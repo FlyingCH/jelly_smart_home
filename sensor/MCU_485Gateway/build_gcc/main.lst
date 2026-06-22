@@ -1,0 +1,239 @@
+ARM GAS  /tmp/cc1JYkvY.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              		.section	.rodata.on_mqtt_message.str1.4,"aMS",%progbits,1
+  16              		.align	2
+  17              	.LC0:
+  18 0000 5B4D5154 		.ascii	"[MQTT] topic: \000"
+  18      545D2074 
+  18      6F706963 
+  18      3A2000
+  19 000f 00       		.align	2
+  20              	.LC1:
+  21 0010 0D0A00   		.ascii	"\015\012\000"
+  22              		.section	.text.on_mqtt_message,"ax",%progbits
+  23              		.align	1
+  24              		.global	on_mqtt_message
+  25              		.syntax unified
+  26              		.thumb
+  27              		.thumb_func
+  29              	on_mqtt_message:
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33 0002 0446     		mov	r4, r0
+  34 0004 0E21     		movs	r1, #14
+  35 0006 0748     		ldr	r0, .L3
+  36 0008 FFF7FEFF 		bl	max3485_U3_send_data
+  37 000c 2046     		mov	r0, r4
+  38 000e FFF7FEFF 		bl	strlen
+  39 0012 81B2     		uxth	r1, r0
+  40 0014 2046     		mov	r0, r4
+  41 0016 FFF7FEFF 		bl	max3485_U3_send_data
+  42 001a 0221     		movs	r1, #2
+  43 001c 0248     		ldr	r0, .L3+4
+  44 001e FFF7FEFF 		bl	max3485_U3_send_data
+  45 0022 10BD     		pop	{r4, pc}
+  46              	.L4:
+  47              		.align	2
+  48              	.L3:
+  49 0024 00000000 		.word	.LC0
+  50 0028 10000000 		.word	.LC1
+  52              		.section	.rodata.bsp_Init.str1.4,"aMS",%progbits,1
+  53              		.align	2
+  54              	.LC2:
+  55 0000 5B555352 		.ascii	"[USR-K5] init FAIL\015\012\000"
+  55      2D4B355D 
+ARM GAS  /tmp/cc1JYkvY.s 			page 2
+
+
+  55      20696E69 
+  55      74204641 
+  55      494C0D0A 
+  56              		.section	.text.bsp_Init,"ax",%progbits
+  57              		.align	1
+  58              		.global	bsp_Init
+  59              		.syntax unified
+  60              		.thumb
+  61              		.thumb_func
+  63              	bsp_Init:
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 08B5     		push	{r3, lr}
+  67 0002 FFF7FEFF 		bl	delay_init
+  68 0006 FFF7FEFF 		bl	uart1_init
+  69 000a FFF7FEFF 		bl	led_init
+  70 000e FFF7FEFF 		bl	max3485_init
+  71 0012 FFF7FEFF 		bl	uart3_init
+  72 0016 FFF7FEFF 		bl	max3485_U3_init
+  73 001a FFF7FEFF 		bl	usrk5_Net_init
+  74 001e 70B1     		cbz	r0, .L6
+  75              	.L7:
+  76 0020 1421     		movs	r1, #20
+  77 0022 1148     		ldr	r0, .L9
+  78 0024 FFF7FEFF 		bl	max3485_U3_send_data
+  79 0028 0020     		movs	r0, #0
+  80 002a FFF7FEFF 		bl	led_toggle
+  81 002e 0120     		movs	r0, #1
+  82 0030 FFF7FEFF 		bl	led_toggle
+  83 0034 4FF4FA60 		mov	r0, #2000
+  84 0038 FFF7FEFF 		bl	delay_ms
+  85 003c F0E7     		b	.L7
+  86              	.L6:
+  87 003e FFF7FEFF 		bl	mqtt_init
+  88 0042 0A48     		ldr	r0, .L9+4
+  89 0044 FFF7FEFF 		bl	mqtt_set_message_callback
+  90 0048 FFF7FEFF 		bl	sensor_poll_init
+  91 004c 4FF4FA70 		mov	r0, #500
+  92 0050 FFF7FEFF 		bl	delay_ms
+  93 0054 0021     		movs	r1, #0
+  94 0056 0846     		mov	r0, r1
+  95 0058 FFF7FEFF 		bl	led_set
+  96 005c 0021     		movs	r1, #0
+  97 005e 0120     		movs	r0, #1
+  98 0060 FFF7FEFF 		bl	led_set
+  99 0064 08BD     		pop	{r3, pc}
+ 100              	.L10:
+ 101 0066 00BF     		.align	2
+ 102              	.L9:
+ 103 0068 00000000 		.word	.LC2
+ 104 006c 00000000 		.word	on_mqtt_message
+ 106              		.section	.rodata.main.str1.4,"aMS",%progbits,1
+ 107              		.align	2
+ 108              	.LC3:
+ 109 0000 5B4D5154 		.ascii	"[MQTT] connected\015\012\000"
+ 109      545D2063 
+ 109      6F6E6E65 
+ARM GAS  /tmp/cc1JYkvY.s 			page 3
+
+
+ 109      63746564 
+ 109      0D0A00
+ 110 0013 00       		.align	2
+ 111              	.LC4:
+ 112 0014 2F4D756C 		.ascii	"/Multisensor/STM32ELE_Gateway/func\000"
+ 112      74697365 
+ 112      6E736F72 
+ 112      2F53544D 
+ 112      3332454C 
+ 113 0037 00       		.align	2
+ 114              	.LC5:
+ 115 0038 5B4D5154 		.ascii	"[MQTT] reconnecting...\015\012\000"
+ 115      545D2072 
+ 115      65636F6E 
+ 115      6E656374 
+ 115      696E672E 
+ 116 0051 000000   		.align	2
+ 117              	.LC6:
+ 118 0054 5B4D5154 		.ascii	"[MQTT] reconnected\015\012\000"
+ 118      545D2072 
+ 118      65636F6E 
+ 118      6E656374 
+ 118      65640D0A 
+ 119              		.section	.text.main,"ax",%progbits
+ 120              		.align	1
+ 121              		.global	main
+ 122              		.syntax unified
+ 123              		.thumb
+ 124              		.thumb_func
+ 126              	main:
+ 127              		@ Volatile: function does not return.
+ 128              		@ args = 0, pretend = 0, frame = 0
+ 129              		@ frame_needed = 0, uses_anonymous_args = 0
+ 130 0000 08B5     		push	{r3, lr}
+ 131 0002 FFF7FEFF 		bl	bsp_Init
+ 132 0006 FFF7FEFF 		bl	mqtt_connect
+ 133 000a 60B9     		cbnz	r0, .L14
+ 134 000c 1221     		movs	r1, #18
+ 135 000e 1248     		ldr	r0, .L16
+ 136 0010 FFF7FEFF 		bl	max3485_U3_send_data
+ 137 0014 0021     		movs	r1, #0
+ 138 0016 1148     		ldr	r0, .L16+4
+ 139 0018 FFF7FEFF 		bl	mqtt_subscribe
+ 140 001c 03E0     		b	.L14
+ 141              	.L13:
+ 142 001e 4FF4FA70 		mov	r0, #500
+ 143 0022 FFF7FEFF 		bl	delay_ms
+ 144              	.L14:
+ 145 0026 FFF7FEFF 		bl	sensor_poll_step
+ 146 002a FFF7FEFF 		bl	mqtt_loop
+ 147 002e FFF7FEFF 		bl	mqtt_get_state
+ 148 0032 0228     		cmp	r0, #2
+ 149 0034 F3D0     		beq	.L13
+ 150 0036 1721     		movs	r1, #23
+ 151 0038 0948     		ldr	r0, .L16+8
+ 152 003a FFF7FEFF 		bl	max3485_U3_send_data
+ 153 003e FFF7FEFF 		bl	mqtt_connect
+ARM GAS  /tmp/cc1JYkvY.s 			page 4
+
+
+ 154 0042 0028     		cmp	r0, #0
+ 155 0044 EBD1     		bne	.L13
+ 156 0046 0021     		movs	r1, #0
+ 157 0048 0448     		ldr	r0, .L16+4
+ 158 004a FFF7FEFF 		bl	mqtt_subscribe
+ 159 004e 1421     		movs	r1, #20
+ 160 0050 0448     		ldr	r0, .L16+12
+ 161 0052 FFF7FEFF 		bl	max3485_U3_send_data
+ 162 0056 E2E7     		b	.L13
+ 163              	.L17:
+ 164              		.align	2
+ 165              	.L16:
+ 166 0058 00000000 		.word	.LC3
+ 167 005c 14000000 		.word	.LC4
+ 168 0060 38000000 		.word	.LC5
+ 169 0064 54000000 		.word	.LC6
+ 171              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/cc1JYkvY.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+     /tmp/cc1JYkvY.s:16     .rodata.on_mqtt_message.str1.4:00000000 $d
+     /tmp/cc1JYkvY.s:23     .text.on_mqtt_message:00000000 $t
+     /tmp/cc1JYkvY.s:29     .text.on_mqtt_message:00000000 on_mqtt_message
+     /tmp/cc1JYkvY.s:49     .text.on_mqtt_message:00000024 $d
+     /tmp/cc1JYkvY.s:53     .rodata.bsp_Init.str1.4:00000000 $d
+     /tmp/cc1JYkvY.s:57     .text.bsp_Init:00000000 $t
+     /tmp/cc1JYkvY.s:63     .text.bsp_Init:00000000 bsp_Init
+     /tmp/cc1JYkvY.s:103    .text.bsp_Init:00000068 $d
+     /tmp/cc1JYkvY.s:107    .rodata.main.str1.4:00000000 $d
+     /tmp/cc1JYkvY.s:120    .text.main:00000000 $t
+     /tmp/cc1JYkvY.s:126    .text.main:00000000 main
+     /tmp/cc1JYkvY.s:166    .text.main:00000058 $d
+
+UNDEFINED SYMBOLS
+max3485_U3_send_data
+strlen
+delay_init
+uart1_init
+led_init
+max3485_init
+uart3_init
+max3485_U3_init
+usrk5_Net_init
+led_toggle
+delay_ms
+mqtt_init
+mqtt_set_message_callback
+sensor_poll_init
+led_set
+mqtt_connect
+mqtt_subscribe
+sensor_poll_step
+mqtt_loop
+mqtt_get_state

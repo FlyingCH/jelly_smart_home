@@ -1,0 +1,1179 @@
+ARM GAS  /tmp/ccfUmAnx.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"mqtt.c"
+  14              		.text
+  15              		.section	.text._mqtt_get_next_packet_id,"ax",%progbits
+  16              		.align	1
+  17              		.syntax unified
+  18              		.thumb
+  19              		.thumb_func
+  21              	_mqtt_get_next_packet_id:
+  22              		@ args = 0, pretend = 0, frame = 0
+  23              		@ frame_needed = 0, uses_anonymous_args = 0
+  24              		@ link register save eliminated.
+  25 0000 024B     		ldr	r3, .L2
+  26 0002 1888     		ldrh	r0, [r3]
+  27 0004 421C     		adds	r2, r0, #1
+  28 0006 1A80     		strh	r2, [r3]	@ movhi
+  29 0008 7047     		bx	lr
+  30              	.L3:
+  31 000a 00BF     		.align	2
+  32              	.L2:
+  33 000c 00000000 		.word	g_packet_id
+  35              		.section	.text._mqtt_recv_flush,"ax",%progbits
+  36              		.align	1
+  37              		.syntax unified
+  38              		.thumb
+  39              		.thumb_func
+  41              	_mqtt_recv_flush:
+  42              		@ args = 0, pretend = 0, frame = 0
+  43              		@ frame_needed = 0, uses_anonymous_args = 0
+  44 0000 08B5     		push	{r3, lr}
+  45 0002 FFF7FEFF 		bl	uart2_clear_rx_flag
+  46 0006 044A     		ldr	r2, .L6
+  47 0008 B2F88831 		ldrh	r3, [r2, #392]
+  48 000c 9BB2     		uxth	r3, r3
+  49 000e A2F88631 		strh	r3, [r2, #390]	@ movhi
+  50 0012 0020     		movs	r0, #0
+  51 0014 08BD     		pop	{r3, pc}
+  52              	.L7:
+  53 0016 00BF     		.align	2
+  54              	.L6:
+  55 0018 00000000 		.word	g_uart2_dev
+  57              		.section	.text._mqtt_transport_read,"ax",%progbits
+  58              		.align	1
+  59              		.syntax unified
+  60              		.thumb
+  61              		.thumb_func
+ARM GAS  /tmp/ccfUmAnx.s 			page 2
+
+
+  63              	_mqtt_transport_read:
+  64              		@ args = 0, pretend = 0, frame = 128
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  67 0004 A1B0     		sub	sp, sp, #132
+  68 0006 0546     		mov	r5, r0
+  69 0008 0F46     		mov	r7, r1
+  70 000a 0026     		movs	r6, #0
+  71 000c B046     		mov	r8, r6
+  72 000e 46E0     		b	.L9
+  73              	.L23:
+  74 0010 8021     		movs	r1, #128
+  75 0012 6846     		mov	r0, sp
+  76 0014 FFF7FEFF 		bl	uart2_recv_data
+  77 0018 8146     		mov	r9, r0
+  78 001a FFF7FEFF 		bl	uart2_clear_rx_flag
+  79 001e B9F1000F 		cmp	r9, #0
+  80 0022 44D0     		beq	.L10
+  81 0024 0023     		movs	r3, #0
+  82 0026 0CE0     		b	.L11
+  83              	.L13:
+  84 0028 08F10102 		add	r2, r8, #1
+  85 002c 03F18001 		add	r1, r3, #128
+  86 0030 6944     		add	r1, sp, r1
+  87 0032 11F8801C 		ldrb	r1, [r1, #-128]	@ zero_extendqisi2
+  88 0036 05F80810 		strb	r1, [r5, r8]
+  89 003a 0133     		adds	r3, r3, #1
+  90 003c 9BB2     		uxth	r3, r3
+  91 003e 1FFA82F8 		uxth	r8, r2
+  92              	.L11:
+  93 0042 4B45     		cmp	r3, r9
+  94 0044 33D2     		bcs	.L10
+  95 0046 4445     		cmp	r4, r8
+  96 0048 EED8     		bhi	.L13
+  97 004a 30E0     		b	.L10
+  98              	.L16:
+  99 004c 204A     		ldr	r2, .L24
+ 100 004e B2F88631 		ldrh	r3, [r2, #390]
+ 101 0052 9BB2     		uxth	r3, r3
+ 102 0054 08F10101 		add	r1, r8, #1
+ 103 0058 1344     		add	r3, r3, r2
+ 104 005a 93F88530 		ldrb	r3, [r3, #133]	@ zero_extendqisi2
+ 105 005e 05F80830 		strb	r3, [r5, r8]
+ 106 0062 B2F88631 		ldrh	r3, [r2, #390]
+ 107 0066 9BB2     		uxth	r3, r3
+ 108 0068 0133     		adds	r3, r3, #1
+ 109 006a DBB2     		uxtb	r3, r3
+ 110 006c A2F88631 		strh	r3, [r2, #390]	@ movhi
+ 111 0070 1FFA81F8 		uxth	r8, r1
+ 112              	.L14:
+ 113 0074 164B     		ldr	r3, .L24
+ 114 0076 B3F88621 		ldrh	r2, [r3, #390]
+ 115 007a 92B2     		uxth	r2, r2
+ 116 007c B3F88831 		ldrh	r3, [r3, #392]
+ 117 0080 9BB2     		uxth	r3, r3
+ 118 0082 9A42     		cmp	r2, r3
+ 119 0084 01D0     		beq	.L15
+ARM GAS  /tmp/ccfUmAnx.s 			page 3
+
+
+ 120 0086 4445     		cmp	r4, r8
+ 121 0088 E0D8     		bhi	.L16
+ 122              	.L15:
+ 123 008a 4445     		cmp	r4, r8
+ 124 008c 19D9     		bls	.L17
+ 125 008e 0A20     		movs	r0, #10
+ 126 0090 FFF7FEFF 		bl	delay_ms
+ 127 0094 0A36     		adds	r6, r6, #10
+ 128 0096 41F28733 		movw	r3, #4999
+ 129 009a 9E42     		cmp	r6, r3
+ 130 009c 15D8     		bhi	.L21
+ 131              	.L9:
+ 132 009e BCB2     		uxth	r4, r7
+ 133 00a0 4445     		cmp	r4, r8
+ 134 00a2 0ED9     		bls	.L17
+ 135 00a4 0A4B     		ldr	r3, .L24
+ 136 00a6 93F88A31 		ldrb	r3, [r3, #394]	@ zero_extendqisi2
+ 137 00aa 002B     		cmp	r3, #0
+ 138 00ac B0D1     		bne	.L23
+ 139              	.L10:
+ 140 00ae 084B     		ldr	r3, .L24
+ 141 00b0 B3F88621 		ldrh	r2, [r3, #390]
+ 142 00b4 92B2     		uxth	r2, r2
+ 143 00b6 B3F88831 		ldrh	r3, [r3, #392]
+ 144 00ba 9BB2     		uxth	r3, r3
+ 145 00bc 9A42     		cmp	r2, r3
+ 146 00be E4D0     		beq	.L15
+ 147 00c0 D8E7     		b	.L14
+ 148              	.L17:
+ 149 00c2 4046     		mov	r0, r8
+ 150              	.L8:
+ 151 00c4 21B0     		add	sp, sp, #132
+ 152              		@ sp needed
+ 153 00c6 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 154              	.L21:
+ 155 00ca 4FF0FF30 		mov	r0, #-1
+ 156 00ce F9E7     		b	.L8
+ 157              	.L25:
+ 158              		.align	2
+ 159              	.L24:
+ 160 00d0 00000000 		.word	g_uart2_dev
+ 162              		.section	.text._mqtt_wait_first_byte,"ax",%progbits
+ 163              		.align	1
+ 164              		.syntax unified
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	_mqtt_wait_first_byte:
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 70B5     		push	{r4, r5, r6, lr}
+ 172 0002 0E46     		mov	r6, r1
+ 173 0004 0001     		lsls	r0, r0, #4
+ 174 0006 C5B2     		uxtb	r5, r0
+ 175 0008 0024     		movs	r4, #0
+ 176 000a 1DE0     		b	.L27
+ 177              	.L28:
+ 178 000c 224B     		ldr	r3, .L36
+ARM GAS  /tmp/ccfUmAnx.s 			page 4
+
+
+ 179 000e B3F88621 		ldrh	r2, [r3, #390]
+ 180 0012 92B2     		uxth	r2, r2
+ 181 0014 B3F88831 		ldrh	r3, [r3, #392]
+ 182 0018 9BB2     		uxth	r3, r3
+ 183 001a 9A42     		cmp	r2, r3
+ 184 001c 10D0     		beq	.L30
+ 185 001e 1E4B     		ldr	r3, .L36
+ 186 0020 B3F88621 		ldrh	r2, [r3, #390]
+ 187 0024 92B2     		uxth	r2, r2
+ 188 0026 1344     		add	r3, r3, r2
+ 189 0028 93F88530 		ldrb	r3, [r3, #133]	@ zero_extendqisi2
+ 190 002c 9D42     		cmp	r5, r3
+ 191 002e 31D0     		beq	.L33
+ 192 0030 194A     		ldr	r2, .L36
+ 193 0032 B2F88631 		ldrh	r3, [r2, #390]
+ 194 0036 9BB2     		uxth	r3, r3
+ 195 0038 0133     		adds	r3, r3, #1
+ 196 003a DBB2     		uxtb	r3, r3
+ 197 003c A2F88631 		strh	r3, [r2, #390]	@ movhi
+ 198              	.L30:
+ 199 0040 0A20     		movs	r0, #10
+ 200 0042 FFF7FEFF 		bl	delay_ms
+ 201 0046 0A34     		adds	r4, r4, #10
+ 202              	.L27:
+ 203 0048 B442     		cmp	r4, r6
+ 204 004a 1FD2     		bcs	.L35
+ 205 004c 124B     		ldr	r3, .L36
+ 206 004e 93F88A31 		ldrb	r3, [r3, #394]	@ zero_extendqisi2
+ 207 0052 002B     		cmp	r3, #0
+ 208 0054 DAD0     		beq	.L28
+ 209 0056 104B     		ldr	r3, .L36
+ 210 0058 B3F88621 		ldrh	r2, [r3, #390]
+ 211 005c 92B2     		uxth	r2, r2
+ 212 005e B3F88831 		ldrh	r3, [r3, #392]
+ 213 0062 9BB2     		uxth	r3, r3
+ 214 0064 9A42     		cmp	r2, r3
+ 215 0066 D1D0     		beq	.L28
+ 216 0068 0B4B     		ldr	r3, .L36
+ 217 006a B3F88621 		ldrh	r2, [r3, #390]
+ 218 006e 92B2     		uxth	r2, r2
+ 219 0070 1344     		add	r3, r3, r2
+ 220 0072 93F88530 		ldrb	r3, [r3, #133]	@ zero_extendqisi2
+ 221 0076 9D42     		cmp	r5, r3
+ 222 0078 0AD0     		beq	.L32
+ 223 007a FFF7FEFF 		bl	uart2_clear_rx_flag
+ 224 007e 064A     		ldr	r2, .L36
+ 225 0080 B2F88831 		ldrh	r3, [r2, #392]
+ 226 0084 9BB2     		uxth	r3, r3
+ 227 0086 A2F88631 		strh	r3, [r2, #390]	@ movhi
+ 228 008a BFE7     		b	.L28
+ 229              	.L35:
+ 230 008c 0120     		movs	r0, #1
+ 231              	.L29:
+ 232 008e 70BD     		pop	{r4, r5, r6, pc}
+ 233              	.L32:
+ 234 0090 0020     		movs	r0, #0
+ 235 0092 FCE7     		b	.L29
+ARM GAS  /tmp/ccfUmAnx.s 			page 5
+
+
+ 236              	.L33:
+ 237 0094 0020     		movs	r0, #0
+ 238 0096 FAE7     		b	.L29
+ 239              	.L37:
+ 240              		.align	2
+ 241              	.L36:
+ 242 0098 00000000 		.word	g_uart2_dev
+ 244              		.section	.text.mqtt_init,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	mqtt_init
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 251              	mqtt_init:
+ 252              		@ args = 0, pretend = 0, frame = 0
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+ 254 0000 38B5     		push	{r3, r4, r5, lr}
+ 255 0002 0024     		movs	r4, #0
+ 256 0004 094B     		ldr	r3, .L40
+ 257 0006 1C70     		strb	r4, [r3]
+ 258 0008 094B     		ldr	r3, .L40+4
+ 259 000a 1C60     		str	r4, [r3]
+ 260 000c 094B     		ldr	r3, .L40+8
+ 261 000e 0122     		movs	r2, #1
+ 262 0010 1A80     		strh	r2, [r3]	@ movhi
+ 263 0012 4FF40075 		mov	r5, #512
+ 264 0016 2A46     		mov	r2, r5
+ 265 0018 2146     		mov	r1, r4
+ 266 001a 0748     		ldr	r0, .L40+12
+ 267 001c FFF7FEFF 		bl	memset
+ 268 0020 2A46     		mov	r2, r5
+ 269 0022 2146     		mov	r1, r4
+ 270 0024 0548     		ldr	r0, .L40+16
+ 271 0026 FFF7FEFF 		bl	memset
+ 272 002a 38BD     		pop	{r3, r4, r5, pc}
+ 273              	.L41:
+ 274              		.align	2
+ 275              	.L40:
+ 276 002c 00000000 		.word	g_mqtt_state
+ 277 0030 00000000 		.word	g_on_message_cb
+ 278 0034 00000000 		.word	g_packet_id
+ 279 0038 00000000 		.word	g_send_buf
+ 280 003c 00000000 		.word	g_recv_buf
+ 282              		.section	.rodata.mqtt_connect.str1.4,"aMS",%progbits,1
+ 283              		.align	2
+ 284              	.LC1:
+ 285 0000 53544D33 		.ascii	"STM32ELE_Gateway\000"
+ 285      32454C45 
+ 285      5F476174 
+ 285      65776179 
+ 285      00
+ 286              		.section	.text.mqtt_connect,"ax",%progbits
+ 287              		.align	1
+ 288              		.global	mqtt_connect
+ 289              		.syntax unified
+ 290              		.thumb
+ 291              		.thumb_func
+ARM GAS  /tmp/ccfUmAnx.s 			page 6
+
+
+ 293              	mqtt_connect:
+ 294              		@ args = 0, pretend = 0, frame = 96
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296 0000 10B5     		push	{r4, lr}
+ 297 0002 98B0     		sub	sp, sp, #96
+ 298 0004 02AC     		add	r4, sp, #8
+ 299 0006 5822     		movs	r2, #88
+ 300 0008 2749     		ldr	r1, .L52
+ 301 000a 2046     		mov	r0, r4
+ 302 000c FFF7FEFF 		bl	memcpy
+ 303 0010 0023     		movs	r3, #0
+ 304 0012 8DF80730 		strb	r3, [sp, #7]
+ 305 0016 8DF80630 		strb	r3, [sp, #6]
+ 306 001a 244B     		ldr	r3, .L52+4
+ 307 001c 0122     		movs	r2, #1
+ 308 001e 1A70     		strb	r2, [r3]
+ 309 0020 234B     		ldr	r3, .L52+8
+ 310 0022 0593     		str	r3, [sp, #20]
+ 311 0024 2246     		mov	r2, r4
+ 312 0026 4FF40071 		mov	r1, #512
+ 313 002a 2248     		ldr	r0, .L52+12
+ 314 002c FFF7FEFF 		bl	MQTTSerialize_connect
+ 315 0030 041E     		subs	r4, r0, #0
+ 316 0032 10DD     		ble	.L50
+ 317 0034 FFF7FEFF 		bl	_mqtt_recv_flush
+ 318 0038 A1B2     		uxth	r1, r4
+ 319 003a 1E48     		ldr	r0, .L52+12
+ 320 003c FFF7FEFF 		bl	uart2_send_hex
+ 321 0040 41F28831 		movw	r1, #5000
+ 322 0044 0220     		movs	r0, #2
+ 323 0046 FFF7FEFF 		bl	_mqtt_wait_first_byte
+ 324 004a 50B1     		cbz	r0, .L45
+ 325 004c 174B     		ldr	r3, .L52+4
+ 326 004e 0422     		movs	r2, #4
+ 327 0050 1A70     		strb	r2, [r3]
+ 328 0052 0120     		movs	r0, #1
+ 329 0054 03E0     		b	.L44
+ 330              	.L50:
+ 331 0056 154B     		ldr	r3, .L52+4
+ 332 0058 0422     		movs	r2, #4
+ 333 005a 1A70     		strb	r2, [r3]
+ 334 005c 0120     		movs	r0, #1
+ 335              	.L44:
+ 336 005e 18B0     		add	sp, sp, #96
+ 337              		@ sp needed
+ 338 0060 10BD     		pop	{r4, pc}
+ 339              	.L45:
+ 340 0062 154A     		ldr	r2, .L52+16
+ 341 0064 4FF40071 		mov	r1, #512
+ 342 0068 1448     		ldr	r0, .L52+20
+ 343 006a FFF7FEFF 		bl	MQTTPacket_read
+ 344 006e 031E     		subs	r3, r0, #0
+ 345 0070 0FDD     		ble	.L51
+ 346 0072 124A     		ldr	r2, .L52+20
+ 347 0074 0DF10601 		add	r1, sp, #6
+ 348 0078 0DF10700 		add	r0, sp, #7
+ 349 007c FFF7FEFF 		bl	MQTTDeserialize_connack
+ARM GAS  /tmp/ccfUmAnx.s 			page 7
+
+
+ 350 0080 0128     		cmp	r0, #1
+ 351 0082 0BD1     		bne	.L47
+ 352 0084 9DF80600 		ldrb	r0, [sp, #6]	@ zero_extendqisi2
+ 353 0088 40B9     		cbnz	r0, .L47
+ 354 008a 084B     		ldr	r3, .L52+4
+ 355 008c 0222     		movs	r2, #2
+ 356 008e 1A70     		strb	r2, [r3]
+ 357 0090 E5E7     		b	.L44
+ 358              	.L51:
+ 359 0092 064B     		ldr	r3, .L52+4
+ 360 0094 0422     		movs	r2, #4
+ 361 0096 1A70     		strb	r2, [r3]
+ 362 0098 0120     		movs	r0, #1
+ 363 009a E0E7     		b	.L44
+ 364              	.L47:
+ 365 009c 034B     		ldr	r3, .L52+4
+ 366 009e 0422     		movs	r2, #4
+ 367 00a0 1A70     		strb	r2, [r3]
+ 368 00a2 0120     		movs	r0, #1
+ 369 00a4 DBE7     		b	.L44
+ 370              	.L53:
+ 371 00a6 00BF     		.align	2
+ 372              	.L52:
+ 373 00a8 00000000 		.word	.LANCHOR0
+ 374 00ac 00000000 		.word	g_mqtt_state
+ 375 00b0 00000000 		.word	.LC1
+ 376 00b4 00000000 		.word	g_send_buf
+ 377 00b8 00000000 		.word	_mqtt_transport_read
+ 378 00bc 00000000 		.word	g_recv_buf
+ 380              		.section	.text.mqtt_disconnect,"ax",%progbits
+ 381              		.align	1
+ 382              		.global	mqtt_disconnect
+ 383              		.syntax unified
+ 384              		.thumb
+ 385              		.thumb_func
+ 387              	mqtt_disconnect:
+ 388              		@ args = 0, pretend = 0, frame = 0
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+ 390 0000 08B5     		push	{r3, lr}
+ 391 0002 4FF40071 		mov	r1, #512
+ 392 0006 0848     		ldr	r0, .L58
+ 393 0008 FFF7FEFF 		bl	MQTTSerialize_disconnect
+ 394 000c 0028     		cmp	r0, #0
+ 395 000e 08DD     		ble	.L56
+ 396 0010 81B2     		uxth	r1, r0
+ 397 0012 0548     		ldr	r0, .L58
+ 398 0014 FFF7FEFF 		bl	uart2_send_hex
+ 399 0018 044B     		ldr	r3, .L58+4
+ 400 001a 0322     		movs	r2, #3
+ 401 001c 1A70     		strb	r2, [r3]
+ 402 001e 0020     		movs	r0, #0
+ 403              	.L55:
+ 404 0020 08BD     		pop	{r3, pc}
+ 405              	.L56:
+ 406 0022 0120     		movs	r0, #1
+ 407 0024 FCE7     		b	.L55
+ 408              	.L59:
+ARM GAS  /tmp/ccfUmAnx.s 			page 8
+
+
+ 409 0026 00BF     		.align	2
+ 410              	.L58:
+ 411 0028 00000000 		.word	g_send_buf
+ 412 002c 00000000 		.word	g_mqtt_state
+ 414              		.section	.text.mqtt_publish,"ax",%progbits
+ 415              		.align	1
+ 416              		.global	mqtt_publish
+ 417              		.syntax unified
+ 418              		.thumb
+ 419              		.thumb_func
+ 421              	mqtt_publish:
+ 422              		@ args = 4, pretend = 0, frame = 16
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 424 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 425 0002 8DB0     		sub	sp, sp, #52
+ 426 0004 0C46     		mov	r4, r1
+ 427 0006 0021     		movs	r1, #0
+ 428 0008 0991     		str	r1, [sp, #36]
+ 429 000a 0A91     		str	r1, [sp, #40]
+ 430 000c 0B91     		str	r1, [sp, #44]
+ 431 000e 40B3     		cbz	r0, .L63
+ 432 0010 1646     		mov	r6, r2
+ 433 0012 1D46     		mov	r5, r3
+ 434 0014 3CB3     		cbz	r4, .L64
+ 435 0016 174B     		ldr	r3, .L70
+ 436 0018 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 437 001a 022B     		cmp	r3, #2
+ 438 001c 25D1     		bne	.L65
+ 439 001e 0990     		str	r0, [sp, #36]
+ 440 0020 DDB9     		cbnz	r5, .L69
+ 441 0022 0027     		movs	r7, #0
+ 442              	.L62:
+ 443 0024 0696     		str	r6, [sp, #24]
+ 444 0026 0594     		str	r4, [sp, #20]
+ 445 0028 02AB     		add	r3, sp, #8
+ 446 002a 0CAA     		add	r2, sp, #48
+ 447 002c 12E90700 		ldmdb	r2, {r0, r1, r2}
+ 448 0030 83E80700 		stm	r3, {r0, r1, r2}
+ 449 0034 0197     		str	r7, [sp, #4]
+ 450 0036 9DF84830 		ldrb	r3, [sp, #72]	@ zero_extendqisi2
+ 451 003a 0093     		str	r3, [sp]
+ 452 003c 2B46     		mov	r3, r5
+ 453 003e 0022     		movs	r2, #0
+ 454 0040 4FF40071 		mov	r1, #512
+ 455 0044 0C48     		ldr	r0, .L70+4
+ 456 0046 FFF7FEFF 		bl	MQTTSerialize_publish
+ 457 004a 0028     		cmp	r0, #0
+ 458 004c 10DD     		ble	.L67
+ 459 004e 81B2     		uxth	r1, r0
+ 460 0050 0948     		ldr	r0, .L70+4
+ 461 0052 FFF7FEFF 		bl	uart2_send_hex
+ 462 0056 0020     		movs	r0, #0
+ 463 0058 08E0     		b	.L61
+ 464              	.L69:
+ 465 005a FFF7FEFF 		bl	_mqtt_get_next_packet_id
+ 466 005e 0746     		mov	r7, r0
+ 467 0060 E0E7     		b	.L62
+ARM GAS  /tmp/ccfUmAnx.s 			page 9
+
+
+ 468              	.L63:
+ 469 0062 0120     		movs	r0, #1
+ 470 0064 02E0     		b	.L61
+ 471              	.L64:
+ 472 0066 0120     		movs	r0, #1
+ 473 0068 00E0     		b	.L61
+ 474              	.L65:
+ 475 006a 0120     		movs	r0, #1
+ 476              	.L61:
+ 477 006c 0DB0     		add	sp, sp, #52
+ 478              		@ sp needed
+ 479 006e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 480              	.L67:
+ 481 0070 0120     		movs	r0, #1
+ 482 0072 FBE7     		b	.L61
+ 483              	.L71:
+ 484              		.align	2
+ 485              	.L70:
+ 486 0074 00000000 		.word	g_mqtt_state
+ 487 0078 00000000 		.word	g_send_buf
+ 489              		.section	.text.mqtt_subscribe,"ax",%progbits
+ 490              		.align	1
+ 491              		.global	mqtt_subscribe
+ 492              		.syntax unified
+ 493              		.thumb
+ 494              		.thumb_func
+ 496              	mqtt_subscribe:
+ 497              		@ args = 0, pretend = 0, frame = 32
+ 498              		@ frame_needed = 0, uses_anonymous_args = 0
+ 499 0000 10B5     		push	{r4, lr}
+ 500 0002 8CB0     		sub	sp, sp, #48
+ 501 0004 0023     		movs	r3, #0
+ 502 0006 0993     		str	r3, [sp, #36]
+ 503 0008 0A93     		str	r3, [sp, #40]
+ 504 000a 0B93     		str	r3, [sp, #44]
+ 505 000c 0891     		str	r1, [sp, #32]
+ 506 000e ADF81E30 		strh	r3, [sp, #30]	@ movhi
+ 507 0012 0693     		str	r3, [sp, #24]
+ 508 0014 0028     		cmp	r0, #0
+ 509 0016 44D0     		beq	.L74
+ 510 0018 274B     		ldr	r3, .L85
+ 511 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 512 001c 022B     		cmp	r3, #2
+ 513 001e 03D0     		beq	.L83
+ 514 0020 0124     		movs	r4, #1
+ 515              	.L73:
+ 516 0022 2046     		mov	r0, r4
+ 517 0024 0CB0     		add	sp, sp, #48
+ 518              		@ sp needed
+ 519 0026 10BD     		pop	{r4, pc}
+ 520              	.L83:
+ 521 0028 0990     		str	r0, [sp, #36]
+ 522 002a FFF7FEFF 		bl	_mqtt_get_next_packet_id
+ 523 002e 0346     		mov	r3, r0
+ 524 0030 08AA     		add	r2, sp, #32
+ 525 0032 0292     		str	r2, [sp, #8]
+ 526 0034 09AA     		add	r2, sp, #36
+ARM GAS  /tmp/ccfUmAnx.s 			page 10
+
+
+ 527 0036 0192     		str	r2, [sp, #4]
+ 528 0038 0122     		movs	r2, #1
+ 529 003a 0092     		str	r2, [sp]
+ 530 003c 0022     		movs	r2, #0
+ 531 003e 4FF40071 		mov	r1, #512
+ 532 0042 1E48     		ldr	r0, .L85+4
+ 533 0044 FFF7FEFF 		bl	MQTTSerialize_subscribe
+ 534 0048 041E     		subs	r4, r0, #0
+ 535 004a 2CDD     		ble	.L76
+ 536 004c FFF7FEFF 		bl	_mqtt_recv_flush
+ 537 0050 A1B2     		uxth	r1, r4
+ 538 0052 1A48     		ldr	r0, .L85+4
+ 539 0054 FFF7FEFF 		bl	uart2_send_hex
+ 540 0058 41F28831 		movw	r1, #5000
+ 541 005c 0920     		movs	r0, #9
+ 542 005e FFF7FEFF 		bl	_mqtt_wait_first_byte
+ 543 0062 0446     		mov	r4, r0
+ 544 0064 08B1     		cbz	r0, .L84
+ 545 0066 0124     		movs	r4, #1
+ 546 0068 DBE7     		b	.L73
+ 547              	.L84:
+ 548 006a 154A     		ldr	r2, .L85+8
+ 549 006c 4FF40071 		mov	r1, #512
+ 550 0070 1448     		ldr	r0, .L85+12
+ 551 0072 FFF7FEFF 		bl	MQTTPacket_read
+ 552 0076 0028     		cmp	r0, #0
+ 553 0078 17DD     		ble	.L78
+ 554 007a 0190     		str	r0, [sp, #4]
+ 555 007c 114B     		ldr	r3, .L85+12
+ 556 007e 0093     		str	r3, [sp]
+ 557 0080 05AB     		add	r3, sp, #20
+ 558 0082 06AA     		add	r2, sp, #24
+ 559 0084 0121     		movs	r1, #1
+ 560 0086 0DF11E00 		add	r0, sp, #30
+ 561 008a FFF7FEFF 		bl	MQTTDeserialize_suback
+ 562 008e 0128     		cmp	r0, #1
+ 563 0090 0DD1     		bne	.L79
+ 564 0092 069B     		ldr	r3, [sp, #24]
+ 565 0094 002B     		cmp	r3, #0
+ 566 0096 0CDD     		ble	.L80
+ 567 0098 059B     		ldr	r3, [sp, #20]
+ 568 009a 802B     		cmp	r3, #128
+ 569 009c C1D1     		bne	.L73
+ 570 009e 0124     		movs	r4, #1
+ 571 00a0 BFE7     		b	.L73
+ 572              	.L74:
+ 573 00a2 0124     		movs	r4, #1
+ 574 00a4 BDE7     		b	.L73
+ 575              	.L76:
+ 576 00a6 0124     		movs	r4, #1
+ 577 00a8 BBE7     		b	.L73
+ 578              	.L78:
+ 579 00aa 0124     		movs	r4, #1
+ 580 00ac B9E7     		b	.L73
+ 581              	.L79:
+ 582 00ae 0124     		movs	r4, #1
+ 583 00b0 B7E7     		b	.L73
+ARM GAS  /tmp/ccfUmAnx.s 			page 11
+
+
+ 584              	.L80:
+ 585 00b2 0124     		movs	r4, #1
+ 586 00b4 B5E7     		b	.L73
+ 587              	.L86:
+ 588 00b6 00BF     		.align	2
+ 589              	.L85:
+ 590 00b8 00000000 		.word	g_mqtt_state
+ 591 00bc 00000000 		.word	g_send_buf
+ 592 00c0 00000000 		.word	_mqtt_transport_read
+ 593 00c4 00000000 		.word	g_recv_buf
+ 595              		.section	.text.mqtt_ping,"ax",%progbits
+ 596              		.align	1
+ 597              		.global	mqtt_ping
+ 598              		.syntax unified
+ 599              		.thumb
+ 600              		.thumb_func
+ 602              	mqtt_ping:
+ 603              		@ args = 0, pretend = 0, frame = 0
+ 604              		@ frame_needed = 0, uses_anonymous_args = 0
+ 605 0000 08B5     		push	{r3, lr}
+ 606 0002 0A4B     		ldr	r3, .L93
+ 607 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 608 0006 022B     		cmp	r3, #2
+ 609 0008 01D0     		beq	.L92
+ 610 000a 0120     		movs	r0, #1
+ 611              	.L88:
+ 612 000c 08BD     		pop	{r3, pc}
+ 613              	.L92:
+ 614 000e 4FF40071 		mov	r1, #512
+ 615 0012 0748     		ldr	r0, .L93+4
+ 616 0014 FFF7FEFF 		bl	MQTTSerialize_pingreq
+ 617 0018 0028     		cmp	r0, #0
+ 618 001a 05DD     		ble	.L90
+ 619 001c 81B2     		uxth	r1, r0
+ 620 001e 0448     		ldr	r0, .L93+4
+ 621 0020 FFF7FEFF 		bl	uart2_send_hex
+ 622 0024 0020     		movs	r0, #0
+ 623 0026 F1E7     		b	.L88
+ 624              	.L90:
+ 625 0028 0120     		movs	r0, #1
+ 626 002a EFE7     		b	.L88
+ 627              	.L94:
+ 628              		.align	2
+ 629              	.L93:
+ 630 002c 00000000 		.word	g_mqtt_state
+ 631 0030 00000000 		.word	g_send_buf
+ 633              		.section	.text.mqtt_yield,"ax",%progbits
+ 634              		.align	1
+ 635              		.global	mqtt_yield
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	mqtt_yield:
+ 641              		@ args = 0, pretend = 0, frame = 32
+ 642              		@ frame_needed = 0, uses_anonymous_args = 0
+ 643 0000 344B     		ldr	r3, .L107
+ 644 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ARM GAS  /tmp/ccfUmAnx.s 			page 12
+
+
+ 645 0004 022B     		cmp	r3, #2
+ 646 0006 15D1     		bne	.L101
+ 647 0008 334B     		ldr	r3, .L107+4
+ 648 000a 93F88A31 		ldrb	r3, [r3, #394]	@ zero_extendqisi2
+ 649 000e 43B9     		cbnz	r3, .L97
+ 650 0010 314B     		ldr	r3, .L107+4
+ 651 0012 B3F88621 		ldrh	r2, [r3, #390]
+ 652 0016 92B2     		uxth	r2, r2
+ 653 0018 B3F88831 		ldrh	r3, [r3, #392]
+ 654 001c 9BB2     		uxth	r3, r3
+ 655 001e 9A42     		cmp	r2, r3
+ 656 0020 08D0     		beq	.L101
+ 657              	.L97:
+ 658 0022 2D4B     		ldr	r3, .L107+4
+ 659 0024 B3F88621 		ldrh	r2, [r3, #390]
+ 660 0028 92B2     		uxth	r2, r2
+ 661 002a 1344     		add	r3, r3, r2
+ 662 002c 93F88530 		ldrb	r3, [r3, #133]	@ zero_extendqisi2
+ 663 0030 302B     		cmp	r3, #48
+ 664 0032 00D0     		beq	.L104
+ 665              	.L101:
+ 666 0034 7047     		bx	lr
+ 667              	.L104:
+ 668 0036 30B5     		push	{r4, r5, lr}
+ 669 0038 8FB0     		sub	sp, sp, #60
+ 670 003a 284A     		ldr	r2, .L107+8
+ 671 003c 4FF40071 		mov	r1, #512
+ 672 0040 2748     		ldr	r0, .L107+12
+ 673 0042 FFF7FEFF 		bl	MQTTPacket_read
+ 674 0046 0028     		cmp	r0, #0
+ 675 0048 01DC     		bgt	.L105
+ 676              	.L95:
+ 677 004a 0FB0     		add	sp, sp, #60
+ 678              		@ sp needed
+ 679 004c 30BD     		pop	{r4, r5, pc}
+ 680              	.L105:
+ 681 004e 0023     		movs	r3, #0
+ 682 0050 8DF81C30 		strb	r3, [sp, #28]
+ 683 0054 0893     		str	r3, [sp, #32]
+ 684 0056 8DF81D30 		strb	r3, [sp, #29]
+ 685 005a ADF81E30 		strh	r3, [sp, #30]	@ movhi
+ 686 005e 0B93     		str	r3, [sp, #44]
+ 687 0060 0C93     		str	r3, [sp, #48]
+ 688 0062 0D93     		str	r3, [sp, #52]
+ 689 0064 0993     		str	r3, [sp, #36]
+ 690 0066 0A93     		str	r3, [sp, #40]
+ 691 0068 0490     		str	r0, [sp, #16]
+ 692 006a 1D4B     		ldr	r3, .L107+12
+ 693 006c 0393     		str	r3, [sp, #12]
+ 694 006e 0AAB     		add	r3, sp, #40
+ 695 0070 0293     		str	r3, [sp, #8]
+ 696 0072 09AB     		add	r3, sp, #36
+ 697 0074 0193     		str	r3, [sp, #4]
+ 698 0076 0BAB     		add	r3, sp, #44
+ 699 0078 0093     		str	r3, [sp]
+ 700 007a 0DF11E03 		add	r3, sp, #30
+ 701 007e 0DF11D02 		add	r2, sp, #29
+ARM GAS  /tmp/ccfUmAnx.s 			page 13
+
+
+ 702 0082 08A9     		add	r1, sp, #32
+ 703 0084 07A8     		add	r0, sp, #28
+ 704 0086 FFF7FEFF 		bl	MQTTDeserialize_publish
+ 705 008a 0128     		cmp	r0, #1
+ 706 008c DDD1     		bne	.L95
+ 707 008e 089B     		ldr	r3, [sp, #32]
+ 708 0090 012B     		cmp	r3, #1
+ 709 0092 10D0     		beq	.L106
+ 710              	.L99:
+ 711 0094 134B     		ldr	r3, .L107+16
+ 712 0096 1C68     		ldr	r4, [r3]
+ 713 0098 002C     		cmp	r4, #0
+ 714 009a D6D0     		beq	.L95
+ 715 009c 0B9D     		ldr	r5, [sp, #44]
+ 716 009e 0EAB     		add	r3, sp, #56
+ 717 00a0 13E90700 		ldmdb	r3, {r0, r1, r2}
+ 718 00a4 FFF7FEFF 		bl	MQTTstrlen
+ 719 00a8 BDF82830 		ldrh	r3, [sp, #40]
+ 720 00ac 099A     		ldr	r2, [sp, #36]
+ 721 00ae 81B2     		uxth	r1, r0
+ 722 00b0 2846     		mov	r0, r5
+ 723 00b2 A047     		blx	r4
+ 724 00b4 C9E7     		b	.L95
+ 725              	.L106:
+ 726 00b6 BDF81E20 		ldrh	r2, [sp, #30]
+ 727 00ba 4FF40071 		mov	r1, #512
+ 728 00be 0A48     		ldr	r0, .L107+20
+ 729 00c0 FFF7FEFF 		bl	MQTTSerialize_puback
+ 730 00c4 011E     		subs	r1, r0, #0
+ 731 00c6 E5DD     		ble	.L99
+ 732 00c8 89B2     		uxth	r1, r1
+ 733 00ca 0748     		ldr	r0, .L107+20
+ 734 00cc FFF7FEFF 		bl	uart2_send_hex
+ 735 00d0 E0E7     		b	.L99
+ 736              	.L108:
+ 737 00d2 00BF     		.align	2
+ 738              	.L107:
+ 739 00d4 00000000 		.word	g_mqtt_state
+ 740 00d8 00000000 		.word	g_uart2_dev
+ 741 00dc 00000000 		.word	_mqtt_transport_read
+ 742 00e0 00000000 		.word	g_recv_buf
+ 743 00e4 00000000 		.word	g_on_message_cb
+ 744 00e8 00000000 		.word	g_send_buf
+ 746              		.section	.text.mqtt_set_message_callback,"ax",%progbits
+ 747              		.align	1
+ 748              		.global	mqtt_set_message_callback
+ 749              		.syntax unified
+ 750              		.thumb
+ 751              		.thumb_func
+ 753              	mqtt_set_message_callback:
+ 754              		@ args = 0, pretend = 0, frame = 0
+ 755              		@ frame_needed = 0, uses_anonymous_args = 0
+ 756              		@ link register save eliminated.
+ 757 0000 014B     		ldr	r3, .L110
+ 758 0002 1860     		str	r0, [r3]
+ 759 0004 7047     		bx	lr
+ 760              	.L111:
+ARM GAS  /tmp/ccfUmAnx.s 			page 14
+
+
+ 761 0006 00BF     		.align	2
+ 762              	.L110:
+ 763 0008 00000000 		.word	g_on_message_cb
+ 765              		.section	.text.mqtt_get_state,"ax",%progbits
+ 766              		.align	1
+ 767              		.global	mqtt_get_state
+ 768              		.syntax unified
+ 769              		.thumb
+ 770              		.thumb_func
+ 772              	mqtt_get_state:
+ 773              		@ args = 0, pretend = 0, frame = 0
+ 774              		@ frame_needed = 0, uses_anonymous_args = 0
+ 775              		@ link register save eliminated.
+ 776 0000 014B     		ldr	r3, .L113
+ 777 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 778 0004 7047     		bx	lr
+ 779              	.L114:
+ 780 0006 00BF     		.align	2
+ 781              	.L113:
+ 782 0008 00000000 		.word	g_mqtt_state
+ 784              		.section	.rodata.mqtt_loop.str1.4,"aMS",%progbits,1
+ 785              		.align	2
+ 786              	.LC2:
+ 787 0000 7B226465 		.ascii	"{\"devcd\":\"%s\",\"devtype\":\"electricity_sensor\""
+ 787      76636422 
+ 787      3A222573 
+ 787      222C2264 
+ 787      65767479 
+ 788 002c 2C226E6F 		.ascii	",\"nodeid\":\"elsensor_%u\",\"data\":{\"sw\":%u,\"v"
+ 788      64656964 
+ 788      223A2265 
+ 788      6C73656E 
+ 788      736F725F 
+ 789 0056 6F6C7461 		.ascii	"oltage\":%d.%01d,\"current\":%d.%02d,\"power\":%d.%"
+ 789      6765223A 
+ 789      25642E25 
+ 789      3031642C 
+ 789      22637572 
+ 790 0084 3032642C 		.ascii	"02d,\"temp\":%d.%01d,\"factor\":%u,\"energy\":%lu}}"
+ 790      2274656D 
+ 790      70223A25 
+ 790      642E2530 
+ 790      31642C22 
+ 791 00b1 00       		.ascii	"\000"
+ 792 00b2 0000     		.align	2
+ 793              	.LC3:
+ 794 00b4 2F4D756C 		.ascii	"/Multisensor/STM32ELE_Gateway/data\000"
+ 794      74697365 
+ 794      6E736F72 
+ 794      2F53544D 
+ 794      3332454C 
+ 795              		.section	.text.mqtt_loop,"ax",%progbits
+ 796              		.align	1
+ 797              		.global	mqtt_loop
+ 798              		.syntax unified
+ 799              		.thumb
+ 800              		.thumb_func
+ARM GAS  /tmp/ccfUmAnx.s 			page 15
+
+
+ 802              	mqtt_loop:
+ 803              		@ args = 0, pretend = 0, frame = 16
+ 804              		@ frame_needed = 0, uses_anonymous_args = 0
+ 805 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 806 0004 91B0     		sub	sp, sp, #68
+ 807 0006 FFF7FEFF 		bl	mqtt_yield
+ 808 000a FFF7FEFF 		bl	mqtt_get_state
+ 809 000e 0228     		cmp	r0, #2
+ 810 0010 00F09D80 		beq	.L124
+ 811              	.L117:
+ 812 0014 FFF7FEFF 		bl	mqtt_get_state
+ 813 0018 0228     		cmp	r0, #2
+ 814 001a 00F09B80 		beq	.L125
+ 815              	.L115:
+ 816 001e 11B0     		add	sp, sp, #68
+ 817              		@ sp needed
+ 818 0020 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 819              	.L119:
+ 820 0024 534B     		ldr	r3, .L126
+ 821 0026 0022     		movs	r2, #0
+ 822 0028 0C99     		ldr	r1, [sp, #48]
+ 823 002a 5A54     		strb	r2, [r3, r1]
+ 824              	.L118:
+ 825 002c 08F10108 		add	r8, r8, #1
+ 826 0030 5FFA88F8 		uxtb	r8, r8
+ 827              	.L116:
+ 828 0034 B8F1040F 		cmp	r8, #4
+ 829 0038 ECD8     		bhi	.L117
+ 830 003a CDF83080 		str	r8, [sp, #48]
+ 831 003e 4D4B     		ldr	r3, .L126
+ 832 0040 13F80830 		ldrb	r3, [r3, r8]	@ zero_extendqisi2
+ 833 0044 002B     		cmp	r3, #0
+ 834 0046 F1D0     		beq	.L118
+ 835 0048 C8EBC803 		rsb	r3, r8, r8, lsl #3
+ 836 004c 4A4D     		ldr	r5, .L126+4
+ 837 004e 05EB8305 		add	r5, r5, r3, lsl #2
+ 838 0052 2B7F     		ldrb	r3, [r5, #28]	@ zero_extendqisi2
+ 839 0054 0E93     		str	r3, [sp, #56]
+ 840 0056 6A7F     		ldrb	r2, [r5, #29]	@ zero_extendqisi2
+ 841 0058 0F92     		str	r2, [sp, #60]
+ 842 005a 6B6A     		ldr	r3, [r5, #36]	@ float
+ 843 005c 4749     		ldr	r1, .L126+8
+ 844 005e 0D93     		str	r3, [sp, #52]	@ float
+ 845 0060 1846     		mov	r0, r3
+ 846 0062 FFF7FEFF 		bl	__aeabi_fmul
+ 847 0066 FFF7FEFF 		bl	__aeabi_f2iz
+ 848 006a 8246     		mov	r10, r0
+ 849 006c D5F82090 		ldr	r9, [r5, #32]	@ float
+ 850 0070 4349     		ldr	r1, .L126+12
+ 851 0072 4846     		mov	r0, r9
+ 852 0074 FFF7FEFF 		bl	__aeabi_fmul
+ 853 0078 FFF7FEFF 		bl	__aeabi_f2iz
+ 854 007c 0746     		mov	r7, r0
+ 855 007e D5F828B0 		ldr	fp, [r5, #40]	@ float
+ 856 0082 3F49     		ldr	r1, .L126+12
+ 857 0084 5846     		mov	r0, fp
+ 858 0086 FFF7FEFF 		bl	__aeabi_fmul
+ARM GAS  /tmp/ccfUmAnx.s 			page 16
+
+
+ 859 008a FFF7FEFF 		bl	__aeabi_f2iz
+ 860 008e 0446     		mov	r4, r0
+ 861 0090 EE6A     		ldr	r6, [r5, #44]	@ float
+ 862 0092 3A49     		ldr	r1, .L126+8
+ 863 0094 3046     		mov	r0, r6
+ 864 0096 FFF7FEFF 		bl	__aeabi_fmul
+ 865 009a FFF7FEFF 		bl	__aeabi_f2iz
+ 866 009e 95F83030 		ldrb	r3, [r5, #48]	@ zero_extendqisi2
+ 867 00a2 6A6B     		ldr	r2, [r5, #52]
+ 868 00a4 0B92     		str	r2, [sp, #44]
+ 869 00a6 0A93     		str	r3, [sp, #40]
+ 870 00a8 364D     		ldr	r5, .L126+16
+ 871 00aa 85FB0032 		smull	r3, r2, r5, r0
+ 872 00ae C317     		asrs	r3, r0, #31
+ 873 00b0 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 874 00b4 03EB8303 		add	r3, r3, r3, lsl #2
+ 875 00b8 A0EB4300 		sub	r0, r0, r3, lsl #1
+ 876 00bc 0990     		str	r0, [sp, #36]
+ 877 00be 3046     		mov	r0, r6
+ 878 00c0 FFF7FEFF 		bl	__aeabi_f2iz
+ 879 00c4 0890     		str	r0, [sp, #32]
+ 880 00c6 304E     		ldr	r6, .L126+20
+ 881 00c8 86FB0432 		smull	r3, r2, r6, r4
+ 882 00cc E317     		asrs	r3, r4, #31
+ 883 00ce C3EB6213 		rsb	r3, r3, r2, asr #5
+ 884 00d2 6422     		movs	r2, #100
+ 885 00d4 02FB1344 		mls	r4, r2, r3, r4
+ 886 00d8 0794     		str	r4, [sp, #28]
+ 887 00da 5846     		mov	r0, fp
+ 888 00dc FFF7FEFF 		bl	__aeabi_f2iz
+ 889 00e0 0690     		str	r0, [sp, #24]
+ 890 00e2 86FB0736 		smull	r3, r6, r6, r7
+ 891 00e6 FB17     		asrs	r3, r7, #31
+ 892 00e8 C3EB6613 		rsb	r3, r3, r6, asr #5
+ 893 00ec 6422     		movs	r2, #100
+ 894 00ee 02FB1373 		mls	r3, r2, r3, r7
+ 895 00f2 0593     		str	r3, [sp, #20]
+ 896 00f4 4846     		mov	r0, r9
+ 897 00f6 FFF7FEFF 		bl	__aeabi_f2iz
+ 898 00fa 0490     		str	r0, [sp, #16]
+ 899 00fc 85FB0A35 		smull	r3, r5, r5, r10
+ 900 0100 4FEAEA73 		asr	r3, r10, #31
+ 901 0104 C3EBA505 		rsb	r5, r3, r5, asr #2
+ 902 0108 05EB8505 		add	r5, r5, r5, lsl #2
+ 903 010c AAEB4505 		sub	r5, r10, r5, lsl #1
+ 904 0110 0395     		str	r5, [sp, #12]
+ 905 0112 0D98     		ldr	r0, [sp, #52]	@ float
+ 906 0114 FFF7FEFF 		bl	__aeabi_f2iz
+ 907 0118 0290     		str	r0, [sp, #8]
+ 908 011a 0F9A     		ldr	r2, [sp, #60]
+ 909 011c 0192     		str	r2, [sp, #4]
+ 910 011e 0E9B     		ldr	r3, [sp, #56]
+ 911 0120 0093     		str	r3, [sp]
+ 912 0122 1A4B     		ldr	r3, .L126+24
+ 913 0124 1A4A     		ldr	r2, .L126+28
+ 914 0126 4FF48071 		mov	r1, #256
+ 915 012a 1A48     		ldr	r0, .L126+32
+ARM GAS  /tmp/ccfUmAnx.s 			page 17
+
+
+ 916 012c FFF7FEFF 		bl	snprintf
+ 917 0130 431E     		subs	r3, r0, #1
+ 918 0132 FE2B     		cmp	r3, #254
+ 919 0134 3FF676AF 		bhi	.L119
+ 920 0138 0023     		movs	r3, #0
+ 921 013a 0093     		str	r3, [sp]
+ 922 013c 82B2     		uxth	r2, r0
+ 923 013e 1549     		ldr	r1, .L126+32
+ 924 0140 1548     		ldr	r0, .L126+36
+ 925 0142 FFF7FEFF 		bl	mqtt_publish
+ 926 0146 0120     		movs	r0, #1
+ 927 0148 FFF7FEFF 		bl	led_toggle
+ 928 014c 6AE7     		b	.L119
+ 929              	.L124:
+ 930 014e 4FF00008 		mov	r8, #0
+ 931 0152 6FE7     		b	.L116
+ 932              	.L125:
+ 933 0154 FFF7FEFF 		bl	get_tick_ms
+ 934 0158 0446     		mov	r4, r0
+ 935 015a 104B     		ldr	r3, .L126+40
+ 936 015c 1B68     		ldr	r3, [r3]
+ 937 015e C31A     		subs	r3, r0, r3
+ 938 0160 47F22F52 		movw	r2, #29999
+ 939 0164 9342     		cmp	r3, r2
+ 940 0166 7FF65AAF 		bls	.L115
+ 941 016a FFF7FEFF 		bl	mqtt_ping
+ 942 016e 0B4B     		ldr	r3, .L126+40
+ 943 0170 1C60     		str	r4, [r3]
+ 944 0172 54E7     		b	.L115
+ 945              	.L127:
+ 946              		.align	2
+ 947              	.L126:
+ 948 0174 00000000 		.word	g_electric_per_done
+ 949 0178 00000000 		.word	g_multi_data
+ 950 017c 00002041 		.word	1092616192
+ 951 0180 0000C842 		.word	1120403456
+ 952 0184 67666666 		.word	1717986919
+ 953 0188 1F85EB51 		.word	1374389535
+ 954 018c 00000000 		.word	.LC1
+ 955 0190 00000000 		.word	.LC2
+ 956 0194 00000000 		.word	g_publish_json_buf
+ 957 0198 B4000000 		.word	.LC3
+ 958 019c 00000000 		.word	last_ping_tick.0
+ 960              		.section	.bss.last_ping_tick.0,"aw",%nobits
+ 961              		.align	2
+ 964              	last_ping_tick.0:
+ 965 0000 00000000 		.space	4
+ 966              		.section	.data.g_packet_id,"aw"
+ 967              		.align	1
+ 970              	g_packet_id:
+ 971 0000 0100     		.short	1
+ 972              		.section	.bss.g_publish_json_buf,"aw",%nobits
+ 973              		.align	2
+ 976              	g_publish_json_buf:
+ 977 0000 00000000 		.space	256
+ 977      00000000 
+ 977      00000000 
+ARM GAS  /tmp/ccfUmAnx.s 			page 18
+
+
+ 977      00000000 
+ 977      00000000 
+ 978              		.section	.bss.g_recv_buf,"aw",%nobits
+ 979              		.align	2
+ 982              	g_recv_buf:
+ 983 0000 00000000 		.space	512
+ 983      00000000 
+ 983      00000000 
+ 983      00000000 
+ 983      00000000 
+ 984              		.section	.bss.g_send_buf,"aw",%nobits
+ 985              		.align	2
+ 988              	g_send_buf:
+ 989 0000 00000000 		.space	512
+ 989      00000000 
+ 989      00000000 
+ 989      00000000 
+ 989      00000000 
+ 990              		.section	.bss.g_on_message_cb,"aw",%nobits
+ 991              		.align	2
+ 994              	g_on_message_cb:
+ 995 0000 00000000 		.space	4
+ 996              		.section	.bss.g_mqtt_state,"aw",%nobits
+ 999              	g_mqtt_state:
+ 1000 0000 00       		.space	1
+ 1001              		.section	.rodata
+ 1002              		.align	2
+ 1003              		.set	.LANCHOR0,. + 0
+ 1004              	.LC0:
+ 1005 0000 4D515443 		.ascii	"MQTC"
+ 1006 0004 00000000 		.word	0
+ 1007 0008 04       		.byte	4
+ 1008 0009 000000   		.space	3
+ 1009 000c 00000000 		.word	0
+ 1010 0010 00000000 		.word	0
+ 1011 0014 00000000 		.word	0
+ 1012 0018 3C00     		.short	60
+ 1013 001a 01       		.byte	1
+ 1014 001b 00       		.byte	0
+ 1015 001c 4D515457 		.ascii	"MQTW"
+ 1016 0020 00000000 		.word	0
+ 1017 0024 00000000 		.word	0
+ 1018 0028 00000000 		.word	0
+ 1019 002c 00000000 		.word	0
+ 1020 0030 00000000 		.word	0
+ 1021 0034 00000000 		.word	0
+ 1022 0038 00000000 		.word	0
+ 1023 003c 00       		.byte	0
+ 1024 003d 00       		.byte	0
+ 1025 003e 0000     		.space	2
+ 1026 0040 00000000 		.word	0
+ 1027 0044 00000000 		.word	0
+ 1028 0048 00000000 		.word	0
+ 1029 004c 00000000 		.word	0
+ 1030 0050 00000000 		.word	0
+ 1031 0054 00000000 		.word	0
+ 1032              		.global	__aeabi_f2iz
+ARM GAS  /tmp/ccfUmAnx.s 			page 19
+
+
+ 1033              		.global	__aeabi_fmul
+ 1034              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccfUmAnx.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 mqtt.c
+     /tmp/ccfUmAnx.s:16     .text._mqtt_get_next_packet_id:00000000 $t
+     /tmp/ccfUmAnx.s:21     .text._mqtt_get_next_packet_id:00000000 _mqtt_get_next_packet_id
+     /tmp/ccfUmAnx.s:33     .text._mqtt_get_next_packet_id:0000000c $d
+     /tmp/ccfUmAnx.s:970    .data.g_packet_id:00000000 g_packet_id
+     /tmp/ccfUmAnx.s:36     .text._mqtt_recv_flush:00000000 $t
+     /tmp/ccfUmAnx.s:41     .text._mqtt_recv_flush:00000000 _mqtt_recv_flush
+     /tmp/ccfUmAnx.s:55     .text._mqtt_recv_flush:00000018 $d
+     /tmp/ccfUmAnx.s:58     .text._mqtt_transport_read:00000000 $t
+     /tmp/ccfUmAnx.s:63     .text._mqtt_transport_read:00000000 _mqtt_transport_read
+     /tmp/ccfUmAnx.s:160    .text._mqtt_transport_read:000000d0 $d
+     /tmp/ccfUmAnx.s:163    .text._mqtt_wait_first_byte:00000000 $t
+     /tmp/ccfUmAnx.s:168    .text._mqtt_wait_first_byte:00000000 _mqtt_wait_first_byte
+     /tmp/ccfUmAnx.s:242    .text._mqtt_wait_first_byte:00000098 $d
+     /tmp/ccfUmAnx.s:245    .text.mqtt_init:00000000 $t
+     /tmp/ccfUmAnx.s:251    .text.mqtt_init:00000000 mqtt_init
+     /tmp/ccfUmAnx.s:276    .text.mqtt_init:0000002c $d
+     /tmp/ccfUmAnx.s:999    .bss.g_mqtt_state:00000000 g_mqtt_state
+     /tmp/ccfUmAnx.s:994    .bss.g_on_message_cb:00000000 g_on_message_cb
+     /tmp/ccfUmAnx.s:988    .bss.g_send_buf:00000000 g_send_buf
+     /tmp/ccfUmAnx.s:982    .bss.g_recv_buf:00000000 g_recv_buf
+     /tmp/ccfUmAnx.s:283    .rodata.mqtt_connect.str1.4:00000000 $d
+     /tmp/ccfUmAnx.s:287    .text.mqtt_connect:00000000 $t
+     /tmp/ccfUmAnx.s:293    .text.mqtt_connect:00000000 mqtt_connect
+     /tmp/ccfUmAnx.s:373    .text.mqtt_connect:000000a8 $d
+     /tmp/ccfUmAnx.s:381    .text.mqtt_disconnect:00000000 $t
+     /tmp/ccfUmAnx.s:387    .text.mqtt_disconnect:00000000 mqtt_disconnect
+     /tmp/ccfUmAnx.s:411    .text.mqtt_disconnect:00000028 $d
+     /tmp/ccfUmAnx.s:415    .text.mqtt_publish:00000000 $t
+     /tmp/ccfUmAnx.s:421    .text.mqtt_publish:00000000 mqtt_publish
+     /tmp/ccfUmAnx.s:486    .text.mqtt_publish:00000074 $d
+     /tmp/ccfUmAnx.s:490    .text.mqtt_subscribe:00000000 $t
+     /tmp/ccfUmAnx.s:496    .text.mqtt_subscribe:00000000 mqtt_subscribe
+     /tmp/ccfUmAnx.s:590    .text.mqtt_subscribe:000000b8 $d
+     /tmp/ccfUmAnx.s:596    .text.mqtt_ping:00000000 $t
+     /tmp/ccfUmAnx.s:602    .text.mqtt_ping:00000000 mqtt_ping
+     /tmp/ccfUmAnx.s:630    .text.mqtt_ping:0000002c $d
+     /tmp/ccfUmAnx.s:634    .text.mqtt_yield:00000000 $t
+     /tmp/ccfUmAnx.s:640    .text.mqtt_yield:00000000 mqtt_yield
+     /tmp/ccfUmAnx.s:739    .text.mqtt_yield:000000d4 $d
+     /tmp/ccfUmAnx.s:747    .text.mqtt_set_message_callback:00000000 $t
+     /tmp/ccfUmAnx.s:753    .text.mqtt_set_message_callback:00000000 mqtt_set_message_callback
+     /tmp/ccfUmAnx.s:763    .text.mqtt_set_message_callback:00000008 $d
+     /tmp/ccfUmAnx.s:766    .text.mqtt_get_state:00000000 $t
+     /tmp/ccfUmAnx.s:772    .text.mqtt_get_state:00000000 mqtt_get_state
+     /tmp/ccfUmAnx.s:782    .text.mqtt_get_state:00000008 $d
+     /tmp/ccfUmAnx.s:785    .rodata.mqtt_loop.str1.4:00000000 $d
+     /tmp/ccfUmAnx.s:796    .text.mqtt_loop:00000000 $t
+     /tmp/ccfUmAnx.s:802    .text.mqtt_loop:00000000 mqtt_loop
+     /tmp/ccfUmAnx.s:948    .text.mqtt_loop:00000174 $d
+     /tmp/ccfUmAnx.s:976    .bss.g_publish_json_buf:00000000 g_publish_json_buf
+     /tmp/ccfUmAnx.s:964    .bss.last_ping_tick.0:00000000 last_ping_tick.0
+     /tmp/ccfUmAnx.s:961    .bss.last_ping_tick.0:00000000 $d
+     /tmp/ccfUmAnx.s:967    .data.g_packet_id:00000000 $d
+     /tmp/ccfUmAnx.s:973    .bss.g_publish_json_buf:00000000 $d
+     /tmp/ccfUmAnx.s:979    .bss.g_recv_buf:00000000 $d
+ARM GAS  /tmp/ccfUmAnx.s 			page 21
+
+
+     /tmp/ccfUmAnx.s:985    .bss.g_send_buf:00000000 $d
+     /tmp/ccfUmAnx.s:991    .bss.g_on_message_cb:00000000 $d
+     /tmp/ccfUmAnx.s:1000   .bss.g_mqtt_state:00000000 $d
+     /tmp/ccfUmAnx.s:1002   .rodata:00000000 $d
+
+UNDEFINED SYMBOLS
+uart2_clear_rx_flag
+g_uart2_dev
+uart2_recv_data
+delay_ms
+memset
+memcpy
+MQTTSerialize_connect
+uart2_send_hex
+MQTTPacket_read
+MQTTDeserialize_connack
+MQTTSerialize_disconnect
+MQTTSerialize_publish
+MQTTSerialize_subscribe
+MQTTDeserialize_suback
+MQTTSerialize_pingreq
+MQTTDeserialize_publish
+MQTTstrlen
+MQTTSerialize_puback
+__aeabi_fmul
+__aeabi_f2iz
+snprintf
+led_toggle
+get_tick_ms
+g_electric_per_done
+g_multi_data

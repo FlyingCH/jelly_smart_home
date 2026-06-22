@@ -1,0 +1,154 @@
+ARM GAS  /tmp/cco7KyUL.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"led.c"
+  14              		.text
+  15              		.section	.text.led_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	led_init
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	led_init:
+  23              		@ args = 0, pretend = 0, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 30B5     		push	{r4, r5, lr}
+  26 0002 83B0     		sub	sp, sp, #12
+  27 0004 0121     		movs	r1, #1
+  28 0006 0420     		movs	r0, #4
+  29 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  30 000c 0324     		movs	r4, #3
+  31 000e ADF80440 		strh	r4, [sp, #4]	@ movhi
+  32 0012 8DF80640 		strb	r4, [sp, #6]
+  33 0016 1023     		movs	r3, #16
+  34 0018 8DF80730 		strb	r3, [sp, #7]
+  35 001c 054D     		ldr	r5, .L3
+  36 001e 01A9     		add	r1, sp, #4
+  37 0020 2846     		mov	r0, r5
+  38 0022 FFF7FEFF 		bl	GPIO_Init
+  39 0026 2146     		mov	r1, r4
+  40 0028 2846     		mov	r0, r5
+  41 002a FFF7FEFF 		bl	GPIO_ResetBits
+  42 002e 03B0     		add	sp, sp, #12
+  43              		@ sp needed
+  44 0030 30BD     		pop	{r4, r5, pc}
+  45              	.L4:
+  46 0032 00BF     		.align	2
+  47              	.L3:
+  48 0034 00080140 		.word	1073809408
+  50              		.section	.text.led_set,"ax",%progbits
+  51              		.align	1
+  52              		.global	led_set
+  53              		.syntax unified
+  54              		.thumb
+  55              		.thumb_func
+  57              	led_set:
+  58              		@ args = 0, pretend = 0, frame = 0
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60 0000 0128     		cmp	r0, #1
+ARM GAS  /tmp/cco7KyUL.s 			page 2
+
+
+  61 0002 0FD8     		bhi	.L9
+  62 0004 08B5     		push	{r3, lr}
+  63 0006 084B     		ldr	r3, .L13
+  64 0008 33F81030 		ldrh	r3, [r3, r0, lsl #1]
+  65 000c 0129     		cmp	r1, #1
+  66 000e 04D0     		beq	.L12
+  67 0010 1946     		mov	r1, r3
+  68 0012 0648     		ldr	r0, .L13+4
+  69 0014 FFF7FEFF 		bl	GPIO_ResetBits
+  70              	.L5:
+  71 0018 08BD     		pop	{r3, pc}
+  72              	.L12:
+  73 001a 1946     		mov	r1, r3
+  74 001c 0348     		ldr	r0, .L13+4
+  75 001e FFF7FEFF 		bl	GPIO_SetBits
+  76 0022 F9E7     		b	.L5
+  77              	.L9:
+  78 0024 7047     		bx	lr
+  79              	.L14:
+  80 0026 00BF     		.align	2
+  81              	.L13:
+  82 0028 00000000 		.word	s_led_pin_table
+  83 002c 00080140 		.word	1073809408
+  85              		.section	.text.led_toggle,"ax",%progbits
+  86              		.align	1
+  87              		.global	led_toggle
+  88              		.syntax unified
+  89              		.thumb
+  90              		.thumb_func
+  92              	led_toggle:
+  93              		@ args = 0, pretend = 0, frame = 0
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95 0000 0128     		cmp	r0, #1
+  96 0002 00D9     		bls	.L22
+  97 0004 7047     		bx	lr
+  98              	.L22:
+  99 0006 10B5     		push	{r4, lr}
+ 100 0008 0A4B     		ldr	r3, .L23
+ 101 000a 33F81040 		ldrh	r4, [r3, r0, lsl #1]
+ 102 000e 2146     		mov	r1, r4
+ 103 0010 0948     		ldr	r0, .L23+4
+ 104 0012 FFF7FEFF 		bl	GPIO_ReadOutputDataBit
+ 105 0016 38B9     		cbnz	r0, .L17
+ 106 0018 2146     		mov	r1, r4
+ 107 001a 00F18040 		add	r0, r0, #1073741824
+ 108 001e 00F58430 		add	r0, r0, #67584
+ 109 0022 FFF7FEFF 		bl	GPIO_SetBits
+ 110              	.L15:
+ 111 0026 10BD     		pop	{r4, pc}
+ 112              	.L17:
+ 113 0028 2146     		mov	r1, r4
+ 114 002a 0348     		ldr	r0, .L23+4
+ 115 002c FFF7FEFF 		bl	GPIO_ResetBits
+ 116 0030 F9E7     		b	.L15
+ 117              	.L24:
+ 118 0032 00BF     		.align	2
+ 119              	.L23:
+ARM GAS  /tmp/cco7KyUL.s 			page 3
+
+
+ 120 0034 00000000 		.word	s_led_pin_table
+ 121 0038 00080140 		.word	1073809408
+ 123              		.section	.rodata.s_led_pin_table,"a"
+ 124              		.align	2
+ 127              	s_led_pin_table:
+ 128 0000 0100     		.short	1
+ 129 0002 0200     		.short	2
+ 130              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/cco7KyUL.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 led.c
+     /tmp/cco7KyUL.s:16     .text.led_init:00000000 $t
+     /tmp/cco7KyUL.s:22     .text.led_init:00000000 led_init
+     /tmp/cco7KyUL.s:48     .text.led_init:00000034 $d
+     /tmp/cco7KyUL.s:51     .text.led_set:00000000 $t
+     /tmp/cco7KyUL.s:57     .text.led_set:00000000 led_set
+     /tmp/cco7KyUL.s:82     .text.led_set:00000028 $d
+     /tmp/cco7KyUL.s:127    .rodata.s_led_pin_table:00000000 s_led_pin_table
+     /tmp/cco7KyUL.s:86     .text.led_toggle:00000000 $t
+     /tmp/cco7KyUL.s:92     .text.led_toggle:00000000 led_toggle
+     /tmp/cco7KyUL.s:120    .text.led_toggle:00000034 $d
+     /tmp/cco7KyUL.s:124    .rodata.s_led_pin_table:00000000 $d
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+GPIO_ResetBits
+GPIO_SetBits
+GPIO_ReadOutputDataBit

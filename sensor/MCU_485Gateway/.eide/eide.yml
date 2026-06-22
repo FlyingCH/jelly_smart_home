@@ -1,0 +1,208 @@
+version: "4.1"
+name: project
+type: ARM
+deviceName: null
+packDir: null
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files: []
+  folders:
+    - name: start
+      files:
+        - path: start/startup_stm32f10x_md.s
+        - path: start/core_cm3.c
+        - path: start/core_cm3.h
+        - path: start/stm32f10x.h
+        - path: start/system_stm32f10x.c
+        - path: start/system_stm32f10x.h
+      folders: []
+    - name: library
+      files:
+        - path: library/misc.c
+        - path: library/misc.h
+        - path: library/stm32f10x_adc.c
+        - path: library/stm32f10x_adc.h
+        - path: library/stm32f10x_bkp.c
+        - path: library/stm32f10x_bkp.h
+        - path: library/stm32f10x_can.c
+        - path: library/stm32f10x_can.h
+        - path: library/stm32f10x_cec.c
+        - path: library/stm32f10x_cec.h
+        - path: library/stm32f10x_crc.c
+        - path: library/stm32f10x_crc.h
+        - path: library/stm32f10x_dac.c
+        - path: library/stm32f10x_dac.h
+        - path: library/stm32f10x_dbgmcu.c
+        - path: library/stm32f10x_dbgmcu.h
+        - path: library/stm32f10x_dma.c
+        - path: library/stm32f10x_dma.h
+        - path: library/stm32f10x_exti.c
+        - path: library/stm32f10x_exti.h
+        - path: library/stm32f10x_flash.c
+        - path: library/stm32f10x_flash.h
+        - path: library/stm32f10x_fsmc.c
+        - path: library/stm32f10x_fsmc.h
+        - path: library/stm32f10x_gpio.c
+        - path: library/stm32f10x_gpio.h
+        - path: library/stm32f10x_i2c.c
+        - path: library/stm32f10x_i2c.h
+        - path: library/stm32f10x_iwdg.c
+        - path: library/stm32f10x_iwdg.h
+        - path: library/stm32f10x_pwr.c
+        - path: library/stm32f10x_pwr.h
+        - path: library/stm32f10x_rcc.c
+        - path: library/stm32f10x_rcc.h
+        - path: library/stm32f10x_rtc.c
+        - path: library/stm32f10x_rtc.h
+        - path: library/stm32f10x_sdio.c
+        - path: library/stm32f10x_sdio.h
+        - path: library/stm32f10x_spi.c
+        - path: library/stm32f10x_spi.h
+        - path: library/stm32f10x_tim.c
+        - path: library/stm32f10x_tim.h
+        - path: library/stm32f10x_usart.c
+        - path: library/stm32f10x_usart.h
+        - path: library/stm32f10x_wwdg.c
+        - path: library/stm32f10x_wwdg.h
+      folders: []
+    - name: user
+      files:
+        - path: user/main.c
+        - path: user/stm32f10x_conf.h
+        - path: user/stm32f10x_it.c
+        - path: user/stm32f10x_it.h
+      folders: []
+dependenceList: []
+outDir: build
+miscInfo:
+  uid: f8a1637e7f11bc4c5030eed915498170
+targets:
+  Target 1:
+    cppPreprocessAttrs:
+      defineList:
+        - USE_STDPERIPH_DRIVER
+      incList:
+        - start
+        - user
+        - library
+        - .cmsis/include
+        - RTE/_Target 1
+      libList: []
+    excludeList: []
+    settings: {}
+    toolchain: AC5
+    toolchainConfigMap:
+      AC5:
+        archExtensions: ""
+        cpuType: Cortex-M3
+        floatingPointHardware: none
+        options:
+          version: 4
+          afterBuildTasks: []
+          asm-compiler:
+            defines: []
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            C_FLAGS: --diag_suppress=1 --diag_suppress=1295
+            c99-mode: true
+            one-elf-section-per-function: true
+            optimization: level-0
+            warnings: all-warnings
+          global:
+            output-debug-info: enable
+            use-microLIB: false
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            output-format: elf
+            ro-base: "0x08000000"
+            rw-base: "0x20000000"
+            xo-base: ""
+        scatterFilePath: ""
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: true
+              mem:
+                size: "0x5000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: true
+              isStartup: true
+              mem:
+                size: "0x10000"
+                startAddr: "0x8000000"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: IROM
+        useCustomScatterFile: false
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+    uploader: JLink

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 传感器编译产物
+sensor/MCU_485Gateway/Objects/
+sensor/MCU_485Gateway/Listings/
+sensor/MCU_485Gateway/DebugConfig/
+sensor/MCU_485Gateway/JLinkSettings.ini
+sensor/MCU_485Gateway/JLinkLog.txt
+sensor/MCU_485Gateway/EventRecorderStub.scvd
+sensor/MCU_485Gateway/*.uvguix*
+sensor/MCU_485Gateway/*.code-workspace
+sensor/MCU_485Gateway/.vscode/uv4.log.lock

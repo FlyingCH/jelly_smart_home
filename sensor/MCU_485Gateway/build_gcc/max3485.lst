@@ -1,0 +1,327 @@
+ARM GAS  /tmp/ccC8dgCm.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"max3485.c"
+  14              		.text
+  15              		.section	.text.max3485_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	max3485_init
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	max3485_init:
+  23              		@ args = 0, pretend = 0, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 30B5     		push	{r4, r5, lr}
+  26 0002 83B0     		sub	sp, sp, #12
+  27 0004 0121     		movs	r1, #1
+  28 0006 0420     		movs	r0, #4
+  29 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  30 000c 4FF40065 		mov	r5, #2048
+  31 0010 ADF80450 		strh	r5, [sp, #4]	@ movhi
+  32 0014 0323     		movs	r3, #3
+  33 0016 8DF80630 		strb	r3, [sp, #6]
+  34 001a 1023     		movs	r3, #16
+  35 001c 8DF80730 		strb	r3, [sp, #7]
+  36 0020 054C     		ldr	r4, .L3
+  37 0022 01A9     		add	r1, sp, #4
+  38 0024 2046     		mov	r0, r4
+  39 0026 FFF7FEFF 		bl	GPIO_Init
+  40 002a 2946     		mov	r1, r5
+  41 002c 2046     		mov	r0, r4
+  42 002e FFF7FEFF 		bl	GPIO_ResetBits
+  43 0032 03B0     		add	sp, sp, #12
+  44              		@ sp needed
+  45 0034 30BD     		pop	{r4, r5, pc}
+  46              	.L4:
+  47 0036 00BF     		.align	2
+  48              	.L3:
+  49 0038 00080140 		.word	1073809408
+  51              		.section	.text.max3485_U3_init,"ax",%progbits
+  52              		.align	1
+  53              		.global	max3485_U3_init
+  54              		.syntax unified
+  55              		.thumb
+  56              		.thumb_func
+  58              	max3485_U3_init:
+  59              		@ args = 0, pretend = 0, frame = 8
+  60              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccC8dgCm.s 			page 2
+
+
+  61 0000 30B5     		push	{r4, r5, lr}
+  62 0002 83B0     		sub	sp, sp, #12
+  63 0004 0121     		movs	r1, #1
+  64 0006 0820     		movs	r0, #8
+  65 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  66 000c 2025     		movs	r5, #32
+  67 000e ADF80450 		strh	r5, [sp, #4]	@ movhi
+  68 0012 0323     		movs	r3, #3
+  69 0014 8DF80630 		strb	r3, [sp, #6]
+  70 0018 1023     		movs	r3, #16
+  71 001a 8DF80730 		strb	r3, [sp, #7]
+  72 001e 054C     		ldr	r4, .L7
+  73 0020 01A9     		add	r1, sp, #4
+  74 0022 2046     		mov	r0, r4
+  75 0024 FFF7FEFF 		bl	GPIO_Init
+  76 0028 2946     		mov	r1, r5
+  77 002a 2046     		mov	r0, r4
+  78 002c FFF7FEFF 		bl	GPIO_ResetBits
+  79 0030 03B0     		add	sp, sp, #12
+  80              		@ sp needed
+  81 0032 30BD     		pop	{r4, r5, pc}
+  82              	.L8:
+  83              		.align	2
+  84              	.L7:
+  85 0034 000C0140 		.word	1073810432
+  87              		.section	.text.max3485_set_mode,"ax",%progbits
+  88              		.align	1
+  89              		.global	max3485_set_mode
+  90              		.syntax unified
+  91              		.thumb
+  92              		.thumb_func
+  94              	max3485_set_mode:
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97 0000 08B5     		push	{r3, lr}
+  98 0002 0128     		cmp	r0, #1
+  99 0004 05D0     		beq	.L13
+ 100 0006 4FF40061 		mov	r1, #2048
+ 101 000a 0548     		ldr	r0, .L14
+ 102 000c FFF7FEFF 		bl	GPIO_ResetBits
+ 103              	.L9:
+ 104 0010 08BD     		pop	{r3, pc}
+ 105              	.L13:
+ 106 0012 4FF40061 		mov	r1, #2048
+ 107 0016 0248     		ldr	r0, .L14
+ 108 0018 FFF7FEFF 		bl	GPIO_SetBits
+ 109 001c F8E7     		b	.L9
+ 110              	.L15:
+ 111 001e 00BF     		.align	2
+ 112              	.L14:
+ 113 0020 00080140 		.word	1073809408
+ 115              		.section	.text.max3485_U3_set_mode,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	max3485_U3_set_mode
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ARM GAS  /tmp/ccC8dgCm.s 			page 3
+
+
+ 122              	max3485_U3_set_mode:
+ 123              		@ args = 0, pretend = 0, frame = 0
+ 124              		@ frame_needed = 0, uses_anonymous_args = 0
+ 125 0000 08B5     		push	{r3, lr}
+ 126 0002 0128     		cmp	r0, #1
+ 127 0004 04D0     		beq	.L20
+ 128 0006 2021     		movs	r1, #32
+ 129 0008 0448     		ldr	r0, .L21
+ 130 000a FFF7FEFF 		bl	GPIO_ResetBits
+ 131              	.L16:
+ 132 000e 08BD     		pop	{r3, pc}
+ 133              	.L20:
+ 134 0010 2021     		movs	r1, #32
+ 135 0012 0248     		ldr	r0, .L21
+ 136 0014 FFF7FEFF 		bl	GPIO_SetBits
+ 137 0018 F9E7     		b	.L16
+ 138              	.L22:
+ 139 001a 00BF     		.align	2
+ 140              	.L21:
+ 141 001c 000C0140 		.word	1073810432
+ 143              		.section	.text.max3485_send_data,"ax",%progbits
+ 144              		.align	1
+ 145              		.global	max3485_send_data
+ 146              		.syntax unified
+ 147              		.thumb
+ 148              		.thumb_func
+ 150              	max3485_send_data:
+ 151              		@ args = 0, pretend = 0, frame = 0
+ 152              		@ frame_needed = 0, uses_anonymous_args = 0
+ 153 0000 38B5     		push	{r3, r4, r5, lr}
+ 154 0002 90B3     		cbz	r0, .L31
+ 155 0004 0C46     		mov	r4, r1
+ 156 0006 0546     		mov	r5, r0
+ 157 0008 11B9     		cbnz	r1, .L34
+ 158 000a 0125     		movs	r5, #1
+ 159              	.L24:
+ 160 000c 2846     		mov	r0, r5
+ 161 000e 38BD     		pop	{r3, r4, r5, pc}
+ 162              	.L34:
+ 163 0010 0120     		movs	r0, #1
+ 164 0012 FFF7FEFF 		bl	max3485_set_mode
+ 165 0016 2246     		mov	r2, r4
+ 166 0018 2946     		mov	r1, r5
+ 167 001a 0120     		movs	r0, #1
+ 168 001c FFF7FEFF 		bl	Serial_transmission_Selection
+ 169 0020 0022     		movs	r2, #0
+ 170              	.L25:
+ 171 0022 134B     		ldr	r3, .L39
+ 172 0024 93F88430 		ldrb	r3, [r3, #132]	@ zero_extendqisi2
+ 173 0028 03F0FF05 		and	r5, r3, #255
+ 174 002c 4BB1     		cbz	r3, .L35
+ 175 002e 114B     		ldr	r3, .L39+4
+ 176 0030 9A42     		cmp	r2, r3
+ 177 0032 01D8     		bhi	.L36
+ 178 0034 0132     		adds	r2, r2, #1
+ 179 0036 F4E7     		b	.L25
+ 180              	.L36:
+ARM GAS  /tmp/ccC8dgCm.s 			page 4
+
+
+ 181 0038 0020     		movs	r0, #0
+ 182 003a FFF7FEFF 		bl	max3485_set_mode
+ 183 003e 0225     		movs	r5, #2
+ 184 0040 E4E7     		b	.L24
+ 185              	.L35:
+ 186 0042 0024     		movs	r4, #0
+ 187              	.L28:
+ 188 0044 4021     		movs	r1, #64
+ 189 0046 0C48     		ldr	r0, .L39+8
+ 190 0048 FFF7FEFF 		bl	USART_GetFlagStatus
+ 191 004c 48B9     		cbnz	r0, .L37
+ 192 004e 0B4B     		ldr	r3, .L39+12
+ 193 0050 9C42     		cmp	r4, r3
+ 194 0052 01D8     		bhi	.L38
+ 195 0054 0134     		adds	r4, r4, #1
+ 196 0056 F5E7     		b	.L28
+ 197              	.L38:
+ 198 0058 0020     		movs	r0, #0
+ 199 005a FFF7FEFF 		bl	max3485_set_mode
+ 200 005e 0225     		movs	r5, #2
+ 201 0060 D4E7     		b	.L24
+ 202              	.L37:
+ 203 0062 0020     		movs	r0, #0
+ 204 0064 FFF7FEFF 		bl	max3485_set_mode
+ 205 0068 D0E7     		b	.L24
+ 206              	.L31:
+ 207 006a 0125     		movs	r5, #1
+ 208 006c CEE7     		b	.L24
+ 209              	.L40:
+ 210 006e 00BF     		.align	2
+ 211              	.L39:
+ 212 0070 00000000 		.word	g_uart1_dev
+ 213 0074 3F420F00 		.word	999999
+ 214 0078 00380140 		.word	1073821696
+ 215 007c 9F860100 		.word	99999
+ 217              		.section	.text.max3485_U3_send_data,"ax",%progbits
+ 218              		.align	1
+ 219              		.global	max3485_U3_send_data
+ 220              		.syntax unified
+ 221              		.thumb
+ 222              		.thumb_func
+ 224              	max3485_U3_send_data:
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 0, uses_anonymous_args = 0
+ 227 0000 38B5     		push	{r3, r4, r5, lr}
+ 228 0002 90B3     		cbz	r0, .L49
+ 229 0004 0C46     		mov	r4, r1
+ 230 0006 0546     		mov	r5, r0
+ 231 0008 11B9     		cbnz	r1, .L52
+ 232 000a 0125     		movs	r5, #1
+ 233              	.L42:
+ 234 000c 2846     		mov	r0, r5
+ 235 000e 38BD     		pop	{r3, r4, r5, pc}
+ 236              	.L52:
+ 237 0010 0120     		movs	r0, #1
+ 238 0012 FFF7FEFF 		bl	max3485_U3_set_mode
+ 239 0016 2246     		mov	r2, r4
+ARM GAS  /tmp/ccC8dgCm.s 			page 5
+
+
+ 240 0018 2946     		mov	r1, r5
+ 241 001a 0320     		movs	r0, #3
+ 242 001c FFF7FEFF 		bl	Serial_transmission_Selection
+ 243 0020 0022     		movs	r2, #0
+ 244              	.L43:
+ 245 0022 134B     		ldr	r3, .L57
+ 246 0024 93F88430 		ldrb	r3, [r3, #132]	@ zero_extendqisi2
+ 247 0028 03F0FF05 		and	r5, r3, #255
+ 248 002c 4BB1     		cbz	r3, .L53
+ 249 002e 114B     		ldr	r3, .L57+4
+ 250 0030 9A42     		cmp	r2, r3
+ 251 0032 01D8     		bhi	.L54
+ 252 0034 0132     		adds	r2, r2, #1
+ 253 0036 F4E7     		b	.L43
+ 254              	.L54:
+ 255 0038 0020     		movs	r0, #0
+ 256 003a FFF7FEFF 		bl	max3485_U3_set_mode
+ 257 003e 0225     		movs	r5, #2
+ 258 0040 E4E7     		b	.L42
+ 259              	.L53:
+ 260 0042 0024     		movs	r4, #0
+ 261              	.L46:
+ 262 0044 4021     		movs	r1, #64
+ 263 0046 0C48     		ldr	r0, .L57+8
+ 264 0048 FFF7FEFF 		bl	USART_GetFlagStatus
+ 265 004c 48B9     		cbnz	r0, .L55
+ 266 004e 0B4B     		ldr	r3, .L57+12
+ 267 0050 9C42     		cmp	r4, r3
+ 268 0052 01D8     		bhi	.L56
+ 269 0054 0134     		adds	r4, r4, #1
+ 270 0056 F5E7     		b	.L46
+ 271              	.L56:
+ 272 0058 0020     		movs	r0, #0
+ 273 005a FFF7FEFF 		bl	max3485_U3_set_mode
+ 274 005e 0225     		movs	r5, #2
+ 275 0060 D4E7     		b	.L42
+ 276              	.L55:
+ 277 0062 0020     		movs	r0, #0
+ 278 0064 FFF7FEFF 		bl	max3485_U3_set_mode
+ 279 0068 D0E7     		b	.L42
+ 280              	.L49:
+ 281 006a 0125     		movs	r5, #1
+ 282 006c CEE7     		b	.L42
+ 283              	.L58:
+ 284 006e 00BF     		.align	2
+ 285              	.L57:
+ 286 0070 00000000 		.word	g_uart3_dev
+ 287 0074 3F420F00 		.word	999999
+ 288 0078 00480040 		.word	1073760256
+ 289 007c 9F860100 		.word	99999
+ 291              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccC8dgCm.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 max3485.c
+     /tmp/ccC8dgCm.s:16     .text.max3485_init:00000000 $t
+     /tmp/ccC8dgCm.s:22     .text.max3485_init:00000000 max3485_init
+     /tmp/ccC8dgCm.s:49     .text.max3485_init:00000038 $d
+     /tmp/ccC8dgCm.s:52     .text.max3485_U3_init:00000000 $t
+     /tmp/ccC8dgCm.s:58     .text.max3485_U3_init:00000000 max3485_U3_init
+     /tmp/ccC8dgCm.s:85     .text.max3485_U3_init:00000034 $d
+     /tmp/ccC8dgCm.s:88     .text.max3485_set_mode:00000000 $t
+     /tmp/ccC8dgCm.s:94     .text.max3485_set_mode:00000000 max3485_set_mode
+     /tmp/ccC8dgCm.s:113    .text.max3485_set_mode:00000020 $d
+     /tmp/ccC8dgCm.s:116    .text.max3485_U3_set_mode:00000000 $t
+     /tmp/ccC8dgCm.s:122    .text.max3485_U3_set_mode:00000000 max3485_U3_set_mode
+     /tmp/ccC8dgCm.s:141    .text.max3485_U3_set_mode:0000001c $d
+     /tmp/ccC8dgCm.s:144    .text.max3485_send_data:00000000 $t
+     /tmp/ccC8dgCm.s:150    .text.max3485_send_data:00000000 max3485_send_data
+     /tmp/ccC8dgCm.s:212    .text.max3485_send_data:00000070 $d
+     /tmp/ccC8dgCm.s:218    .text.max3485_U3_send_data:00000000 $t
+     /tmp/ccC8dgCm.s:224    .text.max3485_U3_send_data:00000000 max3485_U3_send_data
+     /tmp/ccC8dgCm.s:286    .text.max3485_U3_send_data:00000070 $d
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+GPIO_ResetBits
+GPIO_SetBits
+Serial_transmission_Selection
+USART_GetFlagStatus
+g_uart1_dev
+g_uart3_dev

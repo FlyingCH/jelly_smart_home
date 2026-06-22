@@ -1,0 +1,168 @@
+ARM GAS  /tmp/cciSJWZL.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MQTTUnsubscribeClient.c"
+  14              		.text
+  15              		.section	.text.MQTTSerialize_unsubscribeLength,"ax",%progbits
+  16              		.align	1
+  17              		.global	MQTTSerialize_unsubscribeLength
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	MQTTSerialize_unsubscribeLength:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  26 0002 0646     		mov	r6, r0
+  27 0004 0F46     		mov	r7, r1
+  28 0006 0225     		movs	r5, #2
+  29 0008 0024     		movs	r4, #0
+  30 000a 0AE0     		b	.L2
+  31              	.L3:
+  32 000c 04EB4403 		add	r3, r4, r4, lsl #1
+  33 0010 07EB8303 		add	r3, r7, r3, lsl #2
+  34 0014 93E80700 		ldm	r3, {r0, r1, r2}
+  35 0018 FFF7FEFF 		bl	MQTTstrlen
+  36 001c 0230     		adds	r0, r0, #2
+  37 001e 0544     		add	r5, r5, r0
+  38 0020 0134     		adds	r4, r4, #1
+  39              	.L2:
+  40 0022 B442     		cmp	r4, r6
+  41 0024 F2DB     		blt	.L3
+  42 0026 2846     		mov	r0, r5
+  43 0028 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+  45              		.section	.text.MQTTSerialize_unsubscribe,"ax",%progbits
+  46              		.align	1
+  47              		.global	MQTTSerialize_unsubscribe
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+  52              	MQTTSerialize_unsubscribe:
+  53              		@ args = 8, pretend = 0, frame = 8
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  56 0004 83B0     		sub	sp, sp, #12
+  57 0006 0746     		mov	r7, r0
+  58 0008 8846     		mov	r8, r1
+  59 000a 9346     		mov	fp, r2
+  60 000c 9946     		mov	r9, r3
+ARM GAS  /tmp/cciSJWZL.s 			page 2
+
+
+  61 000e 0C9D     		ldr	r5, [sp, #48]
+  62 0010 0D9E     		ldr	r6, [sp, #52]
+  63 0012 0190     		str	r0, [sp, #4]
+  64 0014 3146     		mov	r1, r6
+  65 0016 2846     		mov	r0, r5
+  66 0018 FFF7FEFF 		bl	MQTTSerialize_unsubscribeLength
+  67 001c 8246     		mov	r10, r0
+  68 001e FFF7FEFF 		bl	MQTTPacket_len
+  69 0022 4045     		cmp	r0, r8
+  70 0024 2BDC     		bgt	.L9
+  71 0026 0024     		movs	r4, #0
+  72 0028 0A23     		movs	r3, #10
+  73 002a 63F30714 		bfi	r4, r3, #4, #4
+  74 002e 6BF3C304 		bfi	r4, fp, #3, #1
+  75 0032 0123     		movs	r3, #1
+  76 0034 63F34204 		bfi	r4, r3, #1, #2
+  77 0038 0DF10408 		add	r8, sp, #4
+  78 003c E1B2     		uxtb	r1, r4
+  79 003e 4046     		mov	r0, r8
+  80 0040 FFF7FEFF 		bl	writeChar
+  81 0044 5146     		mov	r1, r10
+  82 0046 0198     		ldr	r0, [sp, #4]
+  83 0048 FFF7FEFF 		bl	MQTTPacket_encode
+  84 004c 019B     		ldr	r3, [sp, #4]
+  85 004e 0344     		add	r3, r3, r0
+  86 0050 0193     		str	r3, [sp, #4]
+  87 0052 4946     		mov	r1, r9
+  88 0054 4046     		mov	r0, r8
+  89 0056 FFF7FEFF 		bl	writeInt
+  90 005a 0024     		movs	r4, #0
+  91 005c 08E0     		b	.L7
+  92              	.L8:
+  93 005e 04EB4403 		add	r3, r4, r4, lsl #1
+  94 0062 06EB8303 		add	r3, r6, r3, lsl #2
+  95 0066 0ECB     		ldm	r3, {r1, r2, r3}
+  96 0068 01A8     		add	r0, sp, #4
+  97 006a FFF7FEFF 		bl	writeMQTTString
+  98 006e 0134     		adds	r4, r4, #1
+  99              	.L7:
+ 100 0070 AC42     		cmp	r4, r5
+ 101 0072 F4DB     		blt	.L8
+ 102 0074 0198     		ldr	r0, [sp, #4]
+ 103 0076 C01B     		subs	r0, r0, r7
+ 104              	.L5:
+ 105 0078 03B0     		add	sp, sp, #12
+ 106              		@ sp needed
+ 107 007a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 108              	.L9:
+ 109 007e 6FF00100 		mvn	r0, #1
+ 110              	.L6:
+ 111 0082 F9E7     		b	.L5
+ 113              		.section	.text.MQTTDeserialize_unsuback,"ax",%progbits
+ 114              		.align	1
+ 115              		.global	MQTTDeserialize_unsuback
+ 116              		.syntax unified
+ 117              		.thumb
+ 118              		.thumb_func
+ARM GAS  /tmp/cciSJWZL.s 			page 3
+
+
+ 120              	MQTTDeserialize_unsuback:
+ 121              		@ args = 0, pretend = 0, frame = 8
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123 0000 00B5     		push	{lr}
+ 124 0002 85B0     		sub	sp, sp, #20
+ 125 0004 0B46     		mov	r3, r1
+ 126 0006 4FF0000C 		mov	ip, #0
+ 127 000a 8DF80FC0 		strb	ip, [sp, #15]
+ 128 000e 8DF80EC0 		strb	ip, [sp, #14]
+ 129 0012 0092     		str	r2, [sp]
+ 130 0014 0246     		mov	r2, r0
+ 131 0016 0DF10E01 		add	r1, sp, #14
+ 132 001a 0DF10F00 		add	r0, sp, #15
+ 133 001e FFF7FEFF 		bl	MQTTDeserialize_ack
+ 134 0022 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 135 0026 0B2B     		cmp	r3, #11
+ 136 0028 02D0     		beq	.L15
+ 137              	.L11:
+ 138 002a 05B0     		add	sp, sp, #20
+ 139              		@ sp needed
+ 140 002c 5DF804FB 		ldr	pc, [sp], #4
+ 141              	.L15:
+ 142 0030 0120     		movs	r0, #1
+ 143 0032 FAE7     		b	.L11
+ 145              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/cciSJWZL.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MQTTUnsubscribeClient.c
+     /tmp/cciSJWZL.s:16     .text.MQTTSerialize_unsubscribeLength:00000000 $t
+     /tmp/cciSJWZL.s:22     .text.MQTTSerialize_unsubscribeLength:00000000 MQTTSerialize_unsubscribeLength
+     /tmp/cciSJWZL.s:46     .text.MQTTSerialize_unsubscribe:00000000 $t
+     /tmp/cciSJWZL.s:52     .text.MQTTSerialize_unsubscribe:00000000 MQTTSerialize_unsubscribe
+     /tmp/cciSJWZL.s:114    .text.MQTTDeserialize_unsuback:00000000 $t
+     /tmp/cciSJWZL.s:120    .text.MQTTDeserialize_unsuback:00000000 MQTTDeserialize_unsuback
+
+UNDEFINED SYMBOLS
+MQTTstrlen
+MQTTPacket_len
+writeChar
+MQTTPacket_encode
+writeInt
+writeMQTTString
+MQTTDeserialize_ack

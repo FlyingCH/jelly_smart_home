@@ -1,0 +1,250 @@
+ARM GAS  /tmp/ccDQ6Jso.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MQTTSerializePublish.c"
+  14              		.text
+  15              		.section	.text.MQTTSerialize_publishLength,"ax",%progbits
+  16              		.align	1
+  17              		.global	MQTTSerialize_publishLength
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	MQTTSerialize_publishLength:
+  23              		@ args = 4, pretend = 0, frame = 16
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 10B5     		push	{r4, lr}
+  26 0002 84B0     		sub	sp, sp, #16
+  27 0004 0446     		mov	r4, r0
+  28 0006 0DF1040C 		add	ip, sp, #4
+  29 000a 8CE80E00 		stm	ip, {r1, r2, r3}
+  30 000e 9CE80700 		ldm	ip, {r0, r1, r2}
+  31 0012 FFF7FEFF 		bl	MQTTstrlen
+  32 0016 831C     		adds	r3, r0, #2
+  33 0018 069A     		ldr	r2, [sp, #24]
+  34 001a 9818     		adds	r0, r3, r2
+  35 001c 002C     		cmp	r4, #0
+  36 001e 00DD     		ble	.L1
+  37 0020 0230     		adds	r0, r0, #2
+  38              	.L1:
+  39 0022 04B0     		add	sp, sp, #16
+  40              		@ sp needed
+  41 0024 10BD     		pop	{r4, pc}
+  43              		.section	.text.MQTTSerialize_publish,"ax",%progbits
+  44              		.align	1
+  45              		.global	MQTTSerialize_publish
+  46              		.syntax unified
+  47              		.thumb
+  48              		.thumb_func
+  50              	MQTTSerialize_publish:
+  51              		@ args = 28, pretend = 0, frame = 8
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+  54 0004 84B0     		sub	sp, sp, #16
+  55 0006 0646     		mov	r6, r0
+  56 0008 0F46     		mov	r7, r1
+  57 000a 9246     		mov	r10, r2
+  58 000c 1C46     		mov	r4, r3
+  59 000e DDF84890 		ldr	r9, [sp, #72]
+  60 0012 0390     		str	r0, [sp, #12]
+ARM GAS  /tmp/ccDQ6Jso.s 			page 2
+
+
+  61 0014 CDF80090 		str	r9, [sp]
+  62 0018 0EAB     		add	r3, sp, #56
+  63 001a 0ECB     		ldm	r3, {r1, r2, r3}
+  64 001c 2046     		mov	r0, r4
+  65 001e FFF7FEFF 		bl	MQTTSerialize_publishLength
+  66 0022 8046     		mov	r8, r0
+  67 0024 FFF7FEFF 		bl	MQTTPacket_len
+  68 0028 B842     		cmp	r0, r7
+  69 002a 30DC     		bgt	.L7
+  70 002c 0025     		movs	r5, #0
+  71 002e 0323     		movs	r3, #3
+  72 0030 63F30715 		bfi	r5, r3, #4, #4
+  73 0034 6AF3C305 		bfi	r5, r10, #3, #1
+  74 0038 64F34205 		bfi	r5, r4, #1, #2
+  75 003c 9DF83030 		ldrb	r3, [sp, #48]	@ zero_extendqisi2
+  76 0040 63F30005 		bfi	r5, r3, #0, #1
+  77 0044 03AF     		add	r7, sp, #12
+  78 0046 E9B2     		uxtb	r1, r5
+  79 0048 3846     		mov	r0, r7
+  80 004a FFF7FEFF 		bl	writeChar
+  81 004e 4146     		mov	r1, r8
+  82 0050 0398     		ldr	r0, [sp, #12]
+  83 0052 FFF7FEFF 		bl	MQTTPacket_encode
+  84 0056 039B     		ldr	r3, [sp, #12]
+  85 0058 0344     		add	r3, r3, r0
+  86 005a 0393     		str	r3, [sp, #12]
+  87 005c 0EAB     		add	r3, sp, #56
+  88 005e 0ECB     		ldm	r3, {r1, r2, r3}
+  89 0060 3846     		mov	r0, r7
+  90 0062 FFF7FEFF 		bl	writeMQTTString
+  91 0066 002C     		cmp	r4, #0
+  92 0068 0BDC     		bgt	.L9
+  93              	.L6:
+  94 006a 4A46     		mov	r2, r9
+  95 006c 1199     		ldr	r1, [sp, #68]
+  96 006e 0398     		ldr	r0, [sp, #12]
+  97 0070 FFF7FEFF 		bl	memcpy
+  98 0074 039A     		ldr	r2, [sp, #12]
+  99 0076 4A44     		add	r2, r2, r9
+ 100 0078 0392     		str	r2, [sp, #12]
+ 101 007a 901B     		subs	r0, r2, r6
+ 102              	.L4:
+ 103 007c 04B0     		add	sp, sp, #16
+ 104              		@ sp needed
+ 105 007e BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 106              	.L9:
+ 107 0082 BDF83410 		ldrh	r1, [sp, #52]
+ 108 0086 3846     		mov	r0, r7
+ 109 0088 FFF7FEFF 		bl	writeInt
+ 110 008c EDE7     		b	.L6
+ 111              	.L7:
+ 112 008e 6FF00100 		mvn	r0, #1
+ 113              	.L5:
+ 114 0092 F3E7     		b	.L4
+ 116              		.section	.text.MQTTSerialize_ack,"ax",%progbits
+ 117              		.align	1
+ 118              		.global	MQTTSerialize_ack
+ARM GAS  /tmp/ccDQ6Jso.s 			page 3
+
+
+ 119              		.syntax unified
+ 120              		.thumb
+ 121              		.thumb_func
+ 123              	MQTTSerialize_ack:
+ 124              		@ args = 4, pretend = 0, frame = 8
+ 125              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126 0000 30B5     		push	{r4, r5, lr}
+ 127 0002 83B0     		sub	sp, sp, #12
+ 128 0004 0446     		mov	r4, r0
+ 129 0006 0190     		str	r0, [sp, #4]
+ 130 0008 0329     		cmp	r1, #3
+ 131 000a 1FDD     		ble	.L12
+ 132 000c 0020     		movs	r0, #0
+ 133 000e 62F30710 		bfi	r0, r2, #4, #4
+ 134 0012 63F3C300 		bfi	r0, r3, #3, #1
+ 135 0016 062A     		cmp	r2, #6
+ 136 0018 14BF     		ite	ne
+ 137 001a 0022     		movne	r2, #0
+ 138 001c 0122     		moveq	r2, #1
+ 139 001e 62F34200 		bfi	r0, r2, #1, #2
+ 140 0022 01AD     		add	r5, sp, #4
+ 141 0024 C1B2     		uxtb	r1, r0
+ 142 0026 2846     		mov	r0, r5
+ 143 0028 FFF7FEFF 		bl	writeChar
+ 144 002c 0221     		movs	r1, #2
+ 145 002e 0198     		ldr	r0, [sp, #4]
+ 146 0030 FFF7FEFF 		bl	MQTTPacket_encode
+ 147 0034 019B     		ldr	r3, [sp, #4]
+ 148 0036 0344     		add	r3, r3, r0
+ 149 0038 0193     		str	r3, [sp, #4]
+ 150 003a BDF81810 		ldrh	r1, [sp, #24]
+ 151 003e 2846     		mov	r0, r5
+ 152 0040 FFF7FEFF 		bl	writeInt
+ 153 0044 0198     		ldr	r0, [sp, #4]
+ 154 0046 001B     		subs	r0, r0, r4
+ 155              	.L10:
+ 156 0048 03B0     		add	sp, sp, #12
+ 157              		@ sp needed
+ 158 004a 30BD     		pop	{r4, r5, pc}
+ 159              	.L12:
+ 160 004c 6FF00100 		mvn	r0, #1
+ 161              	.L11:
+ 162 0050 FAE7     		b	.L10
+ 164              		.section	.text.MQTTSerialize_puback,"ax",%progbits
+ 165              		.align	1
+ 166              		.global	MQTTSerialize_puback
+ 167              		.syntax unified
+ 168              		.thumb
+ 169              		.thumb_func
+ 171              	MQTTSerialize_puback:
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174 0000 00B5     		push	{lr}
+ 175 0002 83B0     		sub	sp, sp, #12
+ 176 0004 0092     		str	r2, [sp]
+ 177 0006 0023     		movs	r3, #0
+ 178 0008 0422     		movs	r2, #4
+ARM GAS  /tmp/ccDQ6Jso.s 			page 4
+
+
+ 179 000a FFF7FEFF 		bl	MQTTSerialize_ack
+ 180 000e 03B0     		add	sp, sp, #12
+ 181              		@ sp needed
+ 182 0010 5DF804FB 		ldr	pc, [sp], #4
+ 184              		.section	.text.MQTTSerialize_pubrel,"ax",%progbits
+ 185              		.align	1
+ 186              		.global	MQTTSerialize_pubrel
+ 187              		.syntax unified
+ 188              		.thumb
+ 189              		.thumb_func
+ 191              	MQTTSerialize_pubrel:
+ 192              		@ args = 0, pretend = 0, frame = 0
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 194 0000 00B5     		push	{lr}
+ 195 0002 83B0     		sub	sp, sp, #12
+ 196 0004 0093     		str	r3, [sp]
+ 197 0006 1346     		mov	r3, r2
+ 198 0008 0622     		movs	r2, #6
+ 199 000a FFF7FEFF 		bl	MQTTSerialize_ack
+ 200 000e 03B0     		add	sp, sp, #12
+ 201              		@ sp needed
+ 202 0010 5DF804FB 		ldr	pc, [sp], #4
+ 204              		.section	.text.MQTTSerialize_pubcomp,"ax",%progbits
+ 205              		.align	1
+ 206              		.global	MQTTSerialize_pubcomp
+ 207              		.syntax unified
+ 208              		.thumb
+ 209              		.thumb_func
+ 211              	MQTTSerialize_pubcomp:
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214 0000 00B5     		push	{lr}
+ 215 0002 83B0     		sub	sp, sp, #12
+ 216 0004 0092     		str	r2, [sp]
+ 217 0006 0023     		movs	r3, #0
+ 218 0008 0722     		movs	r2, #7
+ 219 000a FFF7FEFF 		bl	MQTTSerialize_ack
+ 220 000e 03B0     		add	sp, sp, #12
+ 221              		@ sp needed
+ 222 0010 5DF804FB 		ldr	pc, [sp], #4
+ 224              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccDQ6Jso.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MQTTSerializePublish.c
+     /tmp/ccDQ6Jso.s:16     .text.MQTTSerialize_publishLength:00000000 $t
+     /tmp/ccDQ6Jso.s:22     .text.MQTTSerialize_publishLength:00000000 MQTTSerialize_publishLength
+     /tmp/ccDQ6Jso.s:44     .text.MQTTSerialize_publish:00000000 $t
+     /tmp/ccDQ6Jso.s:50     .text.MQTTSerialize_publish:00000000 MQTTSerialize_publish
+     /tmp/ccDQ6Jso.s:117    .text.MQTTSerialize_ack:00000000 $t
+     /tmp/ccDQ6Jso.s:123    .text.MQTTSerialize_ack:00000000 MQTTSerialize_ack
+     /tmp/ccDQ6Jso.s:165    .text.MQTTSerialize_puback:00000000 $t
+     /tmp/ccDQ6Jso.s:171    .text.MQTTSerialize_puback:00000000 MQTTSerialize_puback
+     /tmp/ccDQ6Jso.s:185    .text.MQTTSerialize_pubrel:00000000 $t
+     /tmp/ccDQ6Jso.s:191    .text.MQTTSerialize_pubrel:00000000 MQTTSerialize_pubrel
+     /tmp/ccDQ6Jso.s:205    .text.MQTTSerialize_pubcomp:00000000 $t
+     /tmp/ccDQ6Jso.s:211    .text.MQTTSerialize_pubcomp:00000000 MQTTSerialize_pubcomp
+
+UNDEFINED SYMBOLS
+MQTTstrlen
+MQTTPacket_len
+writeChar
+MQTTPacket_encode
+writeMQTTString
+memcpy
+writeInt

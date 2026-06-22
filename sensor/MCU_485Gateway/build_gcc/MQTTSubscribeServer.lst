@@ -1,0 +1,169 @@
+ARM GAS  /tmp/ccxlANr3.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MQTTSubscribeServer.c"
+  14              		.text
+  15              		.section	.text.MQTTDeserialize_subscribe,"ax",%progbits
+  16              		.align	1
+  17              		.global	MQTTDeserialize_subscribe
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	MQTTDeserialize_subscribe:
+  23              		@ args = 16, pretend = 0, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  26 0004 83B0     		sub	sp, sp, #12
+  27 0006 8046     		mov	r8, r0
+  28 0008 8946     		mov	r9, r1
+  29 000a 1C46     		mov	r4, r3
+  30 000c 0A9E     		ldr	r6, [sp, #40]
+  31 000e 0B9F     		ldr	r7, [sp, #44]
+  32 0010 0025     		movs	r5, #0
+  33 0012 0C9B     		ldr	r3, [sp, #48]
+  34 0014 0193     		str	r3, [sp, #4]
+  35 0016 0095     		str	r5, [sp]
+  36 0018 01A8     		add	r0, sp, #4
+  37 001a FFF7FEFF 		bl	readChar
+  38 001e 60F30705 		bfi	r5, r0, #0, #8
+  39 0022 00F0F003 		and	r3, r0, #240
+  40 0026 802B     		cmp	r3, #128
+  41 0028 34D1     		bne	.L5
+  42 002a C5F3C005 		ubfx	r5, r5, #3, #1
+  43 002e 88F80050 		strb	r5, [r8]
+  44 0032 6946     		mov	r1, sp
+  45 0034 0198     		ldr	r0, [sp, #4]
+  46 0036 FFF7FEFF 		bl	MQTTPacket_decodeBuf
+  47 003a 8046     		mov	r8, r0
+  48 003c 019D     		ldr	r5, [sp, #4]
+  49 003e 0544     		add	r5, r5, r0
+  50 0040 0195     		str	r5, [sp, #4]
+  51 0042 009B     		ldr	r3, [sp]
+  52 0044 1D44     		add	r5, r5, r3
+  53 0046 01A8     		add	r0, sp, #4
+  54 0048 FFF7FEFF 		bl	readInt
+  55 004c A9F80000 		strh	r0, [r9]	@ movhi
+  56 0050 0023     		movs	r3, #0
+  57 0052 2360     		str	r3, [r4]
+  58              	.L3:
+ARM GAS  /tmp/ccxlANr3.s 			page 2
+
+
+  59 0054 019B     		ldr	r3, [sp, #4]
+  60 0056 AB42     		cmp	r3, r5
+  61 0058 16D2     		bcs	.L7
+  62 005a 2068     		ldr	r0, [r4]
+  63 005c 00EB4000 		add	r0, r0, r0, lsl #1
+  64 0060 2A46     		mov	r2, r5
+  65 0062 01A9     		add	r1, sp, #4
+  66 0064 06EB8000 		add	r0, r6, r0, lsl #2
+  67 0068 FFF7FEFF 		bl	readMQTTLenString
+  68 006c 70B1     		cbz	r0, .L1
+  69 006e 019B     		ldr	r3, [sp, #4]
+  70 0070 AB42     		cmp	r3, r5
+  71 0072 0BD2     		bcs	.L1
+  72 0074 01A8     		add	r0, sp, #4
+  73 0076 FFF7FEFF 		bl	readChar
+  74 007a 2368     		ldr	r3, [r4]
+  75 007c 47F82300 		str	r0, [r7, r3, lsl #2]
+  76 0080 2368     		ldr	r3, [r4]
+  77 0082 0133     		adds	r3, r3, #1
+  78 0084 2360     		str	r3, [r4]
+  79 0086 E5E7     		b	.L3
+  80              	.L7:
+  81 0088 4FF00108 		mov	r8, #1
+  82              	.L1:
+  83 008c 4046     		mov	r0, r8
+  84 008e 03B0     		add	sp, sp, #12
+  85              		@ sp needed
+  86 0090 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+  87              	.L5:
+  88 0094 4FF0FF38 		mov	r8, #-1
+  89              	.L2:
+  90 0098 F8E7     		b	.L1
+  92              		.section	.text.MQTTSerialize_suback,"ax",%progbits
+  93              		.align	1
+  94              		.global	MQTTSerialize_suback
+  95              		.syntax unified
+  96              		.thumb
+  97              		.thumb_func
+  99              	MQTTSerialize_suback:
+ 100              		@ args = 4, pretend = 0, frame = 8
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 103 0004 82B0     		sub	sp, sp, #8
+ 104 0006 1D46     		mov	r5, r3
+ 105 0008 089E     		ldr	r6, [sp, #32]
+ 106 000a 0190     		str	r0, [sp, #4]
+ 107 000c 0133     		adds	r3, r3, #1
+ 108 000e 8B42     		cmp	r3, r1
+ 109 0010 21DA     		bge	.L12
+ 110 0012 0746     		mov	r7, r0
+ 111 0014 1446     		mov	r4, r2
+ 112 0016 0DF10408 		add	r8, sp, #4
+ 113 001a 9021     		movs	r1, #144
+ 114 001c 4046     		mov	r0, r8
+ 115 001e FFF7FEFF 		bl	writeChar
+ 116 0022 A91C     		adds	r1, r5, #2
+ 117 0024 0198     		ldr	r0, [sp, #4]
+ARM GAS  /tmp/ccxlANr3.s 			page 3
+
+
+ 118 0026 FFF7FEFF 		bl	MQTTPacket_encode
+ 119 002a 019B     		ldr	r3, [sp, #4]
+ 120 002c 0344     		add	r3, r3, r0
+ 121 002e 0193     		str	r3, [sp, #4]
+ 122 0030 2146     		mov	r1, r4
+ 123 0032 4046     		mov	r0, r8
+ 124 0034 FFF7FEFF 		bl	writeInt
+ 125 0038 0024     		movs	r4, #0
+ 126 003a 05E0     		b	.L10
+ 127              	.L11:
+ 128 003c 16F82410 		ldrb	r1, [r6, r4, lsl #2]	@ zero_extendqisi2
+ 129 0040 01A8     		add	r0, sp, #4
+ 130 0042 FFF7FEFF 		bl	writeChar
+ 131 0046 0134     		adds	r4, r4, #1
+ 132              	.L10:
+ 133 0048 AC42     		cmp	r4, r5
+ 134 004a F7DB     		blt	.L11
+ 135 004c 0198     		ldr	r0, [sp, #4]
+ 136 004e C01B     		subs	r0, r0, r7
+ 137              	.L8:
+ 138 0050 02B0     		add	sp, sp, #8
+ 139              		@ sp needed
+ 140 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 141              	.L12:
+ 142 0056 6FF00100 		mvn	r0, #1
+ 143              	.L9:
+ 144 005a F9E7     		b	.L8
+ 146              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccxlANr3.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MQTTSubscribeServer.c
+     /tmp/ccxlANr3.s:16     .text.MQTTDeserialize_subscribe:00000000 $t
+     /tmp/ccxlANr3.s:22     .text.MQTTDeserialize_subscribe:00000000 MQTTDeserialize_subscribe
+     /tmp/ccxlANr3.s:93     .text.MQTTSerialize_suback:00000000 $t
+     /tmp/ccxlANr3.s:99     .text.MQTTSerialize_suback:00000000 MQTTSerialize_suback
+
+UNDEFINED SYMBOLS
+readChar
+MQTTPacket_decodeBuf
+readInt
+readMQTTLenString
+writeChar
+MQTTPacket_encode
+writeInt

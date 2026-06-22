@@ -1,0 +1,723 @@
+ARM GAS  /tmp/cclpMeiX.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MQTTPacket.c"
+  14              		.text
+  15              		.section	.text.bufchar,"ax",%progbits
+  16              		.align	1
+  17              		.global	bufchar
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	bufchar:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 8446     		mov	ip, r0
+  27 0002 0846     		mov	r0, r1
+  28 0004 0023     		movs	r3, #0
+  29 0006 8B42     		cmp	r3, r1
+  30 0008 0CDA     		bge	.L8
+  31 000a 30B4     		push	{r4, r5}
+  32              	.L3:
+  33 000c 064C     		ldr	r4, .L9
+  34 000e 2268     		ldr	r2, [r4]
+  35 0010 551C     		adds	r5, r2, #1
+  36 0012 2560     		str	r5, [r4]
+  37 0014 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+  38 0016 8CF80020 		strb	r2, [ip]
+  39 001a 0133     		adds	r3, r3, #1
+  40 001c 8342     		cmp	r3, r0
+  41 001e F5DB     		blt	.L3
+  42 0020 30BC     		pop	{r4, r5}
+  43 0022 7047     		bx	lr
+  44              	.L8:
+  45 0024 7047     		bx	lr
+  46              	.L10:
+  47 0026 00BF     		.align	2
+  48              	.L9:
+  49 0028 00000000 		.word	bufptr
+  51              		.section	.text.MQTTPacket_decodenb,"ax",%progbits
+  52              		.align	1
+  53              		.syntax unified
+  54              		.thumb
+  55              		.thumb_func
+  57              	MQTTPacket_decodenb:
+  58              		@ args = 0, pretend = 0, frame = 8
+  59              		@ frame_needed = 0, uses_anonymous_args = 0
+  60 0000 10B5     		push	{r4, lr}
+ARM GAS  /tmp/cclpMeiX.s 			page 2
+
+
+  61 0002 82B0     		sub	sp, sp, #8
+  62 0004 0446     		mov	r4, r0
+  63 0006 0369     		ldr	r3, [r0, #16]
+  64 0008 1BB9     		cbnz	r3, .L14
+  65 000a 0123     		movs	r3, #1
+  66 000c 8360     		str	r3, [r0, #8]
+  67 000e 0023     		movs	r3, #0
+  68 0010 C360     		str	r3, [r0, #12]
+  69              	.L14:
+  70 0012 2369     		ldr	r3, [r4, #16]
+  71 0014 032B     		cmp	r3, #3
+  72 0016 1BDC     		bgt	.L15
+  73 0018 2368     		ldr	r3, [r4]
+  74 001a 0122     		movs	r2, #1
+  75 001c 0DF10701 		add	r1, sp, #7
+  76 0020 6068     		ldr	r0, [r4, #4]
+  77 0022 9847     		blx	r3
+  78 0024 B0F1FF3F 		cmp	r0, #-1
+  79 0028 14D0     		beq	.L11
+  80 002a 98B1     		cbz	r0, .L11
+  81 002c 2069     		ldr	r0, [r4, #16]
+  82 002e 0130     		adds	r0, r0, #1
+  83 0030 2061     		str	r0, [r4, #16]
+  84 0032 E268     		ldr	r2, [r4, #12]
+  85 0034 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+  86 0038 01F07F0C 		and	ip, r1, #127
+  87 003c A368     		ldr	r3, [r4, #8]
+  88 003e 03FB0C22 		mla	r2, r3, ip, r2
+  89 0042 E260     		str	r2, [r4, #12]
+  90 0044 DB01     		lsls	r3, r3, #7
+  91 0046 A360     		str	r3, [r4, #8]
+  92 0048 11F0800F 		tst	r1, #128
+  93 004c E1D1     		bne	.L14
+  94 004e 01E0     		b	.L11
+  95              	.L15:
+  96 0050 4FF0FF30 		mov	r0, #-1
+  97              	.L13:
+  98              	.L11:
+  99 0054 02B0     		add	sp, sp, #8
+ 100              		@ sp needed
+ 101 0056 10BD     		pop	{r4, pc}
+ 103              		.section	.text.MQTTPacket_encode,"ax",%progbits
+ 104              		.align	1
+ 105              		.global	MQTTPacket_encode
+ 106              		.syntax unified
+ 107              		.thumb
+ 108              		.thumb_func
+ 110              	MQTTPacket_encode:
+ 111              		@ args = 0, pretend = 0, frame = 0
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113 0000 10B5     		push	{r4, lr}
+ 114 0002 0446     		mov	r4, r0
+ 115 0004 4FF0000C 		mov	ip, #0
+ 116 0008 09E0     		b	.L20
+ 117              	.L24:
+ 118 000a 01F17F0E 		add	lr, r1, #127
+ 119 000e 12E0     		b	.L18
+ARM GAS  /tmp/cclpMeiX.s 			page 3
+
+
+ 120              	.L19:
+ 121 0010 0CF10100 		add	r0, ip, #1
+ 122 0014 04F80C30 		strb	r3, [r4, ip]
+ 123 0018 7F2A     		cmp	r2, #127
+ 124 001a 13DD     		ble	.L23
+ 125 001c 8446     		mov	ip, r0
+ 126              	.L20:
+ 127 001e 4A42     		rsbs	r2, r1, #0
+ 128 0020 01F07F03 		and	r3, r1, #127
+ 129 0024 02F07F02 		and	r2, r2, #127
+ 130 0028 58BF     		it	pl
+ 131 002a 5342     		rsbpl	r3, r2, #0
+ 132 002c DBB2     		uxtb	r3, r3
+ 133 002e 0A46     		mov	r2, r1
+ 134 0030 8E46     		mov	lr, r1
+ 135 0032 0029     		cmp	r1, #0
+ 136 0034 E9DB     		blt	.L24
+ 137              	.L18:
+ 138 0036 4FEAEE11 		asr	r1, lr, #7
+ 139 003a 7F2A     		cmp	r2, #127
+ 140 003c E8DD     		ble	.L19
+ 141 003e 43F08003 		orr	r3, r3, #128
+ 142 0042 E5E7     		b	.L19
+ 143              	.L23:
+ 144 0044 10BD     		pop	{r4, pc}
+ 146              		.section	.text.MQTTPacket_decode,"ax",%progbits
+ 147              		.align	1
+ 148              		.global	MQTTPacket_decode
+ 149              		.syntax unified
+ 150              		.thumb
+ 151              		.thumb_func
+ 153              	MQTTPacket_decode:
+ 154              		@ args = 0, pretend = 0, frame = 8
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 157 0002 83B0     		sub	sp, sp, #12
+ 158 0004 0746     		mov	r7, r0
+ 159 0006 0D46     		mov	r5, r1
+ 160 0008 0024     		movs	r4, #0
+ 161 000a 0C60     		str	r4, [r1]
+ 162 000c 0126     		movs	r6, #1
+ 163              	.L27:
+ 164 000e 0134     		adds	r4, r4, #1
+ 165 0010 042C     		cmp	r4, #4
+ 166 0012 11DC     		bgt	.L25
+ 167 0014 0121     		movs	r1, #1
+ 168 0016 0DF10700 		add	r0, sp, #7
+ 169 001a B847     		blx	r7
+ 170 001c 0128     		cmp	r0, #1
+ 171 001e 0BD1     		bne	.L25
+ 172 0020 2B68     		ldr	r3, [r5]
+ 173 0022 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 174 0026 02F07F01 		and	r1, r2, #127
+ 175 002a 06FB0133 		mla	r3, r6, r1, r3
+ 176 002e 2B60     		str	r3, [r5]
+ 177 0030 F601     		lsls	r6, r6, #7
+ 178 0032 12F0800F 		tst	r2, #128
+ARM GAS  /tmp/cclpMeiX.s 			page 4
+
+
+ 179 0036 EAD1     		bne	.L27
+ 180              	.L26:
+ 181              	.L25:
+ 182 0038 2046     		mov	r0, r4
+ 183 003a 03B0     		add	sp, sp, #12
+ 184              		@ sp needed
+ 185 003c F0BD     		pop	{r4, r5, r6, r7, pc}
+ 187              		.section	.text.MQTTPacket_len,"ax",%progbits
+ 188              		.align	1
+ 189              		.global	MQTTPacket_len
+ 190              		.syntax unified
+ 191              		.thumb
+ 192              		.thumb_func
+ 194              	MQTTPacket_len:
+ 195              		@ args = 0, pretend = 0, frame = 0
+ 196              		@ frame_needed = 0, uses_anonymous_args = 0
+ 197              		@ link register save eliminated.
+ 198 0000 431C     		adds	r3, r0, #1
+ 199 0002 7F2B     		cmp	r3, #127
+ 200 0004 01DC     		bgt	.L30
+ 201 0006 0230     		adds	r0, r0, #2
+ 202 0008 7047     		bx	lr
+ 203              	.L30:
+ 204 000a B3F5804F 		cmp	r3, #16384
+ 205 000e 01DA     		bge	.L32
+ 206 0010 0330     		adds	r0, r0, #3
+ 207 0012 7047     		bx	lr
+ 208              	.L32:
+ 209 0014 034A     		ldr	r2, .L34
+ 210 0016 9342     		cmp	r3, r2
+ 211 0018 01DC     		bgt	.L33
+ 212 001a 0430     		adds	r0, r0, #4
+ 213 001c 7047     		bx	lr
+ 214              	.L33:
+ 215 001e 0530     		adds	r0, r0, #5
+ 216 0020 7047     		bx	lr
+ 217              	.L35:
+ 218 0022 00BF     		.align	2
+ 219              	.L34:
+ 220 0024 FEFF1F00 		.word	2097150
+ 222              		.section	.text.MQTTPacket_decodeBuf,"ax",%progbits
+ 223              		.align	1
+ 224              		.global	MQTTPacket_decodeBuf
+ 225              		.syntax unified
+ 226              		.thumb
+ 227              		.thumb_func
+ 229              	MQTTPacket_decodeBuf:
+ 230              		@ args = 0, pretend = 0, frame = 0
+ 231              		@ frame_needed = 0, uses_anonymous_args = 0
+ 232 0000 08B5     		push	{r3, lr}
+ 233 0002 034B     		ldr	r3, .L38
+ 234 0004 1860     		str	r0, [r3]
+ 235 0006 0348     		ldr	r0, .L38+4
+ 236 0008 FFF7FEFF 		bl	MQTTPacket_decode
+ 237 000c 08BD     		pop	{r3, pc}
+ 238              	.L39:
+ 239 000e 00BF     		.align	2
+ARM GAS  /tmp/cclpMeiX.s 			page 5
+
+
+ 240              	.L38:
+ 241 0010 00000000 		.word	bufptr
+ 242 0014 00000000 		.word	bufchar
+ 244              		.section	.text.readInt,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	readInt
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 251              	readInt:
+ 252              		@ args = 0, pretend = 0, frame = 0
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+ 254              		@ link register save eliminated.
+ 255 0000 0368     		ldr	r3, [r0]
+ 256 0002 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 257 0004 5A78     		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 258 0006 0233     		adds	r3, r3, #2
+ 259 0008 0360     		str	r3, [r0]
+ 260 000a 02EB0120 		add	r0, r2, r1, lsl #8
+ 261 000e 7047     		bx	lr
+ 263              		.section	.text.readChar,"ax",%progbits
+ 264              		.align	1
+ 265              		.global	readChar
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 270              	readChar:
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		@ link register save eliminated.
+ 274 0000 0346     		mov	r3, r0
+ 275 0002 0268     		ldr	r2, [r0]
+ 276 0004 12F8010B 		ldrb	r0, [r2], #1	@ zero_extendqisi2
+ 277 0008 1A60     		str	r2, [r3]
+ 278 000a 7047     		bx	lr
+ 280              		.section	.text.writeChar,"ax",%progbits
+ 281              		.align	1
+ 282              		.global	writeChar
+ 283              		.syntax unified
+ 284              		.thumb
+ 285              		.thumb_func
+ 287              	writeChar:
+ 288              		@ args = 0, pretend = 0, frame = 0
+ 289              		@ frame_needed = 0, uses_anonymous_args = 0
+ 290              		@ link register save eliminated.
+ 291 0000 0368     		ldr	r3, [r0]
+ 292 0002 1970     		strb	r1, [r3]
+ 293 0004 0368     		ldr	r3, [r0]
+ 294 0006 0133     		adds	r3, r3, #1
+ 295 0008 0360     		str	r3, [r0]
+ 296 000a 7047     		bx	lr
+ 298              		.section	.text.writeInt,"ax",%progbits
+ 299              		.align	1
+ 300              		.global	writeInt
+ 301              		.syntax unified
+ 302              		.thumb
+ 303              		.thumb_func
+ARM GAS  /tmp/cclpMeiX.s 			page 6
+
+
+ 305              	writeInt:
+ 306              		@ args = 0, pretend = 0, frame = 0
+ 307              		@ frame_needed = 0, uses_anonymous_args = 0
+ 308              		@ link register save eliminated.
+ 309 0000 0B46     		mov	r3, r1
+ 310 0002 0029     		cmp	r1, #0
+ 311 0004 10DB     		blt	.L45
+ 312              	.L44:
+ 313 0006 0268     		ldr	r2, [r0]
+ 314 0008 C3F30723 		ubfx	r3, r3, #8, #8
+ 315 000c 1370     		strb	r3, [r2]
+ 316 000e 0268     		ldr	r2, [r0]
+ 317 0010 531C     		adds	r3, r2, #1
+ 318 0012 0360     		str	r3, [r0]
+ 319 0014 4B42     		rsbs	r3, r1, #0
+ 320 0016 C9B2     		uxtb	r1, r1
+ 321 0018 DBB2     		uxtb	r3, r3
+ 322 001a 58BF     		it	pl
+ 323 001c 5942     		rsbpl	r1, r3, #0
+ 324 001e 5170     		strb	r1, [r2, #1]
+ 325 0020 0368     		ldr	r3, [r0]
+ 326 0022 0133     		adds	r3, r3, #1
+ 327 0024 0360     		str	r3, [r0]
+ 328 0026 7047     		bx	lr
+ 329              	.L45:
+ 330 0028 01F1FF03 		add	r3, r1, #255
+ 331 002c EBE7     		b	.L44
+ 333              		.section	.text.writeCString,"ax",%progbits
+ 334              		.align	1
+ 335              		.global	writeCString
+ 336              		.syntax unified
+ 337              		.thumb
+ 338              		.thumb_func
+ 340              	writeCString:
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343 0000 70B5     		push	{r4, r5, r6, lr}
+ 344 0002 0446     		mov	r4, r0
+ 345 0004 0E46     		mov	r6, r1
+ 346 0006 0846     		mov	r0, r1
+ 347 0008 FFF7FEFF 		bl	strlen
+ 348 000c 0546     		mov	r5, r0
+ 349 000e 0146     		mov	r1, r0
+ 350 0010 2046     		mov	r0, r4
+ 351 0012 FFF7FEFF 		bl	writeInt
+ 352 0016 2A46     		mov	r2, r5
+ 353 0018 3146     		mov	r1, r6
+ 354 001a 2068     		ldr	r0, [r4]
+ 355 001c FFF7FEFF 		bl	memcpy
+ 356 0020 2368     		ldr	r3, [r4]
+ 357 0022 2B44     		add	r3, r3, r5
+ 358 0024 2360     		str	r3, [r4]
+ 359 0026 70BD     		pop	{r4, r5, r6, pc}
+ 361              		.section	.text.getLenStringLen,"ax",%progbits
+ 362              		.align	1
+ 363              		.global	getLenStringLen
+ 364              		.syntax unified
+ARM GAS  /tmp/cclpMeiX.s 			page 7
+
+
+ 365              		.thumb
+ 366              		.thumb_func
+ 368              	getLenStringLen:
+ 369              		@ args = 0, pretend = 0, frame = 0
+ 370              		@ frame_needed = 0, uses_anonymous_args = 0
+ 371              		@ link register save eliminated.
+ 372 0000 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 373 0002 4078     		ldrb	r0, [r0, #1]	@ zero_extendqisi2
+ 374 0004 00EB0220 		add	r0, r0, r2, lsl #8
+ 375 0008 7047     		bx	lr
+ 377              		.section	.text.writeMQTTString,"ax",%progbits
+ 378              		.align	1
+ 379              		.global	writeMQTTString
+ 380              		.syntax unified
+ 381              		.thumb
+ 382              		.thumb_func
+ 384              	writeMQTTString:
+ 385              		@ args = 0, pretend = 0, frame = 16
+ 386              		@ frame_needed = 0, uses_anonymous_args = 0
+ 387 0000 30B5     		push	{r4, r5, lr}
+ 388 0002 85B0     		sub	sp, sp, #20
+ 389 0004 0446     		mov	r4, r0
+ 390 0006 04A8     		add	r0, sp, #16
+ 391 0008 00E90E00 		stmdb	r0, {r1, r2, r3}
+ 392 000c 002A     		cmp	r2, #0
+ 393 000e 05DC     		bgt	.L54
+ 394 0010 0199     		ldr	r1, [sp, #4]
+ 395 0012 91B1     		cbz	r1, .L52
+ 396 0014 2046     		mov	r0, r4
+ 397 0016 FFF7FEFF 		bl	writeCString
+ 398 001a 0CE0     		b	.L49
+ 399              	.L54:
+ 400 001c 1546     		mov	r5, r2
+ 401 001e 1146     		mov	r1, r2
+ 402 0020 2046     		mov	r0, r4
+ 403 0022 FFF7FEFF 		bl	writeInt
+ 404 0026 2A46     		mov	r2, r5
+ 405 0028 0399     		ldr	r1, [sp, #12]
+ 406 002a 2068     		ldr	r0, [r4]
+ 407 002c FFF7FEFF 		bl	memcpy
+ 408 0030 2368     		ldr	r3, [r4]
+ 409 0032 2B44     		add	r3, r3, r5
+ 410 0034 2360     		str	r3, [r4]
+ 411              	.L49:
+ 412 0036 05B0     		add	sp, sp, #20
+ 413              		@ sp needed
+ 414 0038 30BD     		pop	{r4, r5, pc}
+ 415              	.L52:
+ 416 003a 0021     		movs	r1, #0
+ 417 003c 2046     		mov	r0, r4
+ 418 003e FFF7FEFF 		bl	writeInt
+ 419 0042 F8E7     		b	.L49
+ 421              		.section	.text.readMQTTLenString,"ax",%progbits
+ 422              		.align	1
+ 423              		.global	readMQTTLenString
+ 424              		.syntax unified
+ 425              		.thumb
+ARM GAS  /tmp/cclpMeiX.s 			page 8
+
+
+ 426              		.thumb_func
+ 428              	readMQTTLenString:
+ 429              		@ args = 0, pretend = 0, frame = 0
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431 0000 70B5     		push	{r4, r5, r6, lr}
+ 432 0002 0546     		mov	r5, r0
+ 433 0004 0B68     		ldr	r3, [r1]
+ 434 0006 D31A     		subs	r3, r2, r3
+ 435 0008 012B     		cmp	r3, #1
+ 436 000a 03DC     		bgt	.L60
+ 437 000c 0020     		movs	r0, #0
+ 438              	.L56:
+ 439 000e 0023     		movs	r3, #0
+ 440 0010 2B60     		str	r3, [r5]
+ 441 0012 70BD     		pop	{r4, r5, r6, pc}
+ 442              	.L60:
+ 443 0014 0C46     		mov	r4, r1
+ 444 0016 1646     		mov	r6, r2
+ 445 0018 0846     		mov	r0, r1
+ 446 001a FFF7FEFF 		bl	readInt
+ 447 001e 6860     		str	r0, [r5, #4]
+ 448 0020 2368     		ldr	r3, [r4]
+ 449 0022 1844     		add	r0, r0, r3
+ 450 0024 B042     		cmp	r0, r6
+ 451 0026 03D8     		bhi	.L58
+ 452 0028 AB60     		str	r3, [r5, #8]
+ 453 002a 2060     		str	r0, [r4]
+ 454 002c 0120     		movs	r0, #1
+ 455 002e EEE7     		b	.L56
+ 456              	.L58:
+ 457 0030 0020     		movs	r0, #0
+ 458 0032 ECE7     		b	.L56
+ 460              		.section	.text.MQTTstrlen,"ax",%progbits
+ 461              		.align	1
+ 462              		.global	MQTTstrlen
+ 463              		.syntax unified
+ 464              		.thumb
+ 465              		.thumb_func
+ 467              	MQTTstrlen:
+ 468              		@ args = 0, pretend = 0, frame = 16
+ 469              		@ frame_needed = 0, uses_anonymous_args = 0
+ 470 0000 00B5     		push	{lr}
+ 471 0002 85B0     		sub	sp, sp, #20
+ 472 0004 04AB     		add	r3, sp, #16
+ 473 0006 03E90700 		stmdb	r3, {r0, r1, r2}
+ 474 000a 20B1     		cbz	r0, .L62
+ 475 000c FFF7FEFF 		bl	strlen
+ 476              	.L61:
+ 477 0010 05B0     		add	sp, sp, #20
+ 478              		@ sp needed
+ 479 0012 5DF804FB 		ldr	pc, [sp], #4
+ 480              	.L62:
+ 481 0016 0298     		ldr	r0, [sp, #8]
+ 482 0018 FAE7     		b	.L61
+ 484              		.section	.text.MQTTPacket_equals,"ax",%progbits
+ 485              		.align	1
+ 486              		.global	MQTTPacket_equals
+ARM GAS  /tmp/cclpMeiX.s 			page 9
+
+
+ 487              		.syntax unified
+ 488              		.thumb
+ 489              		.thumb_func
+ 491              	MQTTPacket_equals:
+ 492              		@ args = 0, pretend = 0, frame = 0
+ 493              		@ frame_needed = 0, uses_anonymous_args = 0
+ 494 0000 70B5     		push	{r4, r5, r6, lr}
+ 495 0002 0C46     		mov	r4, r1
+ 496 0004 0668     		ldr	r6, [r0]
+ 497 0006 56B1     		cbz	r6, .L66
+ 498 0008 3046     		mov	r0, r6
+ 499 000a FFF7FEFF 		bl	strlen
+ 500 000e 0546     		mov	r5, r0
+ 501              	.L67:
+ 502 0010 2046     		mov	r0, r4
+ 503 0012 FFF7FEFF 		bl	strlen
+ 504 0016 8542     		cmp	r5, r0
+ 505 0018 04D0     		beq	.L72
+ 506 001a 0020     		movs	r0, #0
+ 507              	.L65:
+ 508 001c 70BD     		pop	{r4, r5, r6, pc}
+ 509              	.L66:
+ 510 001e 8668     		ldr	r6, [r0, #8]
+ 511 0020 4568     		ldr	r5, [r0, #4]
+ 512 0022 F5E7     		b	.L67
+ 513              	.L72:
+ 514 0024 2A46     		mov	r2, r5
+ 515 0026 2146     		mov	r1, r4
+ 516 0028 3046     		mov	r0, r6
+ 517 002a FFF7FEFF 		bl	strncmp
+ 518 002e 08B1     		cbz	r0, .L70
+ 519 0030 0020     		movs	r0, #0
+ 520 0032 F3E7     		b	.L65
+ 521              	.L70:
+ 522 0034 0120     		movs	r0, #1
+ 523 0036 F1E7     		b	.L65
+ 525              		.section	.text.MQTTPacket_read,"ax",%progbits
+ 526              		.align	1
+ 527              		.global	MQTTPacket_read
+ 528              		.syntax unified
+ 529              		.thumb
+ 530              		.thumb_func
+ 532              	MQTTPacket_read:
+ 533              		@ args = 0, pretend = 0, frame = 8
+ 534              		@ frame_needed = 0, uses_anonymous_args = 0
+ 535 0000 70B5     		push	{r4, r5, r6, lr}
+ 536 0002 82B0     		sub	sp, sp, #8
+ 537 0004 0546     		mov	r5, r0
+ 538 0006 0E46     		mov	r6, r1
+ 539 0008 1446     		mov	r4, r2
+ 540 000a 0023     		movs	r3, #0
+ 541 000c 0193     		str	r3, [sp, #4]
+ 542 000e 0121     		movs	r1, #1
+ 543 0010 9047     		blx	r2
+ 544 0012 0128     		cmp	r0, #1
+ 545 0014 16D1     		bne	.L76
+ 546 0016 01A9     		add	r1, sp, #4
+ARM GAS  /tmp/cclpMeiX.s 			page 10
+
+
+ 547 0018 2046     		mov	r0, r4
+ 548 001a FFF7FEFF 		bl	MQTTPacket_decode
+ 549 001e 0199     		ldr	r1, [sp, #4]
+ 550 0020 681C     		adds	r0, r5, #1
+ 551 0022 FFF7FEFF 		bl	MQTTPacket_encode
+ 552 0026 0130     		adds	r0, r0, #1
+ 553 0028 0199     		ldr	r1, [sp, #4]
+ 554 002a 0B18     		adds	r3, r1, r0
+ 555 002c B342     		cmp	r3, r6
+ 556 002e 0CDC     		bgt	.L77
+ 557 0030 21B1     		cbz	r1, .L75
+ 558 0032 2844     		add	r0, r0, r5
+ 559 0034 A047     		blx	r4
+ 560 0036 019B     		ldr	r3, [sp, #4]
+ 561 0038 9842     		cmp	r0, r3
+ 562 003a 09D1     		bne	.L78
+ 563              	.L75:
+ 564 003c 2878     		ldrb	r0, [r5]	@ zero_extendqisi2
+ 565 003e 0009     		lsrs	r0, r0, #4
+ 566              	.L73:
+ 567 0040 02B0     		add	sp, sp, #8
+ 568              		@ sp needed
+ 569 0042 70BD     		pop	{r4, r5, r6, pc}
+ 570              	.L76:
+ 571 0044 4FF0FF30 		mov	r0, #-1
+ 572 0048 FAE7     		b	.L73
+ 573              	.L77:
+ 574 004a 4FF0FF30 		mov	r0, #-1
+ 575 004e F7E7     		b	.L73
+ 576              	.L78:
+ 577 0050 4FF0FF30 		mov	r0, #-1
+ 578              	.L74:
+ 579 0054 F4E7     		b	.L73
+ 581              		.section	.text.MQTTPacket_readnb,"ax",%progbits
+ 582              		.align	1
+ 583              		.global	MQTTPacket_readnb
+ 584              		.syntax unified
+ 585              		.thumb
+ 586              		.thumb_func
+ 588              	MQTTPacket_readnb:
+ 589              		@ args = 0, pretend = 0, frame = 0
+ 590              		@ frame_needed = 0, uses_anonymous_args = 0
+ 591 0000 70B5     		push	{r4, r5, r6, lr}
+ 592 0002 0546     		mov	r5, r0
+ 593 0004 0E46     		mov	r6, r1
+ 594 0006 1446     		mov	r4, r2
+ 595 0008 137D     		ldrb	r3, [r2, #20]	@ zero_extendqisi2
+ 596 000a 012B     		cmp	r3, #1
+ 597 000c 12D0     		beq	.L81
+ 598 000e 022B     		cmp	r3, #2
+ 599 0010 24D0     		beq	.L82
+ 600 0012 0BB1     		cbz	r3, .L83
+ 601 0014 0023     		movs	r3, #0
+ 602 0016 1375     		strb	r3, [r2, #20]
+ 603              	.L83:
+ 604 0018 2368     		ldr	r3, [r4]
+ 605 001a 0122     		movs	r2, #1
+ARM GAS  /tmp/cclpMeiX.s 			page 11
+
+
+ 606 001c 2946     		mov	r1, r5
+ 607 001e 6068     		ldr	r0, [r4, #4]
+ 608 0020 9847     		blx	r3
+ 609 0022 B0F1FF3F 		cmp	r0, #-1
+ 610 0026 2DD0     		beq	.L84
+ 611 0028 70B3     		cbz	r0, .L80
+ 612 002a 0023     		movs	r3, #0
+ 613 002c 2361     		str	r3, [r4, #16]
+ 614 002e 237D     		ldrb	r3, [r4, #20]	@ zero_extendqisi2
+ 615 0030 0133     		adds	r3, r3, #1
+ 616 0032 2375     		strb	r3, [r4, #20]
+ 617              	.L81:
+ 618 0034 2046     		mov	r0, r4
+ 619 0036 FFF7FEFF 		bl	MQTTPacket_decodenb
+ 620 003a B0F1FF3F 		cmp	r0, #-1
+ 621 003e 21D0     		beq	.L84
+ 622 0040 10B3     		cbz	r0, .L80
+ 623 0042 E168     		ldr	r1, [r4, #12]
+ 624 0044 681C     		adds	r0, r5, #1
+ 625 0046 FFF7FEFF 		bl	MQTTPacket_encode
+ 626 004a 0130     		adds	r0, r0, #1
+ 627 004c 2061     		str	r0, [r4, #16]
+ 628 004e E368     		ldr	r3, [r4, #12]
+ 629 0050 1844     		add	r0, r0, r3
+ 630 0052 B042     		cmp	r0, r6
+ 631 0054 19DC     		bgt	.L87
+ 632 0056 237D     		ldrb	r3, [r4, #20]	@ zero_extendqisi2
+ 633 0058 0133     		adds	r3, r3, #1
+ 634 005a 2375     		strb	r3, [r4, #20]
+ 635              	.L82:
+ 636 005c E268     		ldr	r2, [r4, #12]
+ 637 005e 7AB1     		cbz	r2, .L86
+ 638 0060 2169     		ldr	r1, [r4, #16]
+ 639 0062 2368     		ldr	r3, [r4]
+ 640 0064 2944     		add	r1, r1, r5
+ 641 0066 6068     		ldr	r0, [r4, #4]
+ 642 0068 9847     		blx	r3
+ 643 006a B0F1FF3F 		cmp	r0, #-1
+ 644 006e 09D0     		beq	.L84
+ 645 0070 50B1     		cbz	r0, .L80
+ 646 0072 E368     		ldr	r3, [r4, #12]
+ 647 0074 1B1A     		subs	r3, r3, r0
+ 648 0076 E360     		str	r3, [r4, #12]
+ 649 0078 2269     		ldr	r2, [r4, #16]
+ 650 007a 0244     		add	r2, r2, r0
+ 651 007c 2261     		str	r2, [r4, #16]
+ 652 007e 3BB9     		cbnz	r3, .L88
+ 653              	.L86:
+ 654 0080 2878     		ldrb	r0, [r5]	@ zero_extendqisi2
+ 655 0082 0009     		lsrs	r0, r0, #4
+ 656              	.L84:
+ 657 0084 0023     		movs	r3, #0
+ 658 0086 2375     		strb	r3, [r4, #20]
+ 659              	.L80:
+ 660 0088 70BD     		pop	{r4, r5, r6, pc}
+ 661              	.L87:
+ 662 008a 4FF0FF30 		mov	r0, #-1
+ARM GAS  /tmp/cclpMeiX.s 			page 12
+
+
+ 663 008e F9E7     		b	.L84
+ 664              	.L88:
+ 665 0090 0020     		movs	r0, #0
+ 666 0092 F9E7     		b	.L80
+ 668              		.section	.bss.bufptr,"aw",%nobits
+ 669              		.align	2
+ 672              	bufptr:
+ 673 0000 00000000 		.space	4
+ 674              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/cclpMeiX.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MQTTPacket.c
+     /tmp/cclpMeiX.s:16     .text.bufchar:00000000 $t
+     /tmp/cclpMeiX.s:22     .text.bufchar:00000000 bufchar
+     /tmp/cclpMeiX.s:49     .text.bufchar:00000028 $d
+     /tmp/cclpMeiX.s:672    .bss.bufptr:00000000 bufptr
+     /tmp/cclpMeiX.s:52     .text.MQTTPacket_decodenb:00000000 $t
+     /tmp/cclpMeiX.s:57     .text.MQTTPacket_decodenb:00000000 MQTTPacket_decodenb
+     /tmp/cclpMeiX.s:104    .text.MQTTPacket_encode:00000000 $t
+     /tmp/cclpMeiX.s:110    .text.MQTTPacket_encode:00000000 MQTTPacket_encode
+     /tmp/cclpMeiX.s:147    .text.MQTTPacket_decode:00000000 $t
+     /tmp/cclpMeiX.s:153    .text.MQTTPacket_decode:00000000 MQTTPacket_decode
+     /tmp/cclpMeiX.s:188    .text.MQTTPacket_len:00000000 $t
+     /tmp/cclpMeiX.s:194    .text.MQTTPacket_len:00000000 MQTTPacket_len
+     /tmp/cclpMeiX.s:220    .text.MQTTPacket_len:00000024 $d
+     /tmp/cclpMeiX.s:223    .text.MQTTPacket_decodeBuf:00000000 $t
+     /tmp/cclpMeiX.s:229    .text.MQTTPacket_decodeBuf:00000000 MQTTPacket_decodeBuf
+     /tmp/cclpMeiX.s:241    .text.MQTTPacket_decodeBuf:00000010 $d
+     /tmp/cclpMeiX.s:245    .text.readInt:00000000 $t
+     /tmp/cclpMeiX.s:251    .text.readInt:00000000 readInt
+     /tmp/cclpMeiX.s:264    .text.readChar:00000000 $t
+     /tmp/cclpMeiX.s:270    .text.readChar:00000000 readChar
+     /tmp/cclpMeiX.s:281    .text.writeChar:00000000 $t
+     /tmp/cclpMeiX.s:287    .text.writeChar:00000000 writeChar
+     /tmp/cclpMeiX.s:299    .text.writeInt:00000000 $t
+     /tmp/cclpMeiX.s:305    .text.writeInt:00000000 writeInt
+     /tmp/cclpMeiX.s:334    .text.writeCString:00000000 $t
+     /tmp/cclpMeiX.s:340    .text.writeCString:00000000 writeCString
+     /tmp/cclpMeiX.s:362    .text.getLenStringLen:00000000 $t
+     /tmp/cclpMeiX.s:368    .text.getLenStringLen:00000000 getLenStringLen
+     /tmp/cclpMeiX.s:378    .text.writeMQTTString:00000000 $t
+     /tmp/cclpMeiX.s:384    .text.writeMQTTString:00000000 writeMQTTString
+     /tmp/cclpMeiX.s:422    .text.readMQTTLenString:00000000 $t
+     /tmp/cclpMeiX.s:428    .text.readMQTTLenString:00000000 readMQTTLenString
+     /tmp/cclpMeiX.s:461    .text.MQTTstrlen:00000000 $t
+     /tmp/cclpMeiX.s:467    .text.MQTTstrlen:00000000 MQTTstrlen
+     /tmp/cclpMeiX.s:485    .text.MQTTPacket_equals:00000000 $t
+     /tmp/cclpMeiX.s:491    .text.MQTTPacket_equals:00000000 MQTTPacket_equals
+     /tmp/cclpMeiX.s:526    .text.MQTTPacket_read:00000000 $t
+     /tmp/cclpMeiX.s:532    .text.MQTTPacket_read:00000000 MQTTPacket_read
+     /tmp/cclpMeiX.s:582    .text.MQTTPacket_readnb:00000000 $t
+     /tmp/cclpMeiX.s:588    .text.MQTTPacket_readnb:00000000 MQTTPacket_readnb
+     /tmp/cclpMeiX.s:669    .bss.bufptr:00000000 $d
+
+UNDEFINED SYMBOLS
+strlen
+memcpy
+strncmp

@@ -1,0 +1,561 @@
+ARM GAS  /tmp/ccqKaUCp.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MQTTFormat.c"
+  14              		.text
+  15              		.section	.text.MQTTPacket_getName,"ax",%progbits
+  16              		.align	1
+  17              		.global	MQTTPacket_getName
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	MQTTPacket_getName:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 014B     		ldr	r3, .L2
+  27 0002 53F82000 		ldr	r0, [r3, r0, lsl #2]
+  28 0006 7047     		bx	lr
+  29              	.L3:
+  30              		.align	2
+  31              	.L2:
+  32 0008 00000000 		.word	MQTTPacket_names
+  34              		.section	.rodata.MQTTStringFormat_connect.str1.4,"aMS",%progbits,1
+  35              		.align	2
+  36              	.LC0:
+  37 0000 434F4E4E 		.ascii	"CONNECT MQTT version %d, client id %.*s, clean sess"
+  37      45435420 
+  37      4D515454 
+  37      20766572 
+  37      73696F6E 
+  38 0033 696F6E20 		.ascii	"ion %d, keep alive %d\000"
+  38      25642C20 
+  38      6B656570 
+  38      20616C69 
+  38      76652025 
+  39 0049 000000   		.align	2
+  40              	.LC1:
+  41 004c 2C207769 		.ascii	", will QoS %d, will retain %d, will topic %.*s, wil"
+  41      6C6C2051 
+  41      6F532025 
+  41      642C2077 
+  41      696C6C20 
+  42 007f 6C206D65 		.ascii	"l message %.*s\000"
+  42      73736167 
+  42      6520252E 
+  42      2A7300
+  43 008e 0000     		.align	2
+  44              	.LC2:
+ARM GAS  /tmp/ccqKaUCp.s 			page 2
+
+
+  45 0090 2C207573 		.ascii	", user name %.*s\000"
+  45      6572206E 
+  45      616D6520 
+  45      252E2A73 
+  45      00
+  46 00a1 000000   		.align	2
+  47              	.LC3:
+  48 00a4 2C207061 		.ascii	", password %.*s\000"
+  48      7373776F 
+  48      72642025 
+  48      2E2A7300 
+  49              		.section	.text.MQTTStringFormat_connect,"ax",%progbits
+  50              		.align	1
+  51              		.global	MQTTStringFormat_connect
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  56              	MQTTStringFormat_connect:
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  60 0002 87B0     		sub	sp, sp, #28
+  61 0004 0646     		mov	r6, r0
+  62 0006 0F46     		mov	r7, r1
+  63 0008 1446     		mov	r4, r2
+  64 000a 937E     		ldrb	r3, [r2, #26]	@ zero_extendqisi2
+  65 000c 128B     		ldrh	r2, [r2, #24]
+  66 000e 0392     		str	r2, [sp, #12]
+  67 0010 0293     		str	r3, [sp, #8]
+  68 0012 6369     		ldr	r3, [r4, #20]
+  69 0014 0193     		str	r3, [sp, #4]
+  70 0016 2369     		ldr	r3, [r4, #16]
+  71 0018 0093     		str	r3, [sp]
+  72 001a 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
+  73 001c 1B4A     		ldr	r2, .L12
+  74 001e FFF7FEFF 		bl	snprintf
+  75 0022 0546     		mov	r5, r0
+  76 0024 E37E     		ldrb	r3, [r4, #27]	@ zero_extendqisi2
+  77 0026 63B9     		cbnz	r3, .L9
+  78              	.L5:
+  79 0028 A26C     		ldr	r2, [r4, #72]
+  80 002a 12B1     		cbz	r2, .L6
+  81 002c 636C     		ldr	r3, [r4, #68]
+  82 002e 002B     		cmp	r3, #0
+  83 0030 1BDC     		bgt	.L10
+  84              	.L6:
+  85 0032 626D     		ldr	r2, [r4, #84]
+  86 0034 12B1     		cbz	r2, .L4
+  87 0036 236D     		ldr	r3, [r4, #80]
+  88 0038 002B     		cmp	r3, #0
+  89 003a 1EDC     		bgt	.L11
+  90              	.L4:
+  91 003c 2846     		mov	r0, r5
+  92 003e 07B0     		add	sp, sp, #28
+  93              		@ sp needed
+  94 0040 F0BD     		pop	{r4, r5, r6, r7, pc}
+  95              	.L9:
+ARM GAS  /tmp/ccqKaUCp.s 			page 3
+
+
+  96 0042 94F83C30 		ldrb	r3, [r4, #60]	@ zero_extendqisi2
+  97 0046 A26B     		ldr	r2, [r4, #56]
+  98 0048 0492     		str	r2, [sp, #16]
+  99 004a 626B     		ldr	r2, [r4, #52]
+ 100 004c 0392     		str	r2, [sp, #12]
+ 101 004e E26A     		ldr	r2, [r4, #44]
+ 102 0050 0292     		str	r2, [sp, #8]
+ 103 0052 A26A     		ldr	r2, [r4, #40]
+ 104 0054 0192     		str	r2, [sp, #4]
+ 105 0056 0093     		str	r3, [sp]
+ 106 0058 94F83D30 		ldrb	r3, [r4, #61]	@ zero_extendqisi2
+ 107 005c 0C4A     		ldr	r2, .L12+4
+ 108 005e 391A     		subs	r1, r7, r0
+ 109 0060 3018     		adds	r0, r6, r0
+ 110 0062 FFF7FEFF 		bl	snprintf
+ 111 0066 0544     		add	r5, r5, r0
+ 112 0068 DEE7     		b	.L5
+ 113              	.L10:
+ 114 006a 0092     		str	r2, [sp]
+ 115 006c 094A     		ldr	r2, .L12+8
+ 116 006e 791B     		subs	r1, r7, r5
+ 117 0070 7019     		adds	r0, r6, r5
+ 118 0072 FFF7FEFF 		bl	snprintf
+ 119 0076 0544     		add	r5, r5, r0
+ 120 0078 DBE7     		b	.L6
+ 121              	.L11:
+ 122 007a 0092     		str	r2, [sp]
+ 123 007c 064A     		ldr	r2, .L12+12
+ 124 007e 791B     		subs	r1, r7, r5
+ 125 0080 7019     		adds	r0, r6, r5
+ 126 0082 FFF7FEFF 		bl	snprintf
+ 127 0086 0544     		add	r5, r5, r0
+ 128 0088 D8E7     		b	.L4
+ 129              	.L13:
+ 130 008a 00BF     		.align	2
+ 131              	.L12:
+ 132 008c 00000000 		.word	.LC0
+ 133 0090 4C000000 		.word	.LC1
+ 134 0094 90000000 		.word	.LC2
+ 135 0098 A4000000 		.word	.LC3
+ 137              		.section	.rodata.MQTTStringFormat_connack.str1.4,"aMS",%progbits,1
+ 138              		.align	2
+ 139              	.LC4:
+ 140 0000 434F4E4E 		.ascii	"CONNACK session present %d, rc %d\000"
+ 140      41434B20 
+ 140      73657373 
+ 140      696F6E20 
+ 140      70726573 
+ 141              		.section	.text.MQTTStringFormat_connack,"ax",%progbits
+ 142              		.align	1
+ 143              		.global	MQTTStringFormat_connack
+ 144              		.syntax unified
+ 145              		.thumb
+ 146              		.thumb_func
+ 148              	MQTTStringFormat_connack:
+ 149              		@ args = 0, pretend = 0, frame = 0
+ 150              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccqKaUCp.s 			page 4
+
+
+ 151 0000 00B5     		push	{lr}
+ 152 0002 83B0     		sub	sp, sp, #12
+ 153 0004 0092     		str	r2, [sp]
+ 154 0006 034A     		ldr	r2, .L16
+ 155 0008 FFF7FEFF 		bl	snprintf
+ 156 000c 03B0     		add	sp, sp, #12
+ 157              		@ sp needed
+ 158 000e 5DF804FB 		ldr	pc, [sp], #4
+ 159              	.L17:
+ 160 0012 00BF     		.align	2
+ 161              	.L16:
+ 162 0014 00000000 		.word	.LC4
+ 164              		.section	.rodata.MQTTStringFormat_publish.str1.4,"aMS",%progbits,1
+ 165              		.align	2
+ 166              	.LC5:
+ 167 0000 5055424C 		.ascii	"PUBLISH dup %d, QoS %d, retained %d, packet id %d, "
+ 167      49534820 
+ 167      64757020 
+ 167      25642C20 
+ 167      516F5320 
+ 168 0033 746F7069 		.ascii	"topic %.*s, payload length %d, payload %.*s\000"
+ 168      6320252E 
+ 168      2A732C20 
+ 168      7061796C 
+ 168      6F616420 
+ 169              		.section	.text.MQTTStringFormat_publish,"ax",%progbits
+ 170              		.align	1
+ 171              		.global	MQTTStringFormat_publish
+ 172              		.syntax unified
+ 173              		.thumb
+ 174              		.thumb_func
+ 176              	MQTTStringFormat_publish:
+ 177              		@ args = 28, pretend = 0, frame = 0
+ 178              		@ frame_needed = 0, uses_anonymous_args = 0
+ 179 0000 30B5     		push	{r4, r5, lr}
+ 180 0002 89B0     		sub	sp, sp, #36
+ 181 0004 129C     		ldr	r4, [sp, #72]
+ 182 0006 119D     		ldr	r5, [sp, #68]
+ 183 0008 0795     		str	r5, [sp, #28]
+ 184 000a 2546     		mov	r5, r4
+ 185 000c 142C     		cmp	r4, #20
+ 186 000e A8BF     		it	ge
+ 187 0010 1425     		movge	r5, #20
+ 188 0012 0695     		str	r5, [sp, #24]
+ 189 0014 0594     		str	r4, [sp, #20]
+ 190 0016 109C     		ldr	r4, [sp, #64]
+ 191 0018 0494     		str	r4, [sp, #16]
+ 192 001a 0F9C     		ldr	r4, [sp, #60]
+ 193 001c 142C     		cmp	r4, #20
+ 194 001e A8BF     		it	ge
+ 195 0020 1424     		movge	r4, #20
+ 196 0022 0394     		str	r4, [sp, #12]
+ 197 0024 BDF83440 		ldrh	r4, [sp, #52]
+ 198 0028 0294     		str	r4, [sp, #8]
+ 199 002a 9DF83040 		ldrb	r4, [sp, #48]	@ zero_extendqisi2
+ 200 002e 0194     		str	r4, [sp, #4]
+ 201 0030 0093     		str	r3, [sp]
+ARM GAS  /tmp/ccqKaUCp.s 			page 5
+
+
+ 202 0032 1346     		mov	r3, r2
+ 203 0034 024A     		ldr	r2, .L20
+ 204 0036 FFF7FEFF 		bl	snprintf
+ 205 003a 09B0     		add	sp, sp, #36
+ 206              		@ sp needed
+ 207 003c 30BD     		pop	{r4, r5, pc}
+ 208              	.L21:
+ 209 003e 00BF     		.align	2
+ 210              	.L20:
+ 211 0040 00000000 		.word	.LC5
+ 213              		.section	.rodata.MQTTStringFormat_ack.str1.4,"aMS",%progbits,1
+ 214              		.align	2
+ 215              	.LC6:
+ 216 0000 25732C20 		.ascii	"%s, packet id %d\000"
+ 216      7061636B 
+ 216      65742069 
+ 216      64202564 
+ 216      00
+ 217 0011 000000   		.align	2
+ 218              	.LC7:
+ 219 0014 2C206475 		.ascii	", dup %d\000"
+ 219      70202564 
+ 219      00
+ 220              		.section	.text.MQTTStringFormat_ack,"ax",%progbits
+ 221              		.align	1
+ 222              		.global	MQTTStringFormat_ack
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ 227              	MQTTStringFormat_ack:
+ 228              		@ args = 4, pretend = 0, frame = 0
+ 229              		@ frame_needed = 0, uses_anonymous_args = 0
+ 230 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 231 0002 83B0     		sub	sp, sp, #12
+ 232 0004 0646     		mov	r6, r0
+ 233 0006 0F46     		mov	r7, r1
+ 234 0008 1D46     		mov	r5, r3
+ 235 000a 0B4B     		ldr	r3, .L26
+ 236 000c 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 237 0010 BDF82020 		ldrh	r2, [sp, #32]
+ 238 0014 0092     		str	r2, [sp]
+ 239 0016 094A     		ldr	r2, .L26+4
+ 240 0018 FFF7FEFF 		bl	snprintf
+ 241 001c 0446     		mov	r4, r0
+ 242 001e 15B9     		cbnz	r5, .L25
+ 243              	.L22:
+ 244 0020 2046     		mov	r0, r4
+ 245 0022 03B0     		add	sp, sp, #12
+ 246              		@ sp needed
+ 247 0024 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 248              	.L25:
+ 249 0026 2B46     		mov	r3, r5
+ 250 0028 054A     		ldr	r2, .L26+8
+ 251 002a 391A     		subs	r1, r7, r0
+ 252 002c 3018     		adds	r0, r6, r0
+ 253 002e FFF7FEFF 		bl	snprintf
+ 254 0032 0444     		add	r4, r4, r0
+ARM GAS  /tmp/ccqKaUCp.s 			page 6
+
+
+ 255 0034 F4E7     		b	.L22
+ 256              	.L27:
+ 257 0036 00BF     		.align	2
+ 258              	.L26:
+ 259 0038 00000000 		.word	MQTTPacket_names
+ 260 003c 00000000 		.word	.LC6
+ 261 0040 14000000 		.word	.LC7
+ 263              		.section	.rodata.MQTTStringFormat_subscribe.str1.4,"aMS",%progbits,1
+ 264              		.align	2
+ 265              	.LC8:
+ 266 0000 53554253 		.ascii	"SUBSCRIBE dup %d, packet id %d count %d topic %.*s "
+ 266      43524942 
+ 266      45206475 
+ 266      70202564 
+ 266      2C207061 
+ 267 0033 716F7320 		.ascii	"qos %d\000"
+ 267      256400
+ 268              		.section	.text.MQTTStringFormat_subscribe,"ax",%progbits
+ 269              		.align	1
+ 270              		.global	MQTTStringFormat_subscribe
+ 271              		.syntax unified
+ 272              		.thumb
+ 273              		.thumb_func
+ 275              	MQTTStringFormat_subscribe:
+ 276              		@ args = 12, pretend = 0, frame = 0
+ 277              		@ frame_needed = 0, uses_anonymous_args = 0
+ 278 0000 30B5     		push	{r4, r5, lr}
+ 279 0002 87B0     		sub	sp, sp, #28
+ 280 0004 0B9C     		ldr	r4, [sp, #44]
+ 281 0006 0C9D     		ldr	r5, [sp, #48]
+ 282 0008 2D68     		ldr	r5, [r5]
+ 283 000a 0495     		str	r5, [sp, #16]
+ 284 000c A568     		ldr	r5, [r4, #8]
+ 285 000e 0395     		str	r5, [sp, #12]
+ 286 0010 6468     		ldr	r4, [r4, #4]
+ 287 0012 0294     		str	r4, [sp, #8]
+ 288 0014 0A9C     		ldr	r4, [sp, #40]
+ 289 0016 0194     		str	r4, [sp, #4]
+ 290 0018 0093     		str	r3, [sp]
+ 291 001a 1346     		mov	r3, r2
+ 292 001c 024A     		ldr	r2, .L30
+ 293 001e FFF7FEFF 		bl	snprintf
+ 294 0022 07B0     		add	sp, sp, #28
+ 295              		@ sp needed
+ 296 0024 30BD     		pop	{r4, r5, pc}
+ 297              	.L31:
+ 298 0026 00BF     		.align	2
+ 299              	.L30:
+ 300 0028 00000000 		.word	.LC8
+ 302              		.section	.rodata.MQTTStringFormat_suback.str1.4,"aMS",%progbits,1
+ 303              		.align	2
+ 304              	.LC9:
+ 305 0000 53554241 		.ascii	"SUBACK packet id %d count %d granted qos %d\000"
+ 305      434B2070 
+ 305      61636B65 
+ 305      74206964 
+ 305      20256420 
+ARM GAS  /tmp/ccqKaUCp.s 			page 7
+
+
+ 306              		.section	.text.MQTTStringFormat_suback,"ax",%progbits
+ 307              		.align	1
+ 308              		.global	MQTTStringFormat_suback
+ 309              		.syntax unified
+ 310              		.thumb
+ 311              		.thumb_func
+ 313              	MQTTStringFormat_suback:
+ 314              		@ args = 4, pretend = 0, frame = 0
+ 315              		@ frame_needed = 0, uses_anonymous_args = 0
+ 316 0000 10B5     		push	{r4, lr}
+ 317 0002 82B0     		sub	sp, sp, #8
+ 318 0004 049C     		ldr	r4, [sp, #16]
+ 319 0006 2468     		ldr	r4, [r4]
+ 320 0008 0194     		str	r4, [sp, #4]
+ 321 000a 0093     		str	r3, [sp]
+ 322 000c 1346     		mov	r3, r2
+ 323 000e 024A     		ldr	r2, .L34
+ 324 0010 FFF7FEFF 		bl	snprintf
+ 325 0014 02B0     		add	sp, sp, #8
+ 326              		@ sp needed
+ 327 0016 10BD     		pop	{r4, pc}
+ 328              	.L35:
+ 329              		.align	2
+ 330              	.L34:
+ 331 0018 00000000 		.word	.LC9
+ 333              		.section	.rodata.MQTTStringFormat_unsubscribe.str1.4,"aMS",%progbits,1
+ 334              		.align	2
+ 335              	.LC10:
+ 336 0000 554E5355 		.ascii	"UNSUBSCRIBE dup %d, packet id %d count %d topic %.*"
+ 336      42534352 
+ 336      49424520 
+ 336      64757020 
+ 336      25642C20 
+ 337 0033 7300     		.ascii	"s\000"
+ 338              		.section	.text.MQTTStringFormat_unsubscribe,"ax",%progbits
+ 339              		.align	1
+ 340              		.global	MQTTStringFormat_unsubscribe
+ 341              		.syntax unified
+ 342              		.thumb
+ 343              		.thumb_func
+ 345              	MQTTStringFormat_unsubscribe:
+ 346              		@ args = 8, pretend = 0, frame = 0
+ 347              		@ frame_needed = 0, uses_anonymous_args = 0
+ 348 0000 10B5     		push	{r4, lr}
+ 349 0002 84B0     		sub	sp, sp, #16
+ 350 0004 079C     		ldr	r4, [sp, #28]
+ 351 0006 D4F808C0 		ldr	ip, [r4, #8]
+ 352 000a CDF80CC0 		str	ip, [sp, #12]
+ 353 000e 6468     		ldr	r4, [r4, #4]
+ 354 0010 0294     		str	r4, [sp, #8]
+ 355 0012 069C     		ldr	r4, [sp, #24]
+ 356 0014 0194     		str	r4, [sp, #4]
+ 357 0016 0093     		str	r3, [sp]
+ 358 0018 1346     		mov	r3, r2
+ 359 001a 024A     		ldr	r2, .L38
+ 360 001c FFF7FEFF 		bl	snprintf
+ 361 0020 04B0     		add	sp, sp, #16
+ARM GAS  /tmp/ccqKaUCp.s 			page 8
+
+
+ 362              		@ sp needed
+ 363 0022 10BD     		pop	{r4, pc}
+ 364              	.L39:
+ 365              		.align	2
+ 366              	.L38:
+ 367 0024 00000000 		.word	.LC10
+ 369              		.global	MQTTPacket_names
+ 370              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 371              		.align	2
+ 372              	.LC11:
+ 373 0000 52455345 		.ascii	"RESERVED\000"
+ 373      52564544 
+ 373      00
+ 374 0009 000000   		.align	2
+ 375              	.LC12:
+ 376 000c 434F4E4E 		.ascii	"CONNECT\000"
+ 376      45435400 
+ 377              		.align	2
+ 378              	.LC13:
+ 379 0014 434F4E4E 		.ascii	"CONNACK\000"
+ 379      41434B00 
+ 380              		.align	2
+ 381              	.LC14:
+ 382 001c 5055424C 		.ascii	"PUBLISH\000"
+ 382      49534800 
+ 383              		.align	2
+ 384              	.LC15:
+ 385 0024 50554241 		.ascii	"PUBACK\000"
+ 385      434B00
+ 386 002b 00       		.align	2
+ 387              	.LC16:
+ 388 002c 50554252 		.ascii	"PUBREC\000"
+ 388      454300
+ 389 0033 00       		.align	2
+ 390              	.LC17:
+ 391 0034 50554252 		.ascii	"PUBREL\000"
+ 391      454C00
+ 392 003b 00       		.align	2
+ 393              	.LC18:
+ 394 003c 50554243 		.ascii	"PUBCOMP\000"
+ 394      4F4D5000 
+ 395              		.align	2
+ 396              	.LC19:
+ 397 0044 53554253 		.ascii	"SUBSCRIBE\000"
+ 397      43524942 
+ 397      4500
+ 398 004e 0000     		.align	2
+ 399              	.LC20:
+ 400 0050 53554241 		.ascii	"SUBACK\000"
+ 400      434B00
+ 401 0057 00       		.align	2
+ 402              	.LC21:
+ 403 0058 554E5355 		.ascii	"UNSUBSCRIBE\000"
+ 403      42534352 
+ 403      49424500 
+ 404              		.align	2
+ 405              	.LC22:
+ARM GAS  /tmp/ccqKaUCp.s 			page 9
+
+
+ 406 0064 554E5355 		.ascii	"UNSUBACK\000"
+ 406      4241434B 
+ 406      00
+ 407 006d 000000   		.align	2
+ 408              	.LC23:
+ 409 0070 50494E47 		.ascii	"PINGREQ\000"
+ 409      52455100 
+ 410              		.align	2
+ 411              	.LC24:
+ 412 0078 50494E47 		.ascii	"PINGRESP\000"
+ 412      52455350 
+ 412      00
+ 413 0081 000000   		.align	2
+ 414              	.LC25:
+ 415 0084 44495343 		.ascii	"DISCONNECT\000"
+ 415      4F4E4E45 
+ 415      435400
+ 416              		.section	.data.MQTTPacket_names,"aw"
+ 417              		.align	2
+ 420              	MQTTPacket_names:
+ 421 0000 00000000 		.word	.LC11
+ 422 0004 0C000000 		.word	.LC12
+ 423 0008 14000000 		.word	.LC13
+ 424 000c 1C000000 		.word	.LC14
+ 425 0010 24000000 		.word	.LC15
+ 426 0014 2C000000 		.word	.LC16
+ 427 0018 34000000 		.word	.LC17
+ 428 001c 3C000000 		.word	.LC18
+ 429 0020 44000000 		.word	.LC19
+ 430 0024 50000000 		.word	.LC20
+ 431 0028 58000000 		.word	.LC21
+ 432 002c 64000000 		.word	.LC22
+ 433 0030 70000000 		.word	.LC23
+ 434 0034 78000000 		.word	.LC24
+ 435 0038 84000000 		.word	.LC25
+ 436              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccqKaUCp.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 MQTTFormat.c
+     /tmp/ccqKaUCp.s:16     .text.MQTTPacket_getName:00000000 $t
+     /tmp/ccqKaUCp.s:22     .text.MQTTPacket_getName:00000000 MQTTPacket_getName
+     /tmp/ccqKaUCp.s:32     .text.MQTTPacket_getName:00000008 $d
+     /tmp/ccqKaUCp.s:420    .data.MQTTPacket_names:00000000 MQTTPacket_names
+     /tmp/ccqKaUCp.s:35     .rodata.MQTTStringFormat_connect.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:50     .text.MQTTStringFormat_connect:00000000 $t
+     /tmp/ccqKaUCp.s:56     .text.MQTTStringFormat_connect:00000000 MQTTStringFormat_connect
+     /tmp/ccqKaUCp.s:132    .text.MQTTStringFormat_connect:0000008c $d
+     /tmp/ccqKaUCp.s:138    .rodata.MQTTStringFormat_connack.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:142    .text.MQTTStringFormat_connack:00000000 $t
+     /tmp/ccqKaUCp.s:148    .text.MQTTStringFormat_connack:00000000 MQTTStringFormat_connack
+     /tmp/ccqKaUCp.s:162    .text.MQTTStringFormat_connack:00000014 $d
+     /tmp/ccqKaUCp.s:165    .rodata.MQTTStringFormat_publish.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:170    .text.MQTTStringFormat_publish:00000000 $t
+     /tmp/ccqKaUCp.s:176    .text.MQTTStringFormat_publish:00000000 MQTTStringFormat_publish
+     /tmp/ccqKaUCp.s:211    .text.MQTTStringFormat_publish:00000040 $d
+     /tmp/ccqKaUCp.s:214    .rodata.MQTTStringFormat_ack.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:221    .text.MQTTStringFormat_ack:00000000 $t
+     /tmp/ccqKaUCp.s:227    .text.MQTTStringFormat_ack:00000000 MQTTStringFormat_ack
+     /tmp/ccqKaUCp.s:259    .text.MQTTStringFormat_ack:00000038 $d
+     /tmp/ccqKaUCp.s:264    .rodata.MQTTStringFormat_subscribe.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:269    .text.MQTTStringFormat_subscribe:00000000 $t
+     /tmp/ccqKaUCp.s:275    .text.MQTTStringFormat_subscribe:00000000 MQTTStringFormat_subscribe
+     /tmp/ccqKaUCp.s:300    .text.MQTTStringFormat_subscribe:00000028 $d
+     /tmp/ccqKaUCp.s:303    .rodata.MQTTStringFormat_suback.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:307    .text.MQTTStringFormat_suback:00000000 $t
+     /tmp/ccqKaUCp.s:313    .text.MQTTStringFormat_suback:00000000 MQTTStringFormat_suback
+     /tmp/ccqKaUCp.s:331    .text.MQTTStringFormat_suback:00000018 $d
+     /tmp/ccqKaUCp.s:334    .rodata.MQTTStringFormat_unsubscribe.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:339    .text.MQTTStringFormat_unsubscribe:00000000 $t
+     /tmp/ccqKaUCp.s:345    .text.MQTTStringFormat_unsubscribe:00000000 MQTTStringFormat_unsubscribe
+     /tmp/ccqKaUCp.s:367    .text.MQTTStringFormat_unsubscribe:00000024 $d
+     /tmp/ccqKaUCp.s:371    .rodata.str1.4:00000000 $d
+     /tmp/ccqKaUCp.s:417    .data.MQTTPacket_names:00000000 $d
+
+UNDEFINED SYMBOLS
+snprintf

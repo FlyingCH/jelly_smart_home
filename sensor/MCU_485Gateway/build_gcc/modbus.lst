@@ -1,0 +1,1341 @@
+ARM GAS  /tmp/ccf6sKoJ.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"modbus.c"
+  14              		.text
+  15              		.section	.text.circuit_recv_data,"ax",%progbits
+  16              		.align	1
+  17              		.global	circuit_recv_data
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	circuit_recv_data:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25 0000 38B5     		push	{r3, r4, r5, lr}
+  26 0002 0024     		movs	r4, #0
+  27 0004 0F4B     		ldr	r3, .L8
+  28 0006 1C70     		strb	r4, [r3]
+  29 0008 03E0     		b	.L2
+  30              	.L3:
+  31 000a 0520     		movs	r0, #5
+  32 000c FFF7FEFF 		bl	delay_ms
+  33 0010 0534     		adds	r4, r4, #5
+  34              	.L2:
+  35 0012 B4F5FA7F 		cmp	r4, #500
+  36 0016 13D2     		bcs	.L7
+  37 0018 0B4B     		ldr	r3, .L8+4
+  38 001a 93F88A31 		ldrb	r3, [r3, #394]	@ zero_extendqisi2
+  39 001e 002B     		cmp	r3, #0
+  40 0020 F3D0     		beq	.L3
+  41 0022 FF21     		movs	r1, #255
+  42 0024 0948     		ldr	r0, .L8+8
+  43 0026 FFF7FEFF 		bl	uart1_recv_data
+  44 002a 0546     		mov	r5, r0
+  45 002c FFF7FEFF 		bl	uart1_clear_rx_flag
+  46 0030 002D     		cmp	r5, #0
+  47 0032 EAD0     		beq	.L3
+  48 0034 0020     		movs	r0, #0
+  49 0036 054B     		ldr	r3, .L8+8
+  50 0038 5855     		strb	r0, [r3, r5]
+  51 003a 024B     		ldr	r3, .L8
+  52 003c 1D70     		strb	r5, [r3]
+  53              	.L4:
+  54 003e 38BD     		pop	{r3, r4, r5, pc}
+  55              	.L7:
+  56 0040 0120     		movs	r0, #1
+  57 0042 FCE7     		b	.L4
+  58              	.L9:
+ARM GAS  /tmp/ccf6sKoJ.s 			page 2
+
+
+  59              		.align	2
+  60              	.L8:
+  61 0044 00000000 		.word	g_circuit_recv_len
+  62 0048 00000000 		.word	g_uart1_dev
+  63 004c 00000000 		.word	g_circuit_recv_buf
+  65              		.section	.rodata.Multiple_modbus_package.str1.4,"aMS",%progbits,1
+  66              		.align	2
+  67              	.LC0:
+  68 0000 5B4D4F44 		.ascii	"[MODBUS] send: \000"
+  68      4255535D 
+  68      2073656E 
+  68      643A2000 
+  69              		.align	2
+  70              	.LC1:
+  71 0010 0D0A00   		.ascii	"\015\012\000"
+  72              		.section	.text.Multiple_modbus_package,"ax",%progbits
+  73              		.align	1
+  74              		.global	Multiple_modbus_package
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  79              	Multiple_modbus_package:
+  80              		@ args = 0, pretend = 0, frame = 32
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82 0000 30B5     		push	{r4, r5, lr}
+  83 0002 89B0     		sub	sp, sp, #36
+  84 0004 0024     		movs	r4, #0
+  85 0006 0694     		str	r4, [sp, #24]
+  86 0008 0794     		str	r4, [sp, #28]
+  87 000a 18B9     		cbnz	r0, .L17
+  88 000c 0124     		movs	r4, #1
+  89              	.L11:
+  90 000e 2046     		mov	r0, r4
+  91 0010 09B0     		add	sp, sp, #36
+  92              		@ sp needed
+  93 0012 30BD     		pop	{r4, r5, pc}
+  94              	.L17:
+  95 0014 06AD     		add	r5, sp, #24
+  96 0016 8DF81800 		strb	r0, [sp, #24]
+  97 001a 8DF81910 		strb	r1, [sp, #25]
+  98 001e 110A     		lsrs	r1, r2, #8
+  99 0020 8DF81A10 		strb	r1, [sp, #26]
+ 100 0024 8DF81B20 		strb	r2, [sp, #27]
+ 101 0028 1A0A     		lsrs	r2, r3, #8
+ 102 002a 8DF81C20 		strb	r2, [sp, #28]
+ 103 002e 8DF81D30 		strb	r3, [sp, #29]
+ 104 0032 0621     		movs	r1, #6
+ 105 0034 2846     		mov	r0, r5
+ 106 0036 FFF7FEFF 		bl	uiCrcCalFunc
+ 107 003a 8DF81E00 		strb	r0, [sp, #30]
+ 108 003e C0F30720 		ubfx	r0, r0, #8, #8
+ 109 0042 8DF81F00 		strb	r0, [sp, #31]
+ 110 0046 0821     		movs	r1, #8
+ 111 0048 2846     		mov	r0, r5
+ 112 004a FFF7FEFF 		bl	max3485_send_data
+ 113 004e 0446     		mov	r4, r0
+ 114 0050 08B1     		cbz	r0, .L18
+ARM GAS  /tmp/ccf6sKoJ.s 			page 3
+
+
+ 115 0052 0124     		movs	r4, #1
+ 116 0054 DBE7     		b	.L11
+ 117              	.L18:
+ 118 0056 0F21     		movs	r1, #15
+ 119 0058 1748     		ldr	r0, .L19
+ 120 005a FFF7FEFF 		bl	max3485_U3_send_data
+ 121 005e 2346     		mov	r3, r4
+ 122 0060 1EE0     		b	.L12
+ 123              	.L13:
+ 124 0062 03F12002 		add	r2, r3, #32
+ 125 0066 6A44     		add	r2, sp, r2
+ 126 0068 12F8081C 		ldrb	r1, [r2, #-8]	@ zero_extendqisi2
+ 127 006c 0809     		lsrs	r0, r1, #4
+ 128 006e 03EB4302 		add	r2, r3, r3, lsl #1
+ 129 0072 124D     		ldr	r5, .L19+4
+ 130 0074 15F800C0 		ldrb	ip, [r5, r0]	@ zero_extendqisi2
+ 131 0078 02F12000 		add	r0, r2, #32
+ 132 007c 6844     		add	r0, sp, r0
+ 133 007e 00F820CC 		strb	ip, [r0, #-32]
+ 134 0082 01F00F01 		and	r1, r1, #15
+ 135 0086 6D5C     		ldrb	r5, [r5, r1]	@ zero_extendqisi2
+ 136 0088 02F12101 		add	r1, r2, #33
+ 137 008c 6944     		add	r1, sp, r1
+ 138 008e 01F8205C 		strb	r5, [r1, #-32]
+ 139 0092 2232     		adds	r2, r2, #34
+ 140 0094 6A44     		add	r2, sp, r2
+ 141 0096 2021     		movs	r1, #32
+ 142 0098 02F8201C 		strb	r1, [r2, #-32]
+ 143 009c 0133     		adds	r3, r3, #1
+ 144 009e DBB2     		uxtb	r3, r3
+ 145              	.L12:
+ 146 00a0 072B     		cmp	r3, #7
+ 147 00a2 DED9     		bls	.L13
+ 148 00a4 1821     		movs	r1, #24
+ 149 00a6 6846     		mov	r0, sp
+ 150 00a8 FFF7FEFF 		bl	max3485_U3_send_data
+ 151 00ac 0221     		movs	r1, #2
+ 152 00ae 0448     		ldr	r0, .L19+8
+ 153 00b0 FFF7FEFF 		bl	max3485_U3_send_data
+ 154 00b4 ABE7     		b	.L11
+ 155              	.L20:
+ 156 00b6 00BF     		.align	2
+ 157              	.L19:
+ 158 00b8 00000000 		.word	.LC0
+ 159 00bc 00000000 		.word	hex_tbl.3
+ 160 00c0 10000000 		.word	.LC1
+ 162              		.section	.text.circuit_send_data,"ax",%progbits
+ 163              		.align	1
+ 164              		.global	circuit_send_data
+ 165              		.syntax unified
+ 166              		.thumb
+ 167              		.thumb_func
+ 169              	circuit_send_data:
+ 170              		@ args = 0, pretend = 0, frame = 0
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172 0000 08B5     		push	{r3, lr}
+ 173 0002 2123     		movs	r3, #33
+ARM GAS  /tmp/ccf6sKoJ.s 			page 4
+
+
+ 174 0004 1022     		movs	r2, #16
+ 175 0006 0321     		movs	r1, #3
+ 176 0008 FFF7FEFF 		bl	Multiple_modbus_package
+ 177 000c 00B9     		cbnz	r0, .L25
+ 178              	.L22:
+ 179 000e 08BD     		pop	{r3, pc}
+ 180              	.L25:
+ 181 0010 0120     		movs	r0, #1
+ 182 0012 FCE7     		b	.L22
+ 184              		.section	.text.circuit_write_single_reg,"ax",%progbits
+ 185              		.align	1
+ 186              		.syntax unified
+ 187              		.thumb
+ 188              		.thumb_func
+ 190              	circuit_write_single_reg:
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193 0000 08B5     		push	{r3, lr}
+ 194 0002 1346     		mov	r3, r2
+ 195 0004 0A46     		mov	r2, r1
+ 196 0006 0621     		movs	r1, #6
+ 197 0008 FFF7FEFF 		bl	Multiple_modbus_package
+ 198 000c 08B1     		cbz	r0, .L31
+ 199 000e 0120     		movs	r0, #1
+ 200              	.L27:
+ 201 0010 08BD     		pop	{r3, pc}
+ 202              	.L31:
+ 203 0012 FFF7FEFF 		bl	circuit_recv_data
+ 204 0016 0028     		cmp	r0, #0
+ 205 0018 FAD0     		beq	.L27
+ 206 001a 0220     		movs	r0, #2
+ 207 001c F8E7     		b	.L27
+ 209              		.section	.text.sensor_poll_init,"ax",%progbits
+ 210              		.align	1
+ 211              		.global	sensor_poll_init
+ 212              		.syntax unified
+ 213              		.thumb
+ 214              		.thumb_func
+ 216              	sensor_poll_init:
+ 217              		@ args = 0, pretend = 0, frame = 0
+ 218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 219              		@ link register save eliminated.
+ 220 0000 044A     		ldr	r2, .L33
+ 221 0002 0023     		movs	r3, #0
+ 222 0004 1370     		strb	r3, [r2]
+ 223 0006 5370     		strb	r3, [r2, #1]
+ 224 0008 5360     		str	r3, [r2, #4]
+ 225 000a 034A     		ldr	r2, .L33+4
+ 226 000c 1360     		str	r3, [r2]
+ 227 000e 1371     		strb	r3, [r2, #4]
+ 228 0010 7047     		bx	lr
+ 229              	.L34:
+ 230 0012 00BF     		.align	2
+ 231              	.L33:
+ 232 0014 00000000 		.word	g_poll_ctx
+ 233 0018 00000000 		.word	g_electric_per_done
+ 235              		.section	.rodata.sensor_poll_step.str1.4,"aMS",%progbits,1
+ARM GAS  /tmp/ccf6sKoJ.s 			page 5
+
+
+ 236              		.align	2
+ 237              	.LC2:
+ 238 0000 5B434B54 		.ascii	"[CKT] send fail\015\012\000"
+ 238      5D207365 
+ 238      6E642066 
+ 238      61696C0D 
+ 238      0A00
+ 239 0012 0000     		.align	2
+ 240              	.LC3:
+ 241 0014 5B4D4F44 		.ascii	"[MODBUS] recv: \000"
+ 241      4255535D 
+ 241      20726563 
+ 241      763A2000 
+ 242              		.align	2
+ 243              	.LC4:
+ 244 0024 5B434B54 		.ascii	"[CKT] recv too short: \000"
+ 244      5D207265 
+ 244      63762074 
+ 244      6F6F2073 
+ 244      686F7274 
+ 245 003b 00       		.align	2
+ 246              	.LC5:
+ 247 003c 5B434B54 		.ascii	"[CKT] recv timeout\015\012\000"
+ 247      5D207265 
+ 247      63762074 
+ 247      696D656F 
+ 247      75740D0A 
+ 248 0051 000000   		.align	2
+ 249              	.LC6:
+ 250 0054 5B504152 		.ascii	"[PARSE] dev=\000"
+ 250      53455D20 
+ 250      6465763D 
+ 250      00
+ 251 0061 000000   		.align	2
+ 252              	.LC7:
+ 253 0064 20616464 		.ascii	" addr=\000"
+ 253      723D00
+ 254 006b 00       		.align	2
+ 255              	.LC8:
+ 256 006c 2073773D 		.ascii	" sw=\000"
+ 256      00
+ 257 0071 000000   		.align	2
+ 258              	.LC9:
+ 259 0074 20563D00 		.ascii	" V=\000"
+ 260              		.align	2
+ 261              	.LC10:
+ 262 0078 20413D00 		.ascii	" A=\000"
+ 263              		.align	2
+ 264              	.LC11:
+ 265 007c 20573D00 		.ascii	" W=\000"
+ 266              		.align	2
+ 267              	.LC12:
+ 268 0080 20543D00 		.ascii	" T=\000"
+ 269              		.align	2
+ 270              	.LC13:
+ 271 0084 2070663D 		.ascii	" pf=\000"
+ 271      00
+ARM GAS  /tmp/ccf6sKoJ.s 			page 6
+
+
+ 272 0089 000000   		.align	2
+ 273              	.LC14:
+ 274 008c 20453D00 		.ascii	" E=\000"
+ 275              		.section	.text.sensor_poll_step,"ax",%progbits
+ 276              		.align	1
+ 277              		.global	sensor_poll_step
+ 278              		.syntax unified
+ 279              		.thumb
+ 280              		.thumb_func
+ 282              	sensor_poll_step:
+ 283              		@ args = 0, pretend = 0, frame = 16
+ 284              		@ frame_needed = 0, uses_anonymous_args = 0
+ 285 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 286 0002 85B0     		sub	sp, sp, #20
+ 287 0004 7C4B     		ldr	r3, .L97
+ 288 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 289 0008 032B     		cmp	r3, #3
+ 290 000a 00F2AF83 		bhi	.L36
+ 291 000e DFE813F0 		tbh	[pc, r3, lsl #1]
+ 292              	.L38:
+ 293 0012 0400     		.2byte	(.L41-.L38)/2
+ 294 0014 0B00     		.2byte	(.L40-.L38)/2
+ 295 0016 3400     		.2byte	(.L39-.L38)/2
+ 296 0018 0F01     		.2byte	(.L37-.L38)/2
+ 297              		.p2align 1
+ 298              	.L41:
+ 299 001a 774B     		ldr	r3, .L97
+ 300 001c 0022     		movs	r2, #0
+ 301 001e 5A70     		strb	r2, [r3, #1]
+ 302 0020 0122     		movs	r2, #1
+ 303 0022 1A70     		strb	r2, [r3]
+ 304              	.L35:
+ 305 0024 05B0     		add	sp, sp, #20
+ 306              		@ sp needed
+ 307 0026 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 308              	.L40:
+ 309 0028 0020     		movs	r0, #0
+ 310 002a FFF7FEFF 		bl	led_toggle
+ 311 002e 724B     		ldr	r3, .L97
+ 312 0030 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 313 0032 724A     		ldr	r2, .L97+4
+ 314 0034 D45C     		ldrb	r4, [r2, r3]	@ zero_extendqisi2
+ 315 0036 FFF7FEFF 		bl	uart1_clear_rx_flag
+ 316 003a 714A     		ldr	r2, .L97+8
+ 317 003c B2F88831 		ldrh	r3, [r2, #392]
+ 318 0040 9BB2     		uxth	r3, r3
+ 319 0042 A2F88631 		strh	r3, [r2, #390]	@ movhi
+ 320 0046 2046     		mov	r0, r4
+ 321 0048 FFF7FEFF 		bl	circuit_send_data
+ 322 004c 30B9     		cbnz	r0, .L43
+ 323 004e FFF7FEFF 		bl	get_tick_ms
+ 324 0052 694B     		ldr	r3, .L97
+ 325 0054 5860     		str	r0, [r3, #4]
+ 326 0056 0222     		movs	r2, #2
+ 327 0058 1A70     		strb	r2, [r3]
+ 328 005a E3E7     		b	.L35
+ 329              	.L43:
+ARM GAS  /tmp/ccf6sKoJ.s 			page 7
+
+
+ 330 005c 1121     		movs	r1, #17
+ 331 005e 6948     		ldr	r0, .L97+12
+ 332 0060 FFF7FEFF 		bl	max3485_U3_send_data
+ 333 0064 644A     		ldr	r2, .L97
+ 334 0066 5378     		ldrb	r3, [r2, #1]	@ zero_extendqisi2
+ 335 0068 0133     		adds	r3, r3, #1
+ 336 006a DBB2     		uxtb	r3, r3
+ 337 006c 5370     		strb	r3, [r2, #1]
+ 338 006e 042B     		cmp	r3, #4
+ 339 0070 D8D9     		bls	.L35
+ 340 0072 1346     		mov	r3, r2
+ 341 0074 0022     		movs	r2, #0
+ 342 0076 5A70     		strb	r2, [r3, #1]
+ 343 0078 D4E7     		b	.L35
+ 344              	.L39:
+ 345 007a 0020     		movs	r0, #0
+ 346 007c FFF7FEFF 		bl	led_toggle
+ 347 0080 5F4B     		ldr	r3, .L97+8
+ 348 0082 93F88A31 		ldrb	r3, [r3, #394]	@ zero_extendqisi2
+ 349 0086 3BB1     		cbz	r3, .L44
+ 350 0088 FF21     		movs	r1, #255
+ 351 008a 5F48     		ldr	r0, .L97+16
+ 352 008c FFF7FEFF 		bl	uart1_recv_data
+ 353 0090 0646     		mov	r6, r0
+ 354 0092 FFF7FEFF 		bl	uart1_clear_rx_flag
+ 355 0096 CEB9     		cbnz	r6, .L93
+ 356              	.L44:
+ 357 0098 FFF7FEFF 		bl	get_tick_ms
+ 358 009c 564B     		ldr	r3, .L97
+ 359 009e 5B68     		ldr	r3, [r3, #4]
+ 360 00a0 C01A     		subs	r0, r0, r3
+ 361 00a2 B0F5FA7F 		cmp	r0, #500
+ 362 00a6 BDD3     		bcc	.L35
+ 363 00a8 1421     		movs	r1, #20
+ 364 00aa 5848     		ldr	r0, .L97+20
+ 365 00ac FFF7FEFF 		bl	max3485_U3_send_data
+ 366 00b0 5149     		ldr	r1, .L97
+ 367 00b2 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+ 368 00b4 0132     		adds	r2, r2, #1
+ 369 00b6 564B     		ldr	r3, .L97+24
+ 370 00b8 83FB0203 		smull	r0, r3, r3, r2
+ 371 00bc 5B10     		asrs	r3, r3, #1
+ 372 00be 03EB8303 		add	r3, r3, r3, lsl #2
+ 373 00c2 D31A     		subs	r3, r2, r3
+ 374 00c4 4B70     		strb	r3, [r1, #1]
+ 375 00c6 0123     		movs	r3, #1
+ 376 00c8 0B70     		strb	r3, [r1]
+ 377 00ca ABE7     		b	.L35
+ 378              	.L93:
+ 379 00cc 0025     		movs	r5, #0
+ 380 00ce 4E4B     		ldr	r3, .L97+16
+ 381 00d0 9D55     		strb	r5, [r3, r6]
+ 382 00d2 504B     		ldr	r3, .L97+28
+ 383 00d4 1E70     		strb	r6, [r3]
+ 384 00d6 0F21     		movs	r1, #15
+ 385 00d8 4F48     		ldr	r0, .L97+32
+ 386 00da FFF7FEFF 		bl	max3485_U3_send_data
+ARM GAS  /tmp/ccf6sKoJ.s 			page 8
+
+
+ 387 00de 25E0     		b	.L45
+ 388              	.L47:
+ 389 00e0 494A     		ldr	r2, .L97+16
+ 390 00e2 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 391 00e4 1009     		lsrs	r0, r2, #4
+ 392 00e6 01F1010C 		add	ip, r1, #1
+ 393 00ea 1FFA8CFC 		uxth	ip, ip
+ 394 00ee 4B4F     		ldr	r7, .L97+36
+ 395 00f0 3C5C     		ldrb	r4, [r7, r0]	@ zero_extendqisi2
+ 396 00f2 4B48     		ldr	r0, .L97+40
+ 397 00f4 4454     		strb	r4, [r0, r1]
+ 398 00f6 02F00F02 		and	r2, r2, #15
+ 399 00fa 8C1C     		adds	r4, r1, #2
+ 400 00fc A4B2     		uxth	r4, r4
+ 401 00fe BA5C     		ldrb	r2, [r7, r2]	@ zero_extendqisi2
+ 402 0100 00F80C20 		strb	r2, [r0, ip]
+ 403 0104 0331     		adds	r1, r1, #3
+ 404 0106 89B2     		uxth	r1, r1
+ 405 0108 2022     		movs	r2, #32
+ 406 010a 0255     		strb	r2, [r0, r4]
+ 407 010c 0133     		adds	r3, r3, #1
+ 408 010e 9BB2     		uxth	r3, r3
+ 409              	.L48:
+ 410 0110 B342     		cmp	r3, r6
+ 411 0112 06D2     		bcs	.L46
+ 412 0114 05F12002 		add	r2, r5, #32
+ 413 0118 9342     		cmp	r3, r2
+ 414 011a 02D2     		bcs	.L46
+ 415 011c CA1C     		adds	r2, r1, #3
+ 416 011e 602A     		cmp	r2, #96
+ 417 0120 DED9     		bls	.L47
+ 418              	.L46:
+ 419 0122 3F48     		ldr	r0, .L97+40
+ 420 0124 FFF7FEFF 		bl	max3485_U3_send_data
+ 421 0128 2035     		adds	r5, r5, #32
+ 422 012a ADB2     		uxth	r5, r5
+ 423              	.L45:
+ 424 012c B542     		cmp	r5, r6
+ 425 012e 02D2     		bcs	.L94
+ 426 0130 2B46     		mov	r3, r5
+ 427 0132 0021     		movs	r1, #0
+ 428 0134 ECE7     		b	.L48
+ 429              	.L94:
+ 430 0136 0221     		movs	r1, #2
+ 431 0138 3A48     		ldr	r0, .L97+44
+ 432 013a FFF7FEFF 		bl	max3485_U3_send_data
+ 433 013e 2E4B     		ldr	r3, .L97
+ 434 0140 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 435 0142 2E4A     		ldr	r2, .L97+4
+ 436 0144 D15C     		ldrb	r1, [r2, r3]	@ zero_extendqisi2
+ 437 0146 0023     		movs	r3, #0
+ 438 0148 01E0     		b	.L49
+ 439              	.L51:
+ 440 014a 0133     		adds	r3, r3, #1
+ 441 014c 9BB2     		uxth	r3, r3
+ 442              	.L49:
+ 443 014e 1A1D     		adds	r2, r3, #4
+ARM GAS  /tmp/ccf6sKoJ.s 			page 9
+
+
+ 444 0150 B242     		cmp	r2, r6
+ 445 0152 03D2     		bcs	.L50
+ 446 0154 2C4A     		ldr	r2, .L97+16
+ 447 0156 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 448 0158 8A42     		cmp	r2, r1
+ 449 015a F6D1     		bne	.L51
+ 450              	.L50:
+ 451 015c 23B1     		cbz	r3, .L52
+ 452 015e 1846     		mov	r0, r3
+ 453 0160 294A     		ldr	r2, .L97+16
+ 454 0162 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 455 0164 8A42     		cmp	r2, r1
+ 456 0166 05D0     		beq	.L95
+ 457              	.L52:
+ 458 0168 442E     		cmp	r6, #68
+ 459 016a 10D9     		bls	.L96
+ 460 016c 224B     		ldr	r3, .L97
+ 461 016e 0322     		movs	r2, #3
+ 462 0170 1A70     		strb	r2, [r3]
+ 463 0172 57E7     		b	.L35
+ 464              	.L95:
+ 465 0174 F31A     		subs	r3, r6, r3
+ 466 0176 9EB2     		uxth	r6, r3
+ 467 0178 0023     		movs	r3, #0
+ 468 017a 05E0     		b	.L53
+ 469              	.L54:
+ 470 017c C118     		adds	r1, r0, r3
+ 471 017e 224A     		ldr	r2, .L97+16
+ 472 0180 515C     		ldrb	r1, [r2, r1]	@ zero_extendqisi2
+ 473 0182 D154     		strb	r1, [r2, r3]
+ 474 0184 0133     		adds	r3, r3, #1
+ 475 0186 9BB2     		uxth	r3, r3
+ 476              	.L53:
+ 477 0188 B342     		cmp	r3, r6
+ 478 018a F7D3     		bcc	.L54
+ 479 018c ECE7     		b	.L52
+ 480              	.L96:
+ 481 018e 1621     		movs	r1, #22
+ 482 0190 2548     		ldr	r0, .L97+48
+ 483 0192 FFF7FEFF 		bl	max3485_U3_send_data
+ 484 0196 254A     		ldr	r2, .L97+52
+ 485 0198 A2FB0613 		umull	r1, r3, r2, r6
+ 486 019c D908     		lsrs	r1, r3, #3
+ 487 019e C3F3CF03 		ubfx	r3, r3, #3, #16
+ 488 01a2 A2FB0302 		umull	r0, r2, r2, r3
+ 489 01a6 D208     		lsrs	r2, r2, #3
+ 490 01a8 02EB8202 		add	r2, r2, r2, lsl #2
+ 491 01ac A3EB4203 		sub	r3, r3, r2, lsl #1
+ 492 01b0 3033     		adds	r3, r3, #48
+ 493 01b2 8DF80430 		strb	r3, [sp, #4]
+ 494 01b6 01EB8101 		add	r1, r1, r1, lsl #2
+ 495 01ba A6EB4103 		sub	r3, r6, r1, lsl #1
+ 496 01be 3033     		adds	r3, r3, #48
+ 497 01c0 8DF80530 		strb	r3, [sp, #5]
+ 498 01c4 4223     		movs	r3, #66
+ 499 01c6 8DF80630 		strb	r3, [sp, #6]
+ 500 01ca 0321     		movs	r1, #3
+ARM GAS  /tmp/ccf6sKoJ.s 			page 10
+
+
+ 501 01cc 01A8     		add	r0, sp, #4
+ 502 01ce FFF7FEFF 		bl	max3485_U3_send_data
+ 503 01d2 0221     		movs	r1, #2
+ 504 01d4 1348     		ldr	r0, .L97+44
+ 505 01d6 FFF7FEFF 		bl	max3485_U3_send_data
+ 506 01da 0749     		ldr	r1, .L97
+ 507 01dc 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+ 508 01de 0132     		adds	r2, r2, #1
+ 509 01e0 0B4B     		ldr	r3, .L97+24
+ 510 01e2 83FB0203 		smull	r0, r3, r3, r2
+ 511 01e6 5B10     		asrs	r3, r3, #1
+ 512 01e8 03EB8303 		add	r3, r3, r3, lsl #2
+ 513 01ec D31A     		subs	r3, r2, r3
+ 514 01ee 4B70     		strb	r3, [r1, #1]
+ 515 01f0 0123     		movs	r3, #1
+ 516 01f2 0B70     		strb	r3, [r1]
+ 517 01f4 16E7     		b	.L35
+ 518              	.L98:
+ 519 01f6 00BF     		.align	2
+ 520              	.L97:
+ 521 01f8 00000000 		.word	g_poll_ctx
+ 522 01fc 00000000 		.word	circuit_device_id
+ 523 0200 00000000 		.word	g_uart1_dev
+ 524 0204 00000000 		.word	.LC2
+ 525 0208 00000000 		.word	g_circuit_recv_buf
+ 526 020c 3C000000 		.word	.LC5
+ 527 0210 67666666 		.word	1717986919
+ 528 0214 00000000 		.word	g_circuit_recv_len
+ 529 0218 14000000 		.word	.LC3
+ 530 021c 00000000 		.word	hx.2
+ 531 0220 00000000 		.word	hex_buf.1
+ 532 0224 10000000 		.word	.LC1
+ 533 0228 24000000 		.word	.LC4
+ 534 022c CDCCCCCC 		.word	-858993459
+ 535              	.L37:
+ 536 0230 D14B     		ldr	r3, .L99+16
+ 537 0232 5C78     		ldrb	r4, [r3, #1]	@ zero_extendqisi2
+ 538 0234 D14B     		ldr	r3, .L99+20
+ 539 0236 1A5D     		ldrb	r2, [r3, r4]	@ zero_extendqisi2
+ 540 0238 C4EBC401 		rsb	r1, r4, r4, lsl #3
+ 541 023c D04B     		ldr	r3, .L99+24
+ 542 023e 03EB8103 		add	r3, r3, r1, lsl #2
+ 543 0242 1A77     		strb	r2, [r3, #28]
+ 544 0244 CF4B     		ldr	r3, .L99+28
+ 545 0246 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 546 0248 002B     		cmp	r3, #0
+ 547 024a 40F0F981 		bne	.L56
+ 548 024e CC4B     		ldr	r3, .L99+24
+ 549 0250 03EB8103 		add	r3, r3, r1, lsl #2
+ 550 0254 0122     		movs	r2, #1
+ 551 0256 5A77     		strb	r2, [r3, #29]
+ 552              	.L57:
+ 553 0258 CA4D     		ldr	r5, .L99+28
+ 554 025a 6879     		ldrb	r0, [r5, #5]	@ zero_extendqisi2
+ 555 025c AB79     		ldrb	r3, [r5, #6]	@ zero_extendqisi2
+ 556 025e 03EB0020 		add	r0, r3, r0, lsl #8
+ 557 0262 FFF7FEFF 		bl	__aeabi_i2d
+ARM GAS  /tmp/ccf6sKoJ.s 			page 11
+
+
+ 558 0266 C0A3     		adr	r3, .L99
+ 559 0268 D3E90023 		ldrd	r2, [r3]
+ 560 026c FFF7FEFF 		bl	__aeabi_dmul
+ 561 0270 FFF7FEFF 		bl	__aeabi_d2f
+ 562 0274 C4EBC403 		rsb	r3, r4, r4, lsl #3
+ 563 0278 C14E     		ldr	r6, .L99+24
+ 564 027a 06EB8306 		add	r6, r6, r3, lsl #2
+ 565 027e 3062     		str	r0, [r6, #32]	@ float
+ 566 0280 687B     		ldrb	r0, [r5, #13]	@ zero_extendqisi2
+ 567 0282 AB7B     		ldrb	r3, [r5, #14]	@ zero_extendqisi2
+ 568 0284 43EA0020 		orr	r0, r3, r0, lsl #8
+ 569 0288 FFF7FEFF 		bl	__aeabi_i2f
+ 570 028c BE49     		ldr	r1, .L99+32
+ 571 028e FFF7FEFF 		bl	__aeabi_fmul
+ 572 0292 7062     		str	r0, [r6, #36]	@ float
+ 573 0294 95F83700 		ldrb	r0, [r5, #55]	@ zero_extendqisi2
+ 574 0298 95F83830 		ldrb	r3, [r5, #56]	@ zero_extendqisi2
+ 575 029c 03EB0020 		add	r0, r3, r0, lsl #8
+ 576 02a0 FFF7FEFF 		bl	__aeabi_i2f
+ 577 02a4 B062     		str	r0, [r6, #40]	@ float
+ 578 02a6 687D     		ldrb	r0, [r5, #21]	@ zero_extendqisi2
+ 579 02a8 AB7D     		ldrb	r3, [r5, #22]	@ zero_extendqisi2
+ 580 02aa 03EB0020 		add	r0, r3, r0, lsl #8
+ 581 02ae FFF7FEFF 		bl	__aeabi_i2d
+ 582 02b2 FFF7FEFF 		bl	__aeabi_d2f
+ 583 02b6 F062     		str	r0, [r6, #44]	@ float
+ 584 02b8 95F84000 		ldrb	r0, [r5, #64]	@ zero_extendqisi2
+ 585 02bc FFF7FEFF 		bl	__aeabi_i2f
+ 586 02c0 B249     		ldr	r1, .L99+36
+ 587 02c2 FFF7FEFF 		bl	__aeabi_fmul
+ 588 02c6 FFF7FEFF 		bl	__aeabi_f2uiz
+ 589 02ca 86F83000 		strb	r0, [r6, #48]
+ 590 02ce 95F84120 		ldrb	r2, [r5, #65]	@ zero_extendqisi2
+ 591 02d2 95F84230 		ldrb	r3, [r5, #66]	@ zero_extendqisi2
+ 592 02d6 1B04     		lsls	r3, r3, #16
+ 593 02d8 03EB0263 		add	r3, r3, r2, lsl #24
+ 594 02dc 95F84320 		ldrb	r2, [r5, #67]	@ zero_extendqisi2
+ 595 02e0 03EB0223 		add	r3, r3, r2, lsl #8
+ 596 02e4 95F84400 		ldrb	r0, [r5, #68]	@ zero_extendqisi2
+ 597 02e8 1844     		add	r0, r0, r3
+ 598 02ea FFF7FEFF 		bl	__aeabi_ui2d
+ 599 02ee A0A3     		adr	r3, .L99+8
+ 600 02f0 D3E90023 		ldrd	r2, [r3]
+ 601 02f4 FFF7FEFF 		bl	__aeabi_dmul
+ 602 02f8 FFF7FEFF 		bl	__aeabi_d2uiz
+ 603 02fc 7063     		str	r0, [r6, #52]
+ 604 02fe 0C21     		movs	r1, #12
+ 605 0300 A348     		ldr	r0, .L99+40
+ 606 0302 FFF7FEFF 		bl	max3485_U3_send_data
+ 607 0306 04F13003 		add	r3, r4, #48
+ 608 030a 8DF80430 		strb	r3, [sp, #4]
+ 609 030e 01AD     		add	r5, sp, #4
+ 610 0310 0121     		movs	r1, #1
+ 611 0312 2846     		mov	r0, r5
+ 612 0314 FFF7FEFF 		bl	max3485_U3_send_data
+ 613 0318 0621     		movs	r1, #6
+ 614 031a 9E48     		ldr	r0, .L99+44
+ARM GAS  /tmp/ccf6sKoJ.s 			page 12
+
+
+ 615 031c FFF7FEFF 		bl	max3485_U3_send_data
+ 616 0320 337F     		ldrb	r3, [r6, #28]	@ zero_extendqisi2
+ 617 0322 1909     		lsrs	r1, r3, #4
+ 618 0324 9C4A     		ldr	r2, .L99+48
+ 619 0326 515C     		ldrb	r1, [r2, r1]	@ zero_extendqisi2
+ 620 0328 8DF80410 		strb	r1, [sp, #4]
+ 621 032c 03F00F03 		and	r3, r3, #15
+ 622 0330 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 623 0332 8DF80530 		strb	r3, [sp, #5]
+ 624 0336 0221     		movs	r1, #2
+ 625 0338 2846     		mov	r0, r5
+ 626 033a FFF7FEFF 		bl	max3485_U3_send_data
+ 627 033e 0421     		movs	r1, #4
+ 628 0340 9648     		ldr	r0, .L99+52
+ 629 0342 FFF7FEFF 		bl	max3485_U3_send_data
+ 630 0346 737F     		ldrb	r3, [r6, #29]	@ zero_extendqisi2
+ 631 0348 3033     		adds	r3, r3, #48
+ 632 034a 8DF80430 		strb	r3, [sp, #4]
+ 633 034e 0121     		movs	r1, #1
+ 634 0350 2846     		mov	r0, r5
+ 635 0352 FFF7FEFF 		bl	max3485_U3_send_data
+ 636 0356 0321     		movs	r1, #3
+ 637 0358 9148     		ldr	r0, .L99+56
+ 638 035a FFF7FEFF 		bl	max3485_U3_send_data
+ 639 035e 9149     		ldr	r1, .L99+60
+ 640 0360 706A     		ldr	r0, [r6, #36]	@ float
+ 641 0362 FFF7FEFF 		bl	__aeabi_fmul
+ 642 0366 FFF7FEFF 		bl	__aeabi_f2iz
+ 643 036a 0546     		mov	r5, r0
+ 644 036c 8E4B     		ldr	r3, .L99+64
+ 645 036e 83FB0023 		smull	r2, r3, r3, r0
+ 646 0372 C117     		asrs	r1, r0, #31
+ 647 0374 D1EBA301 		rsbs	r1, r1, r3, asr #2
+ 648 0378 40F07F81 		bne	.L82
+ 649 037c 3023     		movs	r3, #48
+ 650 037e 8DF80F30 		strb	r3, [sp, #15]
+ 651 0382 0B22     		movs	r2, #11
+ 652              	.L59:
+ 653 0384 C2F10C01 		rsb	r1, r2, #12
+ 654 0388 C9B2     		uxtb	r1, r1
+ 655 038a 01A8     		add	r0, sp, #4
+ 656 038c 1044     		add	r0, r0, r2
+ 657 038e FFF7FEFF 		bl	max3485_U3_send_data
+ 658 0392 854A     		ldr	r2, .L99+64
+ 659 0394 82FB0532 		smull	r3, r2, r2, r5
+ 660 0398 EB17     		asrs	r3, r5, #31
+ 661 039a C3EBA203 		rsb	r3, r3, r2, asr #2
+ 662 039e 03EB8303 		add	r3, r3, r3, lsl #2
+ 663 03a2 A5EB4305 		sub	r5, r5, r3, lsl #1
+ 664 03a6 092D     		cmp	r5, #9
+ 665 03a8 00D9     		bls	.L61
+ 666 03aa 0025     		movs	r5, #0
+ 667              	.L61:
+ 668 03ac 2E23     		movs	r3, #46
+ 669 03ae 8DF80430 		strb	r3, [sp, #4]
+ 670 03b2 3035     		adds	r5, r5, #48
+ 671 03b4 8DF80550 		strb	r5, [sp, #5]
+ARM GAS  /tmp/ccf6sKoJ.s 			page 13
+
+
+ 672 03b8 0221     		movs	r1, #2
+ 673 03ba 01A8     		add	r0, sp, #4
+ 674 03bc FFF7FEFF 		bl	max3485_U3_send_data
+ 675 03c0 0321     		movs	r1, #3
+ 676 03c2 7A48     		ldr	r0, .L99+68
+ 677 03c4 FFF7FEFF 		bl	max3485_U3_send_data
+ 678 03c8 C4EBC402 		rsb	r2, r4, r4, lsl #3
+ 679 03cc 6C4B     		ldr	r3, .L99+24
+ 680 03ce 03EB8203 		add	r3, r3, r2, lsl #2
+ 681 03d2 7749     		ldr	r1, .L99+72
+ 682 03d4 186A     		ldr	r0, [r3, #32]	@ float
+ 683 03d6 FFF7FEFF 		bl	__aeabi_fmul
+ 684 03da FFF7FEFF 		bl	__aeabi_f2iz
+ 685 03de 0546     		mov	r5, r0
+ 686 03e0 744B     		ldr	r3, .L99+76
+ 687 03e2 83FB0023 		smull	r2, r3, r3, r0
+ 688 03e6 C117     		asrs	r1, r0, #31
+ 689 03e8 D1EB6311 		rsbs	r1, r1, r3, asr #5
+ 690 03ec 40F05C81 		bne	.L84
+ 691 03f0 3023     		movs	r3, #48
+ 692 03f2 8DF80F30 		strb	r3, [sp, #15]
+ 693 03f6 0B22     		movs	r2, #11
+ 694              	.L63:
+ 695 03f8 C2F10C01 		rsb	r1, r2, #12
+ 696 03fc C9B2     		uxtb	r1, r1
+ 697 03fe 01A8     		add	r0, sp, #4
+ 698 0400 1044     		add	r0, r0, r2
+ 699 0402 FFF7FEFF 		bl	max3485_U3_send_data
+ 700 0406 6B4A     		ldr	r2, .L99+76
+ 701 0408 82FB0532 		smull	r3, r2, r2, r5
+ 702 040c EB17     		asrs	r3, r5, #31
+ 703 040e C3EB6213 		rsb	r3, r3, r2, asr #5
+ 704 0412 6422     		movs	r2, #100
+ 705 0414 02FB1355 		mls	r5, r2, r3, r5
+ 706 0418 632D     		cmp	r5, #99
+ 707 041a 00D9     		bls	.L65
+ 708 041c 0025     		movs	r5, #0
+ 709              	.L65:
+ 710 041e 2E23     		movs	r3, #46
+ 711 0420 8DF80430 		strb	r3, [sp, #4]
+ 712 0424 644B     		ldr	r3, .L99+80
+ 713 0426 A3FB0523 		umull	r2, r3, r3, r5
+ 714 042a DB08     		lsrs	r3, r3, #3
+ 715 042c 03F13002 		add	r2, r3, #48
+ 716 0430 8DF80520 		strb	r2, [sp, #5]
+ 717 0434 03EB8303 		add	r3, r3, r3, lsl #2
+ 718 0438 A5EB4305 		sub	r5, r5, r3, lsl #1
+ 719 043c 3035     		adds	r5, r5, #48
+ 720 043e 8DF80650 		strb	r5, [sp, #6]
+ 721 0442 0321     		movs	r1, #3
+ 722 0444 01A8     		add	r0, sp, #4
+ 723 0446 FFF7FEFF 		bl	max3485_U3_send_data
+ 724 044a 0321     		movs	r1, #3
+ 725 044c 5B48     		ldr	r0, .L99+84
+ 726 044e FFF7FEFF 		bl	max3485_U3_send_data
+ 727 0452 C4EBC402 		rsb	r2, r4, r4, lsl #3
+ 728 0456 4A4B     		ldr	r3, .L99+24
+ARM GAS  /tmp/ccf6sKoJ.s 			page 14
+
+
+ 729 0458 03EB8203 		add	r3, r3, r2, lsl #2
+ 730 045c 5449     		ldr	r1, .L99+72
+ 731 045e 986A     		ldr	r0, [r3, #40]	@ float
+ 732 0460 FFF7FEFF 		bl	__aeabi_fmul
+ 733 0464 FFF7FEFF 		bl	__aeabi_f2iz
+ 734 0468 0546     		mov	r5, r0
+ 735 046a 524B     		ldr	r3, .L99+76
+ 736 046c 83FB0023 		smull	r2, r3, r3, r0
+ 737 0470 C117     		asrs	r1, r0, #31
+ 738 0472 D1EB6311 		rsbs	r1, r1, r3, asr #5
+ 739 0476 40F02E81 		bne	.L86
+ 740 047a 3023     		movs	r3, #48
+ 741 047c 8DF80F30 		strb	r3, [sp, #15]
+ 742 0480 0B22     		movs	r2, #11
+ 743              	.L67:
+ 744 0482 C2F10C01 		rsb	r1, r2, #12
+ 745 0486 C9B2     		uxtb	r1, r1
+ 746 0488 01A8     		add	r0, sp, #4
+ 747 048a 1044     		add	r0, r0, r2
+ 748 048c FFF7FEFF 		bl	max3485_U3_send_data
+ 749 0490 484A     		ldr	r2, .L99+76
+ 750 0492 82FB0532 		smull	r3, r2, r2, r5
+ 751 0496 EB17     		asrs	r3, r5, #31
+ 752 0498 C3EB6213 		rsb	r3, r3, r2, asr #5
+ 753 049c 6422     		movs	r2, #100
+ 754 049e 02FB1355 		mls	r5, r2, r3, r5
+ 755 04a2 632D     		cmp	r5, #99
+ 756 04a4 00D9     		bls	.L69
+ 757 04a6 0025     		movs	r5, #0
+ 758              	.L69:
+ 759 04a8 2E23     		movs	r3, #46
+ 760 04aa 8DF80430 		strb	r3, [sp, #4]
+ 761 04ae 424B     		ldr	r3, .L99+80
+ 762 04b0 A3FB0523 		umull	r2, r3, r3, r5
+ 763 04b4 DB08     		lsrs	r3, r3, #3
+ 764 04b6 03F13002 		add	r2, r3, #48
+ 765 04ba 8DF80520 		strb	r2, [sp, #5]
+ 766 04be 03EB8303 		add	r3, r3, r3, lsl #2
+ 767 04c2 A5EB4305 		sub	r5, r5, r3, lsl #1
+ 768 04c6 3035     		adds	r5, r5, #48
+ 769 04c8 8DF80650 		strb	r5, [sp, #6]
+ 770 04cc 0321     		movs	r1, #3
+ 771 04ce 01A8     		add	r0, sp, #4
+ 772 04d0 FFF7FEFF 		bl	max3485_U3_send_data
+ 773 04d4 0321     		movs	r1, #3
+ 774 04d6 3A48     		ldr	r0, .L99+88
+ 775 04d8 FFF7FEFF 		bl	max3485_U3_send_data
+ 776 04dc C4EBC402 		rsb	r2, r4, r4, lsl #3
+ 777 04e0 274B     		ldr	r3, .L99+24
+ 778 04e2 03EB8203 		add	r3, r3, r2, lsl #2
+ 779 04e6 2F49     		ldr	r1, .L99+60
+ 780 04e8 D86A     		ldr	r0, [r3, #44]	@ float
+ 781 04ea FFF7FEFF 		bl	__aeabi_fmul
+ 782 04ee FFF7FEFF 		bl	__aeabi_f2iz
+ 783 04f2 0546     		mov	r5, r0
+ 784 04f4 2C4B     		ldr	r3, .L99+64
+ 785 04f6 83FB0023 		smull	r2, r3, r3, r0
+ARM GAS  /tmp/ccf6sKoJ.s 			page 15
+
+
+ 786 04fa C117     		asrs	r1, r0, #31
+ 787 04fc D1EBA301 		rsbs	r1, r1, r3, asr #2
+ 788 0500 40F00081 		bne	.L88
+ 789 0504 3023     		movs	r3, #48
+ 790 0506 8DF80F30 		strb	r3, [sp, #15]
+ 791 050a 0B22     		movs	r2, #11
+ 792              	.L71:
+ 793 050c C2F10C01 		rsb	r1, r2, #12
+ 794 0510 C9B2     		uxtb	r1, r1
+ 795 0512 01A8     		add	r0, sp, #4
+ 796 0514 1044     		add	r0, r0, r2
+ 797 0516 FFF7FEFF 		bl	max3485_U3_send_data
+ 798 051a 234A     		ldr	r2, .L99+64
+ 799 051c 82FB0532 		smull	r3, r2, r2, r5
+ 800 0520 EB17     		asrs	r3, r5, #31
+ 801 0522 C3EBA203 		rsb	r3, r3, r2, asr #2
+ 802 0526 03EB8303 		add	r3, r3, r3, lsl #2
+ 803 052a A5EB4305 		sub	r5, r5, r3, lsl #1
+ 804 052e 092D     		cmp	r5, #9
+ 805 0530 00D9     		bls	.L73
+ 806 0532 0025     		movs	r5, #0
+ 807              	.L73:
+ 808 0534 2E23     		movs	r3, #46
+ 809 0536 8DF80430 		strb	r3, [sp, #4]
+ 810 053a 3035     		adds	r5, r5, #48
+ 811 053c 8DF80550 		strb	r5, [sp, #5]
+ 812 0540 0221     		movs	r1, #2
+ 813 0542 01A8     		add	r0, sp, #4
+ 814 0544 FFF7FEFF 		bl	max3485_U3_send_data
+ 815 0548 0421     		movs	r1, #4
+ 816 054a 1E48     		ldr	r0, .L99+92
+ 817 054c FFF7FEFF 		bl	max3485_U3_send_data
+ 818 0550 C4EBC402 		rsb	r2, r4, r4, lsl #3
+ 819 0554 0A4B     		ldr	r3, .L99+24
+ 820 0556 03EB8203 		add	r3, r3, r2, lsl #2
+ 821 055a 93F83020 		ldrb	r2, [r3, #48]	@ zero_extendqisi2
+ 822 055e 002A     		cmp	r2, #0
+ 823 0560 40F0E780 		bne	.L90
+ 824 0564 30E0     		b	.L100
+ 825              	.L101:
+ 826 0566 00BF     		.align	3
+ 827              	.L99:
+ 828 0568 9A999999 		.word	-1717986918
+ 829 056c 9999B93F 		.word	1069128089
+ 830 0570 2D431CEB 		.word	-350469331
+ 831 0574 E2361A3F 		.word	1058682594
+ 832 0578 00000000 		.word	g_poll_ctx
+ 833 057c 00000000 		.word	circuit_device_id
+ 834 0580 00000000 		.word	g_multi_data
+ 835 0584 00000000 		.word	g_circuit_recv_buf
+ 836 0588 CDCCCC3D 		.word	1036831949
+ 837 058c 0AD7233C 		.word	1008981770
+ 838 0590 54000000 		.word	.LC6
+ 839 0594 64000000 		.word	.LC7
+ 840 0598 00000000 		.word	hx.0
+ 841 059c 6C000000 		.word	.LC8
+ 842 05a0 74000000 		.word	.LC9
+ARM GAS  /tmp/ccf6sKoJ.s 			page 16
+
+
+ 843 05a4 00002041 		.word	1092616192
+ 844 05a8 67666666 		.word	1717986919
+ 845 05ac 78000000 		.word	.LC10
+ 846 05b0 0000C842 		.word	1120403456
+ 847 05b4 1F85EB51 		.word	1374389535
+ 848 05b8 CDCCCCCC 		.word	-858993459
+ 849 05bc 7C000000 		.word	.LC11
+ 850 05c0 80000000 		.word	.LC12
+ 851 05c4 84000000 		.word	.LC13
+ 852              	.L100:
+ 853 05c8 3023     		movs	r3, #48
+ 854 05ca 8DF80F30 		strb	r3, [sp, #15]
+ 855 05ce 0B20     		movs	r0, #11
+ 856              	.L75:
+ 857 05d0 C0F10C01 		rsb	r1, r0, #12
+ 858 05d4 C9B2     		uxtb	r1, r1
+ 859 05d6 01AB     		add	r3, sp, #4
+ 860 05d8 1844     		add	r0, r0, r3
+ 861 05da FFF7FEFF 		bl	max3485_U3_send_data
+ 862 05de 0321     		movs	r1, #3
+ 863 05e0 6448     		ldr	r0, .L102
+ 864 05e2 FFF7FEFF 		bl	max3485_U3_send_data
+ 865 05e6 C4EBC404 		rsb	r4, r4, r4, lsl #3
+ 866 05ea 634B     		ldr	r3, .L102+4
+ 867 05ec 03EB8403 		add	r3, r3, r4, lsl #2
+ 868 05f0 5A6B     		ldr	r2, [r3, #52]
+ 869 05f2 002A     		cmp	r2, #0
+ 870 05f4 40F0B480 		bne	.L91
+ 871 05f8 3023     		movs	r3, #48
+ 872 05fa 8DF80F30 		strb	r3, [sp, #15]
+ 873 05fe 0B20     		movs	r0, #11
+ 874              	.L78:
+ 875 0600 C0F10C01 		rsb	r1, r0, #12
+ 876 0604 C9B2     		uxtb	r1, r1
+ 877 0606 01AB     		add	r3, sp, #4
+ 878 0608 1844     		add	r0, r0, r3
+ 879 060a FFF7FEFF 		bl	max3485_U3_send_data
+ 880 060e 0221     		movs	r1, #2
+ 881 0610 5A48     		ldr	r0, .L102+8
+ 882 0612 FFF7FEFF 		bl	max3485_U3_send_data
+ 883 0616 5A49     		ldr	r1, .L102+12
+ 884 0618 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+ 885 061a 5A4B     		ldr	r3, .L102+16
+ 886 061c 0120     		movs	r0, #1
+ 887 061e 9854     		strb	r0, [r3, r2]
+ 888 0620 0244     		add	r2, r2, r0
+ 889 0622 594B     		ldr	r3, .L102+20
+ 890 0624 83FB0203 		smull	r0, r3, r3, r2
+ 891 0628 5B10     		asrs	r3, r3, #1
+ 892 062a 03EB8303 		add	r3, r3, r3, lsl #2
+ 893 062e D31A     		subs	r3, r2, r3
+ 894 0630 DBB2     		uxtb	r3, r3
+ 895 0632 4B70     		strb	r3, [r1, #1]
+ 896 0634 002B     		cmp	r3, #0
+ 897 0636 40F09580 		bne	.L80
+ 898 063a 0022     		movs	r2, #0
+ 899 063c 0A70     		strb	r2, [r1]
+ARM GAS  /tmp/ccf6sKoJ.s 			page 17
+
+
+ 900 063e F1E4     		b	.L35
+ 901              	.L56:
+ 902 0640 C4EBC402 		rsb	r2, r4, r4, lsl #3
+ 903 0644 4C4B     		ldr	r3, .L102+4
+ 904 0646 03EB8203 		add	r3, r3, r2, lsl #2
+ 905 064a 0022     		movs	r2, #0
+ 906 064c 5A77     		strb	r2, [r3, #29]
+ 907 064e 03E6     		b	.L57
+ 908              	.L60:
+ 909 0650 4E4B     		ldr	r3, .L102+24
+ 910 0652 A3FB0103 		umull	r0, r3, r3, r1
+ 911 0656 DB08     		lsrs	r3, r3, #3
+ 912 0658 1846     		mov	r0, r3
+ 913 065a 03EB8303 		add	r3, r3, r3, lsl #2
+ 914 065e A1EB4303 		sub	r3, r1, r3, lsl #1
+ 915 0662 013A     		subs	r2, r2, #1
+ 916 0664 D2B2     		uxtb	r2, r2
+ 917 0666 3033     		adds	r3, r3, #48
+ 918 0668 02F11001 		add	r1, r2, #16
+ 919 066c 6944     		add	r1, sp, r1
+ 920 066e 01F80C3C 		strb	r3, [r1, #-12]
+ 921 0672 0146     		mov	r1, r0
+ 922              	.L58:
+ 923 0674 0029     		cmp	r1, #0
+ 924 0676 EBD1     		bne	.L60
+ 925 0678 84E6     		b	.L59
+ 926              	.L82:
+ 927 067a 0C22     		movs	r2, #12
+ 928 067c FAE7     		b	.L58
+ 929              	.L64:
+ 930 067e 434B     		ldr	r3, .L102+24
+ 931 0680 A3FB0103 		umull	r0, r3, r3, r1
+ 932 0684 DB08     		lsrs	r3, r3, #3
+ 933 0686 1846     		mov	r0, r3
+ 934 0688 03EB8303 		add	r3, r3, r3, lsl #2
+ 935 068c A1EB4303 		sub	r3, r1, r3, lsl #1
+ 936 0690 013A     		subs	r2, r2, #1
+ 937 0692 D2B2     		uxtb	r2, r2
+ 938 0694 3033     		adds	r3, r3, #48
+ 939 0696 02F11001 		add	r1, r2, #16
+ 940 069a 6944     		add	r1, sp, r1
+ 941 069c 01F80C3C 		strb	r3, [r1, #-12]
+ 942 06a0 0146     		mov	r1, r0
+ 943              	.L62:
+ 944 06a2 0029     		cmp	r1, #0
+ 945 06a4 EBD1     		bne	.L64
+ 946 06a6 A7E6     		b	.L63
+ 947              	.L84:
+ 948 06a8 0C22     		movs	r2, #12
+ 949 06aa FAE7     		b	.L62
+ 950              	.L68:
+ 951 06ac 374B     		ldr	r3, .L102+24
+ 952 06ae A3FB0103 		umull	r0, r3, r3, r1
+ 953 06b2 DB08     		lsrs	r3, r3, #3
+ 954 06b4 1846     		mov	r0, r3
+ 955 06b6 03EB8303 		add	r3, r3, r3, lsl #2
+ 956 06ba A1EB4303 		sub	r3, r1, r3, lsl #1
+ARM GAS  /tmp/ccf6sKoJ.s 			page 18
+
+
+ 957 06be 013A     		subs	r2, r2, #1
+ 958 06c0 D2B2     		uxtb	r2, r2
+ 959 06c2 3033     		adds	r3, r3, #48
+ 960 06c4 02F11001 		add	r1, r2, #16
+ 961 06c8 6944     		add	r1, sp, r1
+ 962 06ca 01F80C3C 		strb	r3, [r1, #-12]
+ 963 06ce 0146     		mov	r1, r0
+ 964              	.L66:
+ 965 06d0 0029     		cmp	r1, #0
+ 966 06d2 EBD1     		bne	.L68
+ 967 06d4 D5E6     		b	.L67
+ 968              	.L86:
+ 969 06d6 0C22     		movs	r2, #12
+ 970 06d8 FAE7     		b	.L66
+ 971              	.L72:
+ 972 06da 2C4B     		ldr	r3, .L102+24
+ 973 06dc A3FB0103 		umull	r0, r3, r3, r1
+ 974 06e0 DB08     		lsrs	r3, r3, #3
+ 975 06e2 1846     		mov	r0, r3
+ 976 06e4 03EB8303 		add	r3, r3, r3, lsl #2
+ 977 06e8 A1EB4303 		sub	r3, r1, r3, lsl #1
+ 978 06ec 013A     		subs	r2, r2, #1
+ 979 06ee D2B2     		uxtb	r2, r2
+ 980 06f0 3033     		adds	r3, r3, #48
+ 981 06f2 02F11001 		add	r1, r2, #16
+ 982 06f6 6944     		add	r1, sp, r1
+ 983 06f8 01F80C3C 		strb	r3, [r1, #-12]
+ 984 06fc 0146     		mov	r1, r0
+ 985              	.L70:
+ 986 06fe 0029     		cmp	r1, #0
+ 987 0700 EBD1     		bne	.L72
+ 988 0702 03E7     		b	.L71
+ 989              	.L88:
+ 990 0704 0C22     		movs	r2, #12
+ 991 0706 FAE7     		b	.L70
+ 992              	.L76:
+ 993 0708 204B     		ldr	r3, .L102+24
+ 994 070a A3FB0213 		umull	r1, r3, r3, r2
+ 995 070e DB08     		lsrs	r3, r3, #3
+ 996 0710 1946     		mov	r1, r3
+ 997 0712 03EB8303 		add	r3, r3, r3, lsl #2
+ 998 0716 A2EB4303 		sub	r3, r2, r3, lsl #1
+ 999 071a 0138     		subs	r0, r0, #1
+ 1000 071c C0B2     		uxtb	r0, r0
+ 1001 071e 3033     		adds	r3, r3, #48
+ 1002 0720 00F11002 		add	r2, r0, #16
+ 1003 0724 6A44     		add	r2, sp, r2
+ 1004 0726 02F80C3C 		strb	r3, [r2, #-12]
+ 1005 072a 0A46     		mov	r2, r1
+ 1006              	.L74:
+ 1007 072c 002A     		cmp	r2, #0
+ 1008 072e EBD1     		bne	.L76
+ 1009 0730 4EE7     		b	.L75
+ 1010              	.L90:
+ 1011 0732 0C20     		movs	r0, #12
+ 1012 0734 FAE7     		b	.L74
+ 1013              	.L79:
+ARM GAS  /tmp/ccf6sKoJ.s 			page 19
+
+
+ 1014 0736 154B     		ldr	r3, .L102+24
+ 1015 0738 A3FB0213 		umull	r1, r3, r3, r2
+ 1016 073c DB08     		lsrs	r3, r3, #3
+ 1017 073e 1946     		mov	r1, r3
+ 1018 0740 03EB8303 		add	r3, r3, r3, lsl #2
+ 1019 0744 A2EB4303 		sub	r3, r2, r3, lsl #1
+ 1020 0748 0138     		subs	r0, r0, #1
+ 1021 074a C0B2     		uxtb	r0, r0
+ 1022 074c 3033     		adds	r3, r3, #48
+ 1023 074e 00F11002 		add	r2, r0, #16
+ 1024 0752 6A44     		add	r2, sp, r2
+ 1025 0754 02F80C3C 		strb	r3, [r2, #-12]
+ 1026 0758 0A46     		mov	r2, r1
+ 1027              	.L77:
+ 1028 075a 002A     		cmp	r2, #0
+ 1029 075c EBD1     		bne	.L79
+ 1030 075e 4FE7     		b	.L78
+ 1031              	.L91:
+ 1032 0760 0C20     		movs	r0, #12
+ 1033 0762 FAE7     		b	.L77
+ 1034              	.L80:
+ 1035 0764 064B     		ldr	r3, .L102+12
+ 1036 0766 0122     		movs	r2, #1
+ 1037 0768 1A70     		strb	r2, [r3]
+ 1038 076a 5BE4     		b	.L35
+ 1039              	.L36:
+ 1040 076c 044B     		ldr	r3, .L102+12
+ 1041 076e 0022     		movs	r2, #0
+ 1042 0770 1A70     		strb	r2, [r3]
+ 1043 0772 57E4     		b	.L35
+ 1044              	.L103:
+ 1045              		.align	2
+ 1046              	.L102:
+ 1047 0774 8C000000 		.word	.LC14
+ 1048 0778 00000000 		.word	g_multi_data
+ 1049 077c 10000000 		.word	.LC1
+ 1050 0780 00000000 		.word	g_poll_ctx
+ 1051 0784 00000000 		.word	g_electric_per_done
+ 1052 0788 67666666 		.word	1717986919
+ 1053 078c CDCCCCCC 		.word	-858993459
+ 1055              		.section	.text.circuit_switch_close,"ax",%progbits
+ 1056              		.align	1
+ 1057              		.global	circuit_switch_close
+ 1058              		.syntax unified
+ 1059              		.thumb
+ 1060              		.thumb_func
+ 1062              	circuit_switch_close:
+ 1063              		@ args = 0, pretend = 0, frame = 0
+ 1064              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1065 0000 10B5     		push	{r4, lr}
+ 1066 0002 0446     		mov	r4, r0
+ 1067 0004 40F25512 		movw	r2, #341
+ 1068 0008 8021     		movs	r1, #128
+ 1069 000a FFF7FEFF 		bl	circuit_write_single_reg
+ 1070 000e 08B1     		cbz	r0, .L109
+ 1071 0010 0120     		movs	r0, #1
+ 1072              	.L105:
+ARM GAS  /tmp/ccf6sKoJ.s 			page 20
+
+
+ 1073 0012 10BD     		pop	{r4, pc}
+ 1074              	.L109:
+ 1075 0014 4FF4D572 		mov	r2, #426
+ 1076 0018 8121     		movs	r1, #129
+ 1077 001a 2046     		mov	r0, r4
+ 1078 001c FFF7FEFF 		bl	circuit_write_single_reg
+ 1079 0020 0028     		cmp	r0, #0
+ 1080 0022 F6D0     		beq	.L105
+ 1081 0024 0220     		movs	r0, #2
+ 1082 0026 F4E7     		b	.L105
+ 1084              		.section	.text.circuit_switch_open,"ax",%progbits
+ 1085              		.align	1
+ 1086              		.global	circuit_switch_open
+ 1087              		.syntax unified
+ 1088              		.thumb
+ 1089              		.thumb_func
+ 1091              	circuit_switch_open:
+ 1092              		@ args = 0, pretend = 0, frame = 0
+ 1093              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1094 0000 10B5     		push	{r4, lr}
+ 1095 0002 0446     		mov	r4, r0
+ 1096 0004 40F25522 		movw	r2, #597
+ 1097 0008 8021     		movs	r1, #128
+ 1098 000a FFF7FEFF 		bl	circuit_write_single_reg
+ 1099 000e 08B1     		cbz	r0, .L115
+ 1100 0010 0120     		movs	r0, #1
+ 1101              	.L111:
+ 1102 0012 10BD     		pop	{r4, pc}
+ 1103              	.L115:
+ 1104 0014 40F2AA22 		movw	r2, #682
+ 1105 0018 8121     		movs	r1, #129
+ 1106 001a 2046     		mov	r0, r4
+ 1107 001c FFF7FEFF 		bl	circuit_write_single_reg
+ 1108 0020 0028     		cmp	r0, #0
+ 1109 0022 F6D0     		beq	.L111
+ 1110 0024 0220     		movs	r0, #2
+ 1111 0026 F4E7     		b	.L111
+ 1113              		.section	.rodata.hx.0,"a"
+ 1114              		.align	2
+ 1117              	hx.0:
+ 1118 0000 30313233 		.ascii	"0123456789\000"
+ 1118      34353637 
+ 1118      383900
+ 1119              		.section	.bss.hex_buf.1,"aw",%nobits
+ 1120              		.align	2
+ 1123              	hex_buf.1:
+ 1124 0000 00000000 		.space	96
+ 1124      00000000 
+ 1124      00000000 
+ 1124      00000000 
+ 1124      00000000 
+ 1125              		.section	.rodata.hx.2,"a"
+ 1126              		.align	2
+ 1129              	hx.2:
+ 1130 0000 30313233 		.ascii	"0123456789ABCDEF\000"
+ 1130      34353637 
+ 1130      38394142 
+ARM GAS  /tmp/ccf6sKoJ.s 			page 21
+
+
+ 1130      43444546 
+ 1130      00
+ 1131              		.section	.rodata.hex_tbl.3,"a"
+ 1132              		.align	2
+ 1135              	hex_tbl.3:
+ 1136 0000 30313233 		.ascii	"0123456789ABCDEF\000"
+ 1136      34353637 
+ 1136      38394142 
+ 1136      43444546 
+ 1136      00
+ 1137              		.global	g_poll_ctx
+ 1138              		.section	.bss.g_poll_ctx,"aw",%nobits
+ 1139              		.align	2
+ 1142              	g_poll_ctx:
+ 1143 0000 00000000 		.space	8
+ 1143      00000000 
+ 1144              		.global	g_electric_per_done
+ 1145              		.section	.bss.g_electric_per_done,"aw",%nobits
+ 1146              		.align	2
+ 1149              	g_electric_per_done:
+ 1150 0000 00000000 		.space	5
+ 1150      00
+ 1151              		.global	g_multi_data
+ 1152              		.section	.bss.g_multi_data,"aw",%nobits
+ 1153              		.align	2
+ 1156              	g_multi_data:
+ 1157 0000 00000000 		.space	172
+ 1157      00000000 
+ 1157      00000000 
+ 1157      00000000 
+ 1157      00000000 
+ 1158              		.global	g_circuit_recv_len
+ 1159              		.section	.bss.g_circuit_recv_len,"aw",%nobits
+ 1162              	g_circuit_recv_len:
+ 1163 0000 00       		.space	1
+ 1164              		.global	g_circuit_recv_buf
+ 1165              		.section	.bss.g_circuit_recv_buf,"aw",%nobits
+ 1166              		.align	2
+ 1169              	g_circuit_recv_buf:
+ 1170 0000 00000000 		.space	256
+ 1170      00000000 
+ 1170      00000000 
+ 1170      00000000 
+ 1170      00000000 
+ 1171              		.section	.rodata.circuit_device_id,"a"
+ 1172              		.align	2
+ 1175              	circuit_device_id:
+ 1176 0000 21222383 		.ascii	"!\"#\203\226"
+ 1176      96
+ 1177              		.global	__aeabi_f2iz
+ 1178              		.global	__aeabi_d2uiz
+ 1179              		.global	__aeabi_ui2d
+ 1180              		.global	__aeabi_f2uiz
+ 1181              		.global	__aeabi_fmul
+ 1182              		.global	__aeabi_i2f
+ 1183              		.global	__aeabi_d2f
+ 1184              		.global	__aeabi_dmul
+ARM GAS  /tmp/ccf6sKoJ.s 			page 22
+
+
+ 1185              		.global	__aeabi_i2d
+ 1186              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccf6sKoJ.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 modbus.c
+     /tmp/ccf6sKoJ.s:16     .text.circuit_recv_data:00000000 $t
+     /tmp/ccf6sKoJ.s:22     .text.circuit_recv_data:00000000 circuit_recv_data
+     /tmp/ccf6sKoJ.s:61     .text.circuit_recv_data:00000044 $d
+     /tmp/ccf6sKoJ.s:1162   .bss.g_circuit_recv_len:00000000 g_circuit_recv_len
+     /tmp/ccf6sKoJ.s:1169   .bss.g_circuit_recv_buf:00000000 g_circuit_recv_buf
+     /tmp/ccf6sKoJ.s:66     .rodata.Multiple_modbus_package.str1.4:00000000 $d
+     /tmp/ccf6sKoJ.s:73     .text.Multiple_modbus_package:00000000 $t
+     /tmp/ccf6sKoJ.s:79     .text.Multiple_modbus_package:00000000 Multiple_modbus_package
+     /tmp/ccf6sKoJ.s:158    .text.Multiple_modbus_package:000000b8 $d
+     /tmp/ccf6sKoJ.s:1135   .rodata.hex_tbl.3:00000000 hex_tbl.3
+     /tmp/ccf6sKoJ.s:163    .text.circuit_send_data:00000000 $t
+     /tmp/ccf6sKoJ.s:169    .text.circuit_send_data:00000000 circuit_send_data
+     /tmp/ccf6sKoJ.s:185    .text.circuit_write_single_reg:00000000 $t
+     /tmp/ccf6sKoJ.s:190    .text.circuit_write_single_reg:00000000 circuit_write_single_reg
+     /tmp/ccf6sKoJ.s:210    .text.sensor_poll_init:00000000 $t
+     /tmp/ccf6sKoJ.s:216    .text.sensor_poll_init:00000000 sensor_poll_init
+     /tmp/ccf6sKoJ.s:232    .text.sensor_poll_init:00000014 $d
+     /tmp/ccf6sKoJ.s:1142   .bss.g_poll_ctx:00000000 g_poll_ctx
+     /tmp/ccf6sKoJ.s:1149   .bss.g_electric_per_done:00000000 g_electric_per_done
+     /tmp/ccf6sKoJ.s:236    .rodata.sensor_poll_step.str1.4:00000000 $d
+     /tmp/ccf6sKoJ.s:276    .text.sensor_poll_step:00000000 $t
+     /tmp/ccf6sKoJ.s:282    .text.sensor_poll_step:00000000 sensor_poll_step
+     /tmp/ccf6sKoJ.s:293    .text.sensor_poll_step:00000012 $d
+     /tmp/ccf6sKoJ.s:297    .text.sensor_poll_step:0000001a $t
+     /tmp/ccf6sKoJ.s:521    .text.sensor_poll_step:000001f8 $d
+     /tmp/ccf6sKoJ.s:1175   .rodata.circuit_device_id:00000000 circuit_device_id
+     /tmp/ccf6sKoJ.s:1129   .rodata.hx.2:00000000 hx.2
+     /tmp/ccf6sKoJ.s:1123   .bss.hex_buf.1:00000000 hex_buf.1
+     /tmp/ccf6sKoJ.s:536    .text.sensor_poll_step:00000230 $t
+     /tmp/ccf6sKoJ.s:828    .text.sensor_poll_step:00000568 $d
+     /tmp/ccf6sKoJ.s:1156   .bss.g_multi_data:00000000 g_multi_data
+     /tmp/ccf6sKoJ.s:1117   .rodata.hx.0:00000000 hx.0
+     /tmp/ccf6sKoJ.s:853    .text.sensor_poll_step:000005c8 $t
+     /tmp/ccf6sKoJ.s:1047   .text.sensor_poll_step:00000774 $d
+     /tmp/ccf6sKoJ.s:1056   .text.circuit_switch_close:00000000 $t
+     /tmp/ccf6sKoJ.s:1062   .text.circuit_switch_close:00000000 circuit_switch_close
+     /tmp/ccf6sKoJ.s:1085   .text.circuit_switch_open:00000000 $t
+     /tmp/ccf6sKoJ.s:1091   .text.circuit_switch_open:00000000 circuit_switch_open
+     /tmp/ccf6sKoJ.s:1114   .rodata.hx.0:00000000 $d
+     /tmp/ccf6sKoJ.s:1120   .bss.hex_buf.1:00000000 $d
+     /tmp/ccf6sKoJ.s:1126   .rodata.hx.2:00000000 $d
+     /tmp/ccf6sKoJ.s:1132   .rodata.hex_tbl.3:00000000 $d
+     /tmp/ccf6sKoJ.s:1139   .bss.g_poll_ctx:00000000 $d
+     /tmp/ccf6sKoJ.s:1146   .bss.g_electric_per_done:00000000 $d
+     /tmp/ccf6sKoJ.s:1153   .bss.g_multi_data:00000000 $d
+     /tmp/ccf6sKoJ.s:1163   .bss.g_circuit_recv_len:00000000 $d
+     /tmp/ccf6sKoJ.s:1166   .bss.g_circuit_recv_buf:00000000 $d
+     /tmp/ccf6sKoJ.s:1172   .rodata.circuit_device_id:00000000 $d
+
+UNDEFINED SYMBOLS
+delay_ms
+uart1_recv_data
+uart1_clear_rx_flag
+g_uart1_dev
+uiCrcCalFunc
+ARM GAS  /tmp/ccf6sKoJ.s 			page 24
+
+
+max3485_send_data
+max3485_U3_send_data
+led_toggle
+get_tick_ms
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_d2f
+__aeabi_i2f
+__aeabi_fmul
+__aeabi_f2uiz
+__aeabi_ui2d
+__aeabi_d2uiz
+__aeabi_f2iz

@@ -1,0 +1,210 @@
+ARM GAS  /tmp/cca9No0d.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"delay.c"
+  14              		.text
+  15              		.section	.text.SysTick_Handler,"ax",%progbits
+  16              		.align	1
+  17              		.global	SysTick_Handler
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	SysTick_Handler:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 024A     		ldr	r2, .L2
+  27 0002 1368     		ldr	r3, [r2]
+  28 0004 0133     		adds	r3, r3, #1
+  29 0006 1360     		str	r3, [r2]
+  30 0008 7047     		bx	lr
+  31              	.L3:
+  32 000a 00BF     		.align	2
+  33              	.L2:
+  34 000c 00000000 		.word	s_ms_tick
+  36              		.section	.text.delay_init,"ax",%progbits
+  37              		.align	1
+  38              		.global	delay_init
+  39              		.syntax unified
+  40              		.thumb
+  41              		.thumb_func
+  43              	delay_init:
+  44              		@ args = 0, pretend = 0, frame = 0
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46              		@ link register save eliminated.
+  47 0000 0F4B     		ldr	r3, .L5
+  48 0002 1B68     		ldr	r3, [r3]
+  49 0004 0F4A     		ldr	r2, .L5+4
+  50 0006 A2FB0323 		umull	r2, r3, r2, r3
+  51 000a 9B09     		lsrs	r3, r3, #6
+  52 000c 013B     		subs	r3, r3, #1
+  53 000e 4FF0E022 		mov	r2, #-536813568
+  54 0012 5361     		str	r3, [r2, #20]
+  55 0014 0C4B     		ldr	r3, .L5+8
+  56 0016 F021     		movs	r1, #240
+  57 0018 83F82310 		strb	r1, [r3, #35]
+  58 001c 0021     		movs	r1, #0
+  59 001e 9161     		str	r1, [r2, #24]
+  60 0020 0723     		movs	r3, #7
+ARM GAS  /tmp/cca9No0d.s 			page 2
+
+
+  61 0022 1361     		str	r3, [r2, #16]
+  62 0024 D2F8FC3D 		ldr	r3, [r2, #3580]
+  63 0028 43F08073 		orr	r3, r3, #16777216
+  64 002c C2F8FC3D 		str	r3, [r2, #3580]
+  65 0030 064B     		ldr	r3, .L5+12
+  66 0032 1A68     		ldr	r2, [r3]
+  67 0034 42F00102 		orr	r2, r2, #1
+  68 0038 1A60     		str	r2, [r3]
+  69 003a 5960     		str	r1, [r3, #4]
+  70 003c 7047     		bx	lr
+  71              	.L6:
+  72 003e 00BF     		.align	2
+  73              	.L5:
+  74 0040 00000000 		.word	SystemCoreClock
+  75 0044 D34D6210 		.word	274877907
+  76 0048 00ED00E0 		.word	-536810240
+  77 004c 001000E0 		.word	-536866816
+  79              		.section	.text.delay_us,"ax",%progbits
+  80              		.align	1
+  81              		.global	delay_us
+  82              		.syntax unified
+  83              		.thumb
+  84              		.thumb_func
+  86              	delay_us:
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		@ link register save eliminated.
+  90 0000 074B     		ldr	r3, .L9
+  91 0002 5A68     		ldr	r2, [r3, #4]
+  92 0004 074B     		ldr	r3, .L9+4
+  93 0006 1B68     		ldr	r3, [r3]
+  94 0008 0749     		ldr	r1, .L9+8
+  95 000a A1FB0313 		umull	r1, r3, r1, r3
+  96 000e 9B0C     		lsrs	r3, r3, #18
+  97 0010 03FB00F0 		mul	r0, r3, r0
+  98              	.L8:
+  99 0014 024B     		ldr	r3, .L9
+ 100 0016 5B68     		ldr	r3, [r3, #4]
+ 101 0018 9B1A     		subs	r3, r3, r2
+ 102 001a 8342     		cmp	r3, r0
+ 103 001c FAD3     		bcc	.L8
+ 104 001e 7047     		bx	lr
+ 105              	.L10:
+ 106              		.align	2
+ 107              	.L9:
+ 108 0020 001000E0 		.word	-536866816
+ 109 0024 00000000 		.word	SystemCoreClock
+ 110 0028 83DE1B43 		.word	1125899907
+ 112              		.section	.text.delay_ms,"ax",%progbits
+ 113              		.align	1
+ 114              		.global	delay_ms
+ 115              		.syntax unified
+ 116              		.thumb
+ 117              		.thumb_func
+ 119              	delay_ms:
+ 120              		@ args = 0, pretend = 0, frame = 0
+ 121              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/cca9No0d.s 			page 3
+
+
+ 122              		@ link register save eliminated.
+ 123 0000 034B     		ldr	r3, .L13
+ 124 0002 1A68     		ldr	r2, [r3]
+ 125              	.L12:
+ 126 0004 024B     		ldr	r3, .L13
+ 127 0006 1B68     		ldr	r3, [r3]
+ 128 0008 9B1A     		subs	r3, r3, r2
+ 129 000a 8342     		cmp	r3, r0
+ 130 000c FAD3     		bcc	.L12
+ 131 000e 7047     		bx	lr
+ 132              	.L14:
+ 133              		.align	2
+ 134              	.L13:
+ 135 0010 00000000 		.word	s_ms_tick
+ 137              		.section	.text.delay_s,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	delay_s
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 144              	delay_s:
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147 0000 38B5     		push	{r3, r4, r5, lr}
+ 148 0002 0546     		mov	r5, r0
+ 149 0004 0024     		movs	r4, #0
+ 150 0006 04E0     		b	.L16
+ 151              	.L17:
+ 152 0008 4FF47A70 		mov	r0, #1000
+ 153 000c FFF7FEFF 		bl	delay_ms
+ 154 0010 0134     		adds	r4, r4, #1
+ 155              	.L16:
+ 156 0012 AC42     		cmp	r4, r5
+ 157 0014 F8D3     		bcc	.L17
+ 158 0016 38BD     		pop	{r3, r4, r5, pc}
+ 160              		.section	.text.get_tick_ms,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	get_tick_ms
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	get_tick_ms:
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170              		@ link register save eliminated.
+ 171 0000 014B     		ldr	r3, .L20
+ 172 0002 1868     		ldr	r0, [r3]
+ 173 0004 7047     		bx	lr
+ 174              	.L21:
+ 175 0006 00BF     		.align	2
+ 176              	.L20:
+ 177 0008 00000000 		.word	s_ms_tick
+ 179              		.section	.bss.s_ms_tick,"aw",%nobits
+ 180              		.align	2
+ 183              	s_ms_tick:
+ 184 0000 00000000 		.space	4
+ 185              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/cca9No0d.s 			page 4
+
+
+ARM GAS  /tmp/cca9No0d.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 delay.c
+     /tmp/cca9No0d.s:16     .text.SysTick_Handler:00000000 $t
+     /tmp/cca9No0d.s:22     .text.SysTick_Handler:00000000 SysTick_Handler
+     /tmp/cca9No0d.s:34     .text.SysTick_Handler:0000000c $d
+     /tmp/cca9No0d.s:183    .bss.s_ms_tick:00000000 s_ms_tick
+     /tmp/cca9No0d.s:37     .text.delay_init:00000000 $t
+     /tmp/cca9No0d.s:43     .text.delay_init:00000000 delay_init
+     /tmp/cca9No0d.s:74     .text.delay_init:00000040 $d
+     /tmp/cca9No0d.s:80     .text.delay_us:00000000 $t
+     /tmp/cca9No0d.s:86     .text.delay_us:00000000 delay_us
+     /tmp/cca9No0d.s:108    .text.delay_us:00000020 $d
+     /tmp/cca9No0d.s:113    .text.delay_ms:00000000 $t
+     /tmp/cca9No0d.s:119    .text.delay_ms:00000000 delay_ms
+     /tmp/cca9No0d.s:135    .text.delay_ms:00000010 $d
+     /tmp/cca9No0d.s:138    .text.delay_s:00000000 $t
+     /tmp/cca9No0d.s:144    .text.delay_s:00000000 delay_s
+     /tmp/cca9No0d.s:161    .text.get_tick_ms:00000000 $t
+     /tmp/cca9No0d.s:167    .text.get_tick_ms:00000000 get_tick_ms
+     /tmp/cca9No0d.s:177    .text.get_tick_ms:00000008 $d
+     /tmp/cca9No0d.s:180    .bss.s_ms_tick:00000000 $d
+
+UNDEFINED SYMBOLS
+SystemCoreClock

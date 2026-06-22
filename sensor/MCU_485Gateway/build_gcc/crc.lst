@@ -1,0 +1,268 @@
+ARM GAS  /tmp/ccsFwMwb.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"crc.c"
+  14              		.text
+  15              		.section	.text.calCheckSumFunc,"ax",%progbits
+  16              		.align	1
+  17              		.global	calCheckSumFunc
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  22              	calCheckSumFunc:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 0346     		mov	r3, r0
+  27 0002 0020     		movs	r0, #0
+  28 0004 04E0     		b	.L2
+  29              	.L3:
+  30 0006 13F8011B 		ldrb	r1, [r3], #1	@ zero_extendqisi2
+  31 000a 0844     		add	r0, r0, r1
+  32 000c C0B2     		uxtb	r0, r0
+  33 000e 1146     		mov	r1, r2
+  34              	.L2:
+  35 0010 4A1E     		subs	r2, r1, #1
+  36 0012 92B2     		uxth	r2, r2
+  37 0014 0029     		cmp	r1, #0
+  38 0016 F6D1     		bne	.L3
+  39 0018 7047     		bx	lr
+  41              		.section	.text.uiCrcCalFunc,"ax",%progbits
+  42              		.align	1
+  43              		.global	uiCrcCalFunc
+  44              		.syntax unified
+  45              		.thumb
+  46              		.thumb_func
+  48              	uiCrcCalFunc:
+  49              		@ args = 0, pretend = 0, frame = 0
+  50              		@ frame_needed = 0, uses_anonymous_args = 0
+  51 0000 00B5     		push	{lr}
+  52 0002 FF22     		movs	r2, #255
+  53 0004 9646     		mov	lr, r2
+  54 0006 0AE0     		b	.L5
+  55              	.L6:
+  56 0008 10F8013B 		ldrb	r3, [r0], #1	@ zero_extendqisi2
+  57 000c 5340     		eors	r3, r3, r2
+  58 000e 094A     		ldr	r2, .L8
+  59 0010 D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+  60 0012 82EA0E02 		eor	r2, r2, lr
+ARM GAS  /tmp/ccsFwMwb.s 			page 2
+
+
+  61 0016 0849     		ldr	r1, .L8+4
+  62 0018 11F803E0 		ldrb	lr, [r1, r3]	@ zero_extendqisi2
+  63 001c 6146     		mov	r1, ip
+  64              	.L5:
+  65 001e 4B1E     		subs	r3, r1, #1
+  66 0020 1FFA83FC 		uxth	ip, r3
+  67 0024 0029     		cmp	r1, #0
+  68 0026 EFD1     		bne	.L6
+  69 0028 02EB0E20 		add	r0, r2, lr, lsl #8
+  70 002c 80B2     		uxth	r0, r0
+  71 002e 5DF804FB 		ldr	pc, [sp], #4
+  72              	.L9:
+  73 0032 00BF     		.align	2
+  74              	.L8:
+  75 0034 00000000 		.word	auchCRCHi
+  76 0038 00000000 		.word	auchCRCLo
+  78              		.section	.text.uCrc8Cal_Func,"ax",%progbits
+  79              		.align	1
+  80              		.global	uCrc8Cal_Func
+  81              		.syntax unified
+  82              		.thumb
+  83              		.thumb_func
+  85              	uCrc8Cal_Func:
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88              		@ link register save eliminated.
+  89 0000 0346     		mov	r3, r0
+  90 0002 0020     		movs	r0, #0
+  91 0004 03E0     		b	.L11
+  92              	.L12:
+  93 0006 13F8011B 		ldrb	r1, [r3], #1	@ zero_extendqisi2
+  94 000a 4840     		eors	r0, r0, r1
+  95 000c 1146     		mov	r1, r2
+  96              	.L11:
+  97 000e 4A1E     		subs	r2, r1, #1
+  98 0010 D2B2     		uxtb	r2, r2
+  99 0012 0029     		cmp	r1, #0
+ 100 0014 F7D1     		bne	.L12
+ 101 0016 7047     		bx	lr
+ 103              		.section	.rodata.auchCRCLo,"a"
+ 104              		.align	2
+ 107              	auchCRCLo:
+ 108 0000 00C0C101 		.ascii	"\000\300\301\001\303\003\002\302\306\006\007\307\005"
+ 108      C30302C2 
+ 108      C60607C7 
+ 108      05
+ 109 000d C5C404CC 		.ascii	"\305\304\004\314\014\015\315\017\317\316\016\012\312"
+ 109      0C0DCD0F 
+ 109      CFCE0E0A 
+ 109      CA
+ 110 001a CB0BC909 		.ascii	"\313\013\311\011\010\310\330\030\031\331\033\333\332"
+ 110      08C8D818 
+ 110      19D91BDB 
+ 110      DA
+ 111 0027 1A1EDEDF 		.ascii	"\032\036\336\337\037\335\035\034\334\024\324\325\025"
+ 111      1FDD1D1C 
+ 111      DC14D4D5 
+ARM GAS  /tmp/ccsFwMwb.s 			page 3
+
+
+ 111      15
+ 112 0034 D71716D6 		.ascii	"\327\027\026\326\322\022\023\323\021\321\320\020\360"
+ 112      D21213D3 
+ 112      11D1D010 
+ 112      F0
+ 113 0041 3031F133 		.ascii	"01\3613\363\36226\366\3677\36554\364<\374\375=\377?"
+ 113      F3F23236 
+ 113      F6F737F5 
+ 113      3534F43C 
+ 113      FCFD3DFF 
+ 114 0056 3EFEFA3A 		.ascii	">\376\372:;\3739\371\3708(\350\351)\353+*\352\356./"
+ 114      3BFB39F9 
+ 114      F83828E8 
+ 114      E929EB2B 
+ 114      2AEAEE2E 
+ 115 006b EF2DEDEC 		.ascii	"\357-\355\354,\344$%\345'\347\346&\"\342\343#\341! "
+ 115      2CE42425 
+ 115      E527E7E6 
+ 115      2622E2E3 
+ 115      23E12120 
+ 116 007f E0A06061 		.ascii	"\340\240`a\241c\243\242bf\246\247g\245ed\244l\254\255"
+ 116      A163A3A2 
+ 116      6266A6A7 
+ 116      67A56564 
+ 116      A46CACAD 
+ 117 0093 6DAF6F6E 		.ascii	"m\257on\256\252jk\253i\251\250hx\270\271y\273{z\272"
+ 117      AEAA6A6B 
+ 117      AB69A9A8 
+ 117      6878B8B9 
+ 117      79BB7B7A 
+ 118 00a8 BE7E7FBF 		.ascii	"\276~\177\277}\275\274|\264tu\265w\267\266vr\262\263"
+ 118      7DBDBC7C 
+ 118      B47475B5 
+ 118      77B7B676 
+ 118      72B2B3
+ 119 00bb 73B17170 		.ascii	"s\261qp\260P\220\221Q\223SR\222\226VW\227U\225\224T"
+ 119      B0509091 
+ 119      51935352 
+ 119      92965657 
+ 119      97559594 
+ 120 00d0 9C5C5D9D 		.ascii	"\234\\]\235_\237\236^Z\232\233[\231YX\230\210HI\211"
+ 120      5F9F9E5E 
+ 120      5A9A9B5B 
+ 120      99595898 
+ 120      88484989 
+ 121 00e4 4B8B8A4A 		.ascii	"K\213\212JN\216\217O\215ML\214D\204\205E\207GF\206\202"
+ 121      4E8E8F4F 
+ 121      8D4D4C8C 
+ 121      44848545 
+ 121      87474686 
+ 122 00f9 42438341 		.ascii	"BC\203A\201\200@"
+ 122      818040
+ 123              		.section	.rodata.auchCRCHi,"a"
+ 124              		.align	2
+ 127              	auchCRCHi:
+ 128 0000 00C18140 		.ascii	"\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 128      01C08041 
+ARM GAS  /tmp/ccsFwMwb.s 			page 4
+
+
+ 128      01C08041 
+ 128      00C181
+ 129 000f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 129      4100C181 
+ 129      4000C181 
+ 129      4001C080 
+ 130 001f 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 130      4100C181 
+ 130      4000C181 
+ 130      4001C080 
+ 131 002f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 131      4001C080 
+ 131      4101C080 
+ 131      4100C181 
+ 132 003f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 132      4100C181 
+ 132      4000C181 
+ 132      4001C080 
+ 133 004f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 133      4001C080 
+ 133      4101C080 
+ 133      4100C181 
+ 134 005f 4000C181 		.ascii	"@\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 134      4001C080 
+ 134      4101C080 
+ 134      4100C181 
+ 135 006f 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 135      4100C181 
+ 135      4000C181 
+ 135      4001C080 
+ 136 007f 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 136      4100C181 
+ 136      4000C181 
+ 136      4001C080 
+ 137 008f 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 137      4001C080 
+ 137      4101C080 
+ 137      4100C181 
+ 138 009f 4000C181 		.ascii	"@\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 138      4001C080 
+ 138      4101C080 
+ 138      4100C181 
+ 139 00af 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 139      4100C181 
+ 139      4000C181 
+ 139      4001C080 
+ 140 00bf 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 140      4001C080 
+ 140      4101C080 
+ 140      4100C181 
+ 141 00cf 4001C080 		.ascii	"@\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 141      4100C181 
+ 141      4000C181 
+ 141      4001C080 
+ 142 00df 4101C080 		.ascii	"A\001\300\200A\000\301\201@\000\301\201@\001\300\200"
+ 142      4100C181 
+ 142      4000C181 
+ARM GAS  /tmp/ccsFwMwb.s 			page 5
+
+
+ 142      4001C080 
+ 143 00ef 4100C181 		.ascii	"A\000\301\201@\001\300\200A\001\300\200A\000\301\201"
+ 143      4001C080 
+ 143      4101C080 
+ 143      4100C181 
+ 144 00ff 40       		.ascii	"@"
+ 145              		.ident	"GCC: (15:14.2.rel1-1) 14.2.1 20241119"
+ARM GAS  /tmp/ccsFwMwb.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 crc.c
+     /tmp/ccsFwMwb.s:16     .text.calCheckSumFunc:00000000 $t
+     /tmp/ccsFwMwb.s:22     .text.calCheckSumFunc:00000000 calCheckSumFunc
+     /tmp/ccsFwMwb.s:42     .text.uiCrcCalFunc:00000000 $t
+     /tmp/ccsFwMwb.s:48     .text.uiCrcCalFunc:00000000 uiCrcCalFunc
+     /tmp/ccsFwMwb.s:75     .text.uiCrcCalFunc:00000034 $d
+     /tmp/ccsFwMwb.s:127    .rodata.auchCRCHi:00000000 auchCRCHi
+     /tmp/ccsFwMwb.s:107    .rodata.auchCRCLo:00000000 auchCRCLo
+     /tmp/ccsFwMwb.s:79     .text.uCrc8Cal_Func:00000000 $t
+     /tmp/ccsFwMwb.s:85     .text.uCrc8Cal_Func:00000000 uCrc8Cal_Func
+     /tmp/ccsFwMwb.s:104    .rodata.auchCRCLo:00000000 $d
+     /tmp/ccsFwMwb.s:124    .rodata.auchCRCHi:00000000 $d
+
+NO UNDEFINED SYMBOLS
